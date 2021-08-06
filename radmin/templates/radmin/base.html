@@ -1,0 +1,71 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %} {% endblock title %} </title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Favicon-->
+    <!-- plugin css file  -->
+    <link rel="stylesheet" href="{% static '/radmin/assets/plugin/datatables/responsive.dataTables.min.css' %}
+    ">
+       <!-- Plugin css file  -->
+    <link rel="stylesheet" href="{% static 'assets/plugin/owlcarousel/owl.carousel.min.css' %}">
+    
+    <link rel="stylesheet" href="{% static '/radmin/assets/plugin/datatables/dataTables.bootstrap5.min.css'  %}">
+    <!-- project css file  -->
+    <link rel="stylesheet" href="{% static '/radmin/assets/css/ihealth.style.min.css'  %}">
+
+    {% block custom_css %}{% endblock custom_css %}
+</head>
+<body>
+
+<div id="ihealth-layout" class="theme-tradewind">
+    
+    <!-- sidebar --> 
+    {% include 'radmin/sidebar.html' %}
+    
+    <!-- main body area -->
+    <div class="main px-lg-4 px-md-4">
+        {% include 'radmin/navbar.html' %}
+    
+
+        {% block content %}
+
+        {% endblock content %}
+
+        {% include 'radmin/settings.html' %}
+    </div>
+  
+</div>
+
+<!-- Jquery Core Js -->
+<script src="{% static '/radmin/assets/bundles/libscripts.bundle.js'%}"></script>
+
+<!-- Plugin Js -->
+<script src="{% static '/radmin/assets/bundles/apexcharts.bundle.js'%}"></script>
+<script src="{% static '/radmin/assets/plugin/jqueryuicalandar/jquery-ui.min.js'%}"></script>
+<script src="{% static '/radmin/assets/plugin/owlcarousel/owl.carousel.js'%}"></script>
+<script src="{% static '/radmin/assets/bundles/dataTables.bundle.js'%}"></script>      
+
+<!-- Jquery Page Js -->
+<script src="{% static '/radmin/js/template.js'%}"></script>
+<script src="{% static '/radmin/js/page/index.js'%}"></script>
+<script src="{% static '/radmin/js/page/virtual.js'%}"></script>
+
+ <script>
+      $('#myDataTable')
+      .addClass( 'nowrap' )
+      .dataTable( {
+          responsive: true,
+          columnDefs: [
+              { targets: [-1, -3], className: 'dt-body-right' }
+          ]
+      });
+ </script>
+{% block custom_js %}{% endblock custom_js %}
+</body>
+</html> 
+

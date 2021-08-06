@@ -1,0 +1,414 @@
+{% extends 'radmin/base.html' %}
+{% load static %}
+{% block title %} :: I-Health::  Dashboard {% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block content %}
+<!-- Body: Body -->
+        <div class="body d-flex py-3">
+            <div class="container-xxl">
+                <div class="row align-items-center">
+                    <div class="border-0 mb-4">
+                        <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                            <h3 class="fw-bold mb-0">Accidents Alert</h3>
+                        </div>
+                    </div>
+                </div> <!-- Row end  -->
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                <h6 class="mb-0 fw-bold ">Call Alert Dispatcher</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3 mb-3 row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4">
+                                    <div class="col">
+                                        <div class="amu-info border p-3 d-flex align-items-center">
+                                            <i class="icofont-ambulance-cross secondary-color amu"></i>
+                                            <div class="call-info ms-2">
+                                                <span class="d-block fw-bold">Emegaency call</span>
+                                                <span class="d-block">108</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="amu-info border p-3 d-flex align-items-center">
+                                            <i class="icofont-star-alt-1 secondary-color amu"></i>
+                                            <div class="call-info ms-2">
+                                                <span class="d-block fw-bold">New</span>
+                                                <span class="d-block">111</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="amu-info border p-3 d-flex align-items-center">
+                                            <i class="icofont-spinner-alt-5 secondary-color amu"></i>
+                                            <div class="call-info ms-2">
+                                                <span class="d-block fw-bold">Proceed</span>
+                                                <span class="d-block">141</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="amu-info border p-3 d-flex align-items-center">
+                                            <i class="icofont-verification-check secondary-color amu"></i>
+                                            <div class="call-info ms-2">
+                                                <span class="d-block fw-bold">Completed</span>
+                                                <span class="d-block">200</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-lg-7">
+                                        <div id="googleMap" style="width:100%;height:600px;"></div>
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <div class="d-flex py-2 project-tab flex-wrap w-sm-100">
+                                            <ul class="nav nav-tabs tab-body-header rounded  prtab-set w-sm-100 w-100 list-unstyled" role="tablist">
+                                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#all" role="tab">All</a></li>
+                                                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#new" role="tab">New</a></li>
+                                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#proceeding" role="tab">Proceed</a></li>
+                                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#completed" role="tab">Completed</a></li>
+                                            </ul>
+                                            <div class="tab-content mt-4 w-100">
+                                                <div class="tab-pane fade " id="all">
+                                                    <ul class="list-unstyled">
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-star-alt-1 me-2 fs-5"></i>New</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-star-alt-1 me-2 fs-5"></i>New</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-verification-check me-2 fs-5"></i>Completed</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-verification-check me-2 fs-5"></i>Completed</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-spinner-alt-5 me-2 fs-5"></i>Proceeding</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-spinner-alt-5 me-2 fs-5"></i>Proceeding</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="tab-pane fade show active" id="new">
+                                                    <ul class="list-unstyled">
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-star-alt-1 me-2 fs-5"></i>New</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-star-alt-1 me-2 fs-5"></i>New</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-star-alt-1 me-2 fs-5"></i>New</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-star-alt-1 me-2 fs-5"></i>New</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-star-alt-1 me-2 fs-5"></i>New</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="tab-pane fade " id="proceeding">
+                                                    <ul class="list-unstyled">
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-spinner-alt-5 me-2 fs-5"></i>Proceeding</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-spinner-alt-5 me-2 fs-5"></i>Proceeding</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-spinner-alt-5 me-2 fs-5"></i>Proceeding</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-spinner-alt-5 me-2 fs-5"></i>Proceeding</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-spinner-alt-5 me-2 fs-5"></i>Proceeding</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-spinner-alt-5 me-2 fs-5"></i>Proceeding</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="tab-pane fade " id="completed">
+                                                    <ul class="list-unstyled">
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-verification-check me-2 fs-5"></i>Completed</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-verification-check me-2 fs-5"></i>Completed</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-verification-check me-2 fs-5"></i>Completed</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-verification-check me-2 fs-5"></i>Completed</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                        <li class="border p-3 d-flex justify-content-between accident-info mb-3 flex-wrap">
+                                                            <div class="tickit-info">
+                                                                <span class="text-muted"><i class="icofont-verification-check me-2 fs-5"></i>Completed</span>
+                                                                <h6 class="fw-bold small mt-1">A-456784576</h6>
+                                                            </div>
+                                                            <div class="time-info">
+                                                                <span class="text-muted"><i class="icofont-clock-time me-2 fs-5"></i>Time</span>
+                                                                <h6 class="fw-bold small mt-1">10:30 3:30</h6>
+                                                            </div>
+                                                            <div class="location-info">
+                                                                <span class="text-muted"><i class="icofont-location-pin me-2 fs-5"></i>Location</span>
+                                                                <h6 class="fw-bold small mt-1">3004  Seltice Way,Boise</h6>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+     
+{% endblock content %}
+
+{% block custom_js %}{% endblock custom_js %}

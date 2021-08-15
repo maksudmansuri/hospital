@@ -1,7 +1,12 @@
+from typing import Counter
+from django.contrib.messages import views
+from django.http import request, response
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic.base import TemplateResponseMixin
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
@@ -26,6 +31,8 @@ class generateKey:
     @staticmethod
     def returnValue(phone):
         return str(phone) + str(datetime.date(datetime.now())) + "Some Random Secret Key"
+
+
  
 def dologin(request):
     print(request.user)
@@ -79,32 +86,87 @@ class HospitalSingup(SuccessMessageMixin,CreateView):
         user=form.save(commit=False)
         user.user_type=2
         user.set_password(form.cleaned_data["password"])
-        print('just one step ahead save?')
-        user.save()
-        current_site=get_current_site(self.request)
-        email_subject='Active your Account',
-        message=render_to_string('accounts/activate.html',
-        {
-            'user':user,
-            'domain':current_site.domain,
-            'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-            'token':generate_token.make_token(user)
-        }
-        )
-        print(message)
-        print(urlsafe_base64_encode(force_bytes(user.pk)),)
-        print(generate_token.make_token(user))
-        print(current_site.domain)
-        email_message=EmailMessage(
-            email_subject,
-            message,
-            settings.EMAIL_HOST_USER,
-            [user.email]
-        )
-        print(email_message)
-        email_message.send()
-        msg=messages.success(self.request,"Sucessfully Singup Please Verify Your Account First")
+        print('just one step ahead save?')        
+        user.counter += 1 # Update Counter At every Call
+        user.save() # Save the data
+        keygen = generateKey() 
+        print(keygen)
+        key = base64.b32encode(keygen.returnValue(user.phone).encode()) # Key is generated
+        print(key)
+        OTP = pyotp.HOTP(key)# HOTP Model for OTP is created
+        print(OTP.at(user.counter))
+        # Using Multi-Threading send the OTP Using Messaging Services like Twilio or Fast2sms
+        messages.add_message(self.request,messages.SUCCESS,"OTP Sent to your numbet kindly Verify")
+        return HttpResponseRedirect(reverse('OTP_Gen', args=(user.phone,)))
+        # return HttpResponseRedirect(reverse("OTP_Gen",kwargs={"user":user.phone}))  # send to next page with OTP
+
+class verifyOTPDetailsViews(views):
+    model=CustomUser
+    template_name = "accounts/OTPVerification.html"
+    # def get(self, request, *args, **kwargs):
+    #     phone = kwargs("phone")
+    #     print("we are inside vification "+ phone)
+    #     try:
+    #         user = CustomUser.objects.get(phone=phone)  # if Mobile already exists the take this else create New One
+    #     except ObjectDoesNotExist:
+    #         messages.add_message(self.request,messages.SUCCESS,"Mobile number does not available")
+            
+    #     user.counter += 1 # Update Counter At every Call
+    #     keygen = generateKey() 
+    #     print(keygen)
+    #     key = base64.b32encode(keygen.returnValue(user.phone).encode()) # Key is generated
+    #     print(key)
+    #     OTP = pyotp.HOTP(key)# HOTP Model for OTP is created
+    #     print(OTP.at(user.counter))
+    #     # Using Multi-Threading send the OTP Using Messaging Services like Twilio or Fast2sms
+    #     messages.add_message(self.request,messages.SUCCESS,"OTP Sent to your numbet kindly Verify")
+    #     return render(request,"OTPVerification.html",{"user":user})
+    
+    def post(self,request,*args,**kwargs):
+        phone = kwargs("phone")
+        try:
+            Mobile = CustomUser.objects.get(phone=phone)
+        except ObjectDoesNotExist:
+            messages.add_message(request,messages.ERROR,"Mobile number does not Exits")
+            return HttpResponseRedirect(reverse("OTP_Gen"))  # False Call
+        if request.POST:
+            pass
+        keygen = generateKey()
+        key = base64.b32encode(keygen.returnValue(phone).encode())  # Generating Key
+        OTP = pyotp.HOTP(key)  # HOTP Model
+        if OTP.verify(request.data["otp"], Mobile.counter):  # Verifying the OTP
+            Mobile.is_Mobile_Verified = True
+            if Mobile.is_Email_Verified:
+                Mobile.is_active=True
+            Mobile.save()
+            messages.add_message(request,messages.SUCCESS,"Mobile Verified Successfuly")
         return HttpResponseRedirect(reverse("dologin"))
+
+# def OTPPAge(request,phone):
+#     phone = CustomUser.objects.get(phone=phone)
+    
+#     template_name = "accounts/OTPVerification.html"
+#     field = ["phone","counter"]
+
+def VerifyOTP(request,phone):
+    try:
+        Mobile = CustomUser.objects.get(phone=phone)
+    except ObjectDoesNotExist:
+        messages.add_message(request,messages.ERROR,"Mobile number does not Exits")
+        return HttpResponseRedirect(reverse("OTP_Gen"))  # False Call
+    if request.POST:
+        pass
+    keygen = generateKey()
+    key = base64.b32encode(keygen.returnValue(phone).encode())  # Generating Key
+    OTP = pyotp.HOTP(key)  # HOTP Model
+    if OTP.verify(request.data["otp"], Mobile.counter):  # Verifying the OTP
+        Mobile.is_Mobile_Verified = True
+        if Mobile.is_Email_Verified:
+            Mobile.is_active=True
+        Mobile.save()
+        messages.add_message(request,messages.ERROR,"Mobile Verified Successfuly")
+    return HttpResponseRedirect(reverse("dologin"))
+
 
 class DoctorSingup(SuccessMessageMixin,CreateView):
     template_name="accounts/doctorsingup.html"
@@ -267,7 +329,9 @@ def activate(request,uidb64,token):
     except:
         user=None
     if user is not None and generate_token.check_token(user,token):
-        user.is_active=True
+        if user.is_Mobile_Verified:
+            user.is_active=True
+        user.is_Email_Verified=True
         user.save()
         messages.add_message(request,messages.SUCCESS,'account  is Activated Successfully')
         return redirect('/accounts/dologin')

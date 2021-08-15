@@ -71,6 +71,9 @@ class CustomUser(AbstractBaseUser):
     user_type=models.CharField(choices=user_type_data,max_length=50)
     phone_regex     = RegexValidator( regex = r'^\+?1?\d{9,10}$', message ="Phone number must be entered in the format +919999999999. Up to 10 digits allowed.")
     phone           = models.CharField('Phone',validators =[phone_regex], max_length=10, unique = True,null=True)
+    is_Mobile_Verified      = models.BooleanField(blank=False, default=False)
+    is_Email_Verified      = models.BooleanField(blank=False, default=False)
+    counter         = models.IntegerField(default=0, blank=False) #OTP counter
     
     USERNAME_FIELD = 'email'
 

@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from datetime import timedelta
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,7 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'radmin',
-    'accounts'
+    'hospital',
+    'accounts',
+    'lab',
+    'pharmacy',
+    'patient',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -68,17 +76,50 @@ TEMPLATES = [
         },
     },
 ]
+AUTH_USER_MODEL="accounts.CustomUser"
 
+SITE_ID = 1 
+
+REST_FRAMWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+        'rest_framework.permissions.IsAuthenticated'
+        #  'rest_framework.permissions.IsAdminUser'
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'knox.auth.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'accounts.EmailBackEnd.EmailBackEnd',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE':10,
+    # 'REST_SESSION_LOGIN' : False
+   
+}
 WSGI_APPLICATION = 'relief.wsgi.application'
 
+ASGI_APPLICATION = 'OC3.routing.application'
+
+LOGIN_REDIRECT_URL = "/"
+
+LOGIN_URL='dologin'
+LOGOUT_URL = 'dologout'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+   'default': {
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE':'django.db.backends.mysql',
+        'NAME':'reliefdb',
+        'USER':'root',
+        'PASSWORD':'Aot567@lk',
+        'HOST':'localhost',
+        'PORT':'3306'
     }
 }
 
@@ -119,13 +160,29 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT=os.path.join(BASE_DIR,"media")
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 
+
+BASE_URL="http://127.0.0.1:8000"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_CONFIRMATION_PERIOD_DAYS = 1
+SIMPLE_EMAIL_CONFIRMATION_PERIOD = timedelta(days=EMAIL_CONFIRMATION_PERIOD_DAYS)
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'intellecttec@gmail.com'
+EMAIL_HOST_PASSWORD ='Aot567{LK}'
+EMAIL_PORT = 587

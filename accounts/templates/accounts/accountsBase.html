@@ -1,0 +1,68 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <title>:: I-Health:: Signup</title>
+    <link rel="icon" href="{% static '/radmin/assets/favicon.ico' %}" type="image/x-icon"> <!-- Favicon-->
+    <!-- project css file  -->
+    <link rel="stylesheet" href="{% static '/radmin/assets/css/ihealth.style.min.css' %}">
+    {% block custom_css %}
+    {% endblock custom_css %}
+</head>
+
+<body>
+
+<div id="ihealth-layout" class="theme-tradewind">
+        <!-- main body area -->
+    <div class="main p-10 py-10 p-xl-5">
+        
+        <!-- Body: Body -->
+        <div class="body d-flex p-0 p-xl-5">
+            <div class="container-xxl">
+
+                <div class="row g-0">
+                    <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center rounded-lg auth-h100">
+                        <div style="max-width: 25rem;">
+                        {% if messages %}
+                            {% for message in messages  %}
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>{{message}}.</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                            <div class="text-center mb-2">
+                                  <i class="icofont-heart-beat secondary-color" style="font-size: 90px;"></i>
+                            </div>
+                            <div class="mb-5">
+                                <h2 class="color-900 text-center">I-Health, We aim to make your life better</h2>
+                            </div>
+                            <!-- Image block -->
+                            <div class="">
+                                <img src="{% static '/radmin/assets/images/login-img.svg'%}" alt="login-img">
+                            </div>
+                        </div>
+                    </div>
+                   
+                    {% block content %}
+                    {% endblock content %}
+                    </div> <!-- End Row -->
+                
+            </div>
+        </div>
+
+    </div>  
+</div>
+
+<!-- Jquery Core Js -->
+<script src="{% static '/radmin/assets/bundles/libscripts.bundle.js' %}"></script>
+
+</body>
+</html>
+{% block custom_js %}
+{% endblock custom_js %}

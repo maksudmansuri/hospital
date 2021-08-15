@@ -21,4 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('radmin/', include("radmin.urls")),
     path('accounts/', include("accounts.urls")),
+    path('hospital/', include("hospital.urls")),
+    path('patient/', include("patient.urls")),
+    path('lab/', include("lab.urls")),
+    path('pharmacy/', include("pharmacy.urls")),
 ]

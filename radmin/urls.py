@@ -1,8 +1,13 @@
 from django.urls import path
 from .import views
+ 
+urlpatterns = [ 
+    path('',views.indexView,name="radmin_home"),
+    path('hospital_all',views.hospitalallView,name="hospital_all"),
+    path('hospital_add',views.hospitalAddViews.as_view(),name="hospital_add"),
+    path('hospital_update',views.hospitalUpdateView,name="hospital_update"),
+    path('hospital_delete',views.hospitalDeleteView,name="hospital_delete"),
 
-urlpatterns = [
-    path('',views.indexView,name="radmin_home"), 
     path('virtual',views.virtualView,name="virtual"),
     path('doctor_all',views.doctorallView,name="doctor_all"),
     path('doctor_add',views.doctor_addView,name="doctor_add"),

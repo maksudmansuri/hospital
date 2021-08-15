@@ -10,7 +10,7 @@
                     <div class="col-lg-6 d-flex justify-content-center align-items-center border-0 rounded-lg auth-h100">
                         <div class="w-100 p-3 p-md-5 card border-0 bg-dark text-light" style="max-width: 32rem;">
                             <!-- Form -->
-                            <form class="row g-1 p-3 p-md-4" action="{% url 'OTP_Gen' {{phone}} %}" method="post">
+                            <form class="row g-1 p-3 p-md-4" action="{% url 'OTP_Gen' user.phone %}" method="post">
                             {% csrf_token %}
                                 <div class="col-12 text-center mb-5">
                                     <img src="{% static '/radmin/assets/images/verify.svg'%}" class="w240 mb-4" alt="" />
@@ -19,39 +19,39 @@
                                 </div>
                                 <div class="col">
                                     <div class="mb-2">
-                                        <input type="number" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                        <input type="text" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" name="first">
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="mb-2">
-                                        <input type="number" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                        <input type="text" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" name="second">
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="mb-2">
-                                        <input type="number" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                        <input type="text" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" name="third">
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="mb-2">
-                                        <input type="number" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                        <input type="text" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" name="forth">
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="mb-2">
-                                        <input type="number" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                        <input type="text" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" name="fifth">
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="mb-2">
-                                        <input type="number" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                        <input type="text" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" name="sixth">
                                     </div>
                                 </div>
                                 <div class="col-12 text-center mt-4">
-                                    <button title="" class="btn btn-lg btn-block btn-light lift text-uppercase">Verify my Mobile</button>
+                                    <button title="submit" class="btn btn-lg btn-block btn-light lift text-uppercase">Verify my Mobile</button>
                                 </div>
                                 <div class="col-12 text-center mt-4">
-                                    <span >Haven't received it? <a href="{% url 'Verify' {{phone}} %}">Resend a new code.</a></span>
+                                    <span >Haven't received it? <a href="{% url 'verifyPhone' user.phone %}">Resend a new code.</a></span>
                                 </div>
                             </form>
                             <!-- End Form -->
@@ -76,5 +76,7 @@
             myLayer.setAttribute("disabled","disabled");
     };
     }
+
+    
 </script>
 {% endblock custom_js %}

@@ -23,6 +23,10 @@ import base64
 import pyotp
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
+import random
+import http.client
+import ast
+conn = http.client.HTTPConnection("2factor.in")
 # Create your views here.
 
 
@@ -86,24 +90,96 @@ class HospitalSingup(SuccessMessageMixin,CreateView):
         user=form.save(commit=False)
         user.user_type=2
         user.set_password(form.cleaned_data["password"])
-        print('just one step ahead save?')        
-        user.counter += 1 # Update Counter At every Call
+        print('just one step ahead save?')   
+        user.counter += 1  # Update Counter At every Call
         user.save() # Save the data
-        keygen = generateKey() 
-        print(keygen)
-        key = base64.b32encode(keygen.returnValue(user.phone).encode()) # Key is generated
-        print(key)
-        OTP = pyotp.HOTP(key)# HOTP Model for OTP is created
+        mobile= user.phone
+        keygen = generateKey()
+        key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
+        OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
         print(OTP.at(user.counter))
+        otp=OTP.at(user.counter)
+        # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
+        # res = conn.getresponse()
+        # data = res.read()
+        # data=data.decode("utf-8")
+        # data=ast.literal_eval(data)
+        # print(data)
+        # if data["Status"] == 'Success':
+        #     user.otp_session_id = data["Details"]
+        #     user.save()
+        #     print('In validate phone :'+user.otp_session_id)
+        messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
+        return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
+        # else:
+        #     messages.add_message(self.request,messages.ERROR,"OTP sending Failed") 
+        #     return HttpResponseRedirect(reverse("hospitalsingup"))
         # Using Multi-Threading send the OTP Using Messaging Services like Twilio or Fast2sms
-        messages.add_message(self.request,messages.SUCCESS,"OTP Sent to your numbet kindly Verify")
-        return HttpResponseRedirect(reverse('OTP_Gen', args=(user.phone,)))
+        
         # return HttpResponseRedirect(reverse("OTP_Gen",kwargs={"user":user.phone}))  # send to next page with OTP
 
-class verifyOTPDetailsViews(views):
-    model=CustomUser
-    template_name = "accounts/OTPVerification.html"
-    # def get(self, request, *args, **kwargs):
+def verifyPhone(request,phone):
+    try:
+        user = CustomUser.objects.get(phone=phone)
+        print("inside virify phone")
+    except ObjectDoesNotExist:
+        messages.add_message(request,messages.ERROR,"Mobile number does not Exits")
+        return render(request,"accounts/OTPVerification.html")  # False Call
+    return render(request,"accounts/OTPVerification.html",{'user':user})  #  Call
+
+def verifyOTP(request,phone):
+    try:
+        user = CustomUser.objects.get(phone=phone) #mobile is a user
+    except ObjectDoesNotExist:
+        messages.add_message(request,messages.ERROR,"Mobile number does not Exits")
+        return HttpResponseRedirect(reverse("hospitalsingup"))  # False Call
+    if request.POST:
+        first=request.POST.get("first")
+        second=request.POST.get("second")
+        third=request.POST.get("third")
+        forth=request.POST.get("forth")
+        fifth=request.POST.get("fifth")
+        sixth=request.POST.get("sixth")
+
+        postotp = first+second+third+forth+fifth+sixth  #added in one string
+
+        keygen = generateKey()
+        key = base64.b32encode(keygen.returnValue(phone).encode())  # Generating Key
+        OTP = pyotp.HOTP(key)  # HOTP Model
+        if OTP.verify(postotp, user.counter):  # Verifying the OTP
+            user.is_Mobile_Verified = True
+            user.is_active=True
+            user.save()
+            messages.add_message(request,messages.SUCCESS,"Mobile Verified Successfuly")
+        #emila message for email verification
+        current_site=get_current_site(request) #fetch domain    
+        email_subject='Active your Account',
+        message=render_to_string('accounts/activate.html',
+        {
+            'user':user,
+            'domain':current_site.domain,
+            'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+            'token':generate_token.make_token(user)
+        } #convert Link into string/message
+        )
+        print(message)
+        email_message=EmailMessage(
+            email_subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [user.email]
+        )#compose email
+        print(email_message)
+        email_message.send() #send Email
+        messages.add_message(request,messages.SUCCESS,"Sucessfully Singup Please Verify Your Account Email")        
+        return HttpResponseRedirect(reverse("dologin"))
+        # return HttpResponseRedirect(reverse("dologin"))
+
+
+# class verifyOTPDetailsViews(views):
+#     model=CustomUser
+#     template_name = "accounts/OTPVerification.html"
+#     # def get(self, request, *args, **kwargs):
     #     phone = kwargs("phone")
     #     print("we are inside vification "+ phone)
     #     try:
@@ -122,25 +198,25 @@ class verifyOTPDetailsViews(views):
     #     messages.add_message(self.request,messages.SUCCESS,"OTP Sent to your numbet kindly Verify")
     #     return render(request,"OTPVerification.html",{"user":user})
     
-    def post(self,request,*args,**kwargs):
-        phone = kwargs("phone")
-        try:
-            Mobile = CustomUser.objects.get(phone=phone)
-        except ObjectDoesNotExist:
-            messages.add_message(request,messages.ERROR,"Mobile number does not Exits")
-            return HttpResponseRedirect(reverse("OTP_Gen"))  # False Call
-        if request.POST:
-            pass
-        keygen = generateKey()
-        key = base64.b32encode(keygen.returnValue(phone).encode())  # Generating Key
-        OTP = pyotp.HOTP(key)  # HOTP Model
-        if OTP.verify(request.data["otp"], Mobile.counter):  # Verifying the OTP
-            Mobile.is_Mobile_Verified = True
-            if Mobile.is_Email_Verified:
-                Mobile.is_active=True
-            Mobile.save()
-            messages.add_message(request,messages.SUCCESS,"Mobile Verified Successfuly")
-        return HttpResponseRedirect(reverse("dologin"))
+    # def post(self,request,*args,**kwargs):
+    #     phone = kwargs("phone")
+    #     try:
+    #         Mobile = CustomUser.objects.get(phone=phone)
+    #     except ObjectDoesNotExist:
+    #         messages.add_message(request,messages.ERROR,"Mobile number does not Exits")
+    #         return HttpResponseRedirect(reverse("OTP_Gen"))  # False Call
+    #     if request.POST:
+    #         pass
+    #     keygen = generateKey()
+    #     key = base64.b32encode(keygen.returnValue(phone).encode())  # Generating Key
+    #     OTP = pyotp.HOTP(key)  # HOTP Model
+    #     if OTP.verify(request.data["otp"], Mobile.counter):  # Verifying the OTP
+    #         Mobile.is_Mobile_Verified = True
+    #         if Mobile.is_Email_Verified:
+    #             Mobile.is_active=True
+    #         Mobile.save()
+    #         messages.add_message(request,messages.SUCCESS,"Mobile Verified Successfuly")
+    #     return HttpResponseRedirect(reverse("dologin"))
 
 # def OTPPAge(request,phone):
 #     phone = CustomUser.objects.get(phone=phone)
@@ -336,3 +412,4 @@ def activate(request,uidb64,token):
         messages.add_message(request,messages.SUCCESS,'account  is Activated Successfully')
         return redirect('/accounts/dologin')
     return render(request,'accounts/activate_failed.html',status=401)
+

@@ -27,7 +27,7 @@
                                 <div class="col-12">
                                     <div class="mb-2">
                                         <label class="form-label">Email address</label>
-                                        <input type="email" class="form-control form-control-lg" placeholder="name@example.com">
+                                        <input type="email" class="form-control form-control-lg" placeholder="name@example.com" name="email" id="email">
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -38,19 +38,19 @@
                                                 <a  href="auth-password-reset.html">Forgot Password?</a>
                                             </span>
                                         </div>
-                                        <input type="password" class="form-control form-control-lg" placeholder="***************">
+                                        <input type="password" class="form-control form-control-lg" placeholder="***************" name="password" id="password">
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="lsRememberMe" id="rememberMe">
                                         <label class="form-check-label" for="flexCheckDefault">
                                             Remember me
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center mt-4">
-                                    <a href="index.html" class="btn btn-lg btn-block btn-light lift text-uppercase" atl="signin">SIGN IN</a>
+                                    <button type="submit" class="btn btn-lg btn-block btn-light lift text-uppercase" onclick="lsRememberMe()" atl="signin">SIGN IN</bUtton>
                                 </div>
                                 <div class="col-12 text-center mt-4">
                                     <span>Don't have an account yet? <a href="auth-signup.html" >Sign up here</a></span>
@@ -65,4 +65,30 @@
 {% endblock content %}
 
 {% block custom_js %}
+<script>
+    const rmCheck = document.getElementById("rememberMe"),
+    emailInput = document.getElementById("email");
+    passwordInput = document.getElementById("password");
+
+    if (localStorage.checkbox && localStorage.checkbox !== "") {
+    rmCheck.setAttribute("checked", "checked");
+    emailInput.value = localStorage.username;
+    passwordInput.value = localStorage.password;
+    } else {
+    rmCheck.removeAttribute("checked");
+    emailInput.value = "";
+    passwordInput.value = "";
+    }
+
+    function lsRememberMe() {
+    if (rmCheck.checked && emailInput.value && passwordInput.value  !== "") {
+        localStorage.username = emailInput.value;
+        localStorage.password = passwordInput.value;
+        localStorage.checkbox = rmCheck.value;
+    } else {
+        localStorage.username = "";
+        localStorage.checkbox = "";
+    }
+    }
+</script>
 {% endblock custom_js %}

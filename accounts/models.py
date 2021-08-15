@@ -74,7 +74,7 @@ class CustomUser(AbstractBaseUser):
     is_Mobile_Verified      = models.BooleanField(blank=False, default=False)
     is_Email_Verified      = models.BooleanField(blank=False, default=False)
     counter         = models.IntegerField(default=0, blank=False) #OTP counter
-    
+    otp_session_id  = models.CharField(max_length=120, null=True, default = "")
     USERNAME_FIELD = 'email'
 
     REQUIRED_FIELDS = ['username',]

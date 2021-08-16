@@ -1,5 +1,5 @@
 from django.urls import path
-from .import views
+from .import views,logoutview
 
 urlpatterns = [ 
     # path('auth_404',views.auth404View,name="auth_404"), 
@@ -10,6 +10,7 @@ urlpatterns = [
     path("verifyOTP/<phone>", views.verifyOTP, name="OTP_Gen"),
     path("verifyPhone/<phone>", views.verifyPhone, name="verifyPhone"),
     path('dologin', views.dologin,name='dologin'),
+    path('logout', logoutview.logout_view,name='dologout'),
     path('dosingup', views.adminSingup,name='dosingup'),
     path('hospitalsingup', views.HospitalSingup.as_view(),name='hospitalsingup'),
     path('doctorsingup', views.DoctorSingup.as_view(),name='doctorsingup'),

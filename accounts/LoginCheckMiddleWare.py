@@ -13,9 +13,9 @@ class LoginCheckMiddleWare(MiddlewareMixin):
         user=request.user
         if user.is_authenticated:
             if user.user_type=="1":
-                if modulename == "ecaadmin.views" or modulename == "django.views.static":
+                if modulename == "radmin.views" or modulename == "django.views.static":
                     pass
-                elif modulename == "front.views":
+                elif modulename == "accounts.logoutview":
                     pass
                 elif modulename == "media.views":
                     pass
@@ -24,7 +24,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 elif  modulename == "chat.views":
                     pass
                 else:
-                    return HttpResponseRedirect(reverse("admin_home"))
+                    return HttpResponseRedirect(reverse("radmin_home"))
             elif user.user_type=="2":
                 if modulename == "staffs.views" or modulename == "django.views.static":
                     pass
@@ -65,7 +65,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 # else:
                 #     return redirect("/admin")
                     # return HttpResponseRedirect(reverse("django/contrib/admin"))
-            elif user.user_type=="0" or user.is_superuser==True:
+            elif user.user_type=="5" or user.is_superuser==True:
                 if modulename == "ecaadmin.views" or modulename == "django.views.static":
                     pass
                 elif modulename == "front.views":
@@ -87,7 +87,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 # return RedirectView.as_view(url=reverse_lazy('admin:index'))
                 # return reverse('admin_login')
         else:
-            if request.path == reverse("dologin") or modulename == "front.views" or modulename == "accounts.views" or modulename == "django.views.static" or modulename == "django.contrib.auth.views" or modulename == "chat.views" or modulename == "accounts.api.views" or modulename == "front.api.views" or request.path == reverse("login") or modulename == "allauth.account.views" or modulename == " allauth.socialaccount.views" :
+            if request.path == reverse("dologin") or modulename == "front.views" or modulename == "accounts.views" or modulename == "django.views.static" or modulename == "django.contrib.auth.views" or modulename == "chat.views" or modulename == "accounts.api.views" or modulename == "front.api.views" or modulename == "allauth.account.views" or modulename == " allauth.socialaccount.views" :
                 pass
             else:
                 return HttpResponseRedirect(reverse("dologin")) or modulename == "allauth.account.views" or modulename == " allauth.socialaccount.views" or request.path == reverse("saccount") or modulename == "allauth.socialaccount.providers.oauth2.views"

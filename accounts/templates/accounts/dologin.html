@@ -5,12 +5,13 @@
 {% block custom_css %}
 {% endblock custom_css %}
     
-{% block content %}
+{% block content %} 
 
                     <div class="col-lg-6 d-flex justify-content-center align-items-center border-0 rounded-lg auth-h100">
                         <div class="w-100 p-3 p-md-5 card border-0 bg-dark text-light" style="max-width: 32rem;">
                             <!-- Form -->
-                            <form class="row g-1 p-3 p-md-4">
+                            <form class="row g-1 p-3 p-md-4" method="post">
+                            {% csrf_token %}
                                 <div class="col-12 text-center mb-5">
                                     <h1>Sign in</h1>
                                     <span>Free access to our dashboard.</span>
@@ -18,7 +19,7 @@
                                 <div class="col-12 text-center mb-4">
                                     <a class="btn btn-lg btn-outline-secondary btn-block" href="#">
                                         <span class="d-flex justify-content-center align-items-center">
-                                            <img class="avatar xs me-2" src="../assets/images/google.svg" alt="Image Description">
+                                            <img class="avatar xs me-2" src="{% static '/radmin/assets/images/google.svg'%}" alt="Image Description">
                                             Sign in with Google
                                         </span>
                                     </a>
@@ -27,7 +28,7 @@
                                 <div class="col-12">
                                     <div class="mb-2">
                                         <label class="form-label">Email address</label>
-                                        <input type="email" class="form-control form-control-lg" placeholder="name@example.com" name="email" id="email">
+                                        <input type="text" class="form-control form-control-lg" placeholder="Enter Email or Mobiel Nunber" name="username" id="username">
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -53,7 +54,18 @@
                                     <button type="submit" class="btn btn-lg btn-block btn-light lift text-uppercase" onclick="lsRememberMe()" atl="signin">SIGN IN</bUtton>
                                 </div>
                                 <div class="col-12 text-center mt-4">
-                                    <span>Don't have an account yet? <a href="auth-signup.html" >Sign up here</a></span>
+                                    <span>Don't have an account yet? 
+                                        <a class="dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Sign up here
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <li><a class="dropdown-item" href="{% url 'patientsingup' %}">As a Patient</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'hospitalsingup' %}">As a Hospital</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'doctorsingup' %}">As a Doictor</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'labsingup' %}">As a Laboratory</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'pharmacysingup' %}">As a Pharmacist</a></li>
+                                        </ul>
+                                        </span>
                                 </div>
                             </form>
                             <!-- End Form -->
@@ -67,7 +79,7 @@
 {% block custom_js %}
 <script>
     const rmCheck = document.getElementById("rememberMe"),
-    emailInput = document.getElementById("email");
+    emailInput = document.getElementById("username");
     passwordInput = document.getElementById("password");
 
     if (localStorage.checkbox && localStorage.checkbox !== "") {

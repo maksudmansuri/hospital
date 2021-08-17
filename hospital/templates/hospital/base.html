@@ -25,18 +25,37 @@
 <div id="ihealth-layout" class="theme-tradewind">
     
     <!-- sidebar --> 
-    {% include 'radmin/sidebar.html' %}
+    {% include 'hospital/sidebar.html' %}
     
     <!-- main body area -->
     <div class="main px-lg-4 px-md-4">
-        {% include 'radmin/navbar.html' %}
-    
-
+        {% include 'hospital/navbar.html' %}
+       
+        {% if messages %} 
+            {% for message in messages  %}
+            {% comment %} <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{message}}.</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div> {% endcomment %}
+           {% if message.tags == "ERROR" %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{message}}.</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+            {% if message.tags == "SUCCESS" %}
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <strong>{{message}}.</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+            {% endfor %}
+        {% endif %}
         {% block content %}
 
         {% endblock content %}
 
-        {% include 'radmin/settings.html' %}
+        {% include 'hospital/settings.html' %}
     </div>
   
 </div>

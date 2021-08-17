@@ -51,13 +51,13 @@ def dologin(request):
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))
                     else:
-                        return HttpResponseRedirect(reverse('hospital_add'))
+                        return HttpResponseRedirect(reverse('radmin_home'))
                         # return HttpResponseRedirect(reverse('admin:index'))
                 if user.user_type=="2":
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))
                     else:
-                        return HttpResponseRedirect(reverse('hospital_add'))
+                        return HttpResponseRedirect(reverse('hospital_dashboard'))
                 elif user.user_type=="3":
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))

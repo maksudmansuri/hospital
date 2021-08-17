@@ -23,12 +23,12 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     pass
                 elif  modulename == "chat.views":
                     pass
-                else:
+                else: 
                     return HttpResponseRedirect(reverse("radmin_home"))
             elif user.user_type=="2":
-                if modulename == "staffs.views" or modulename == "django.views.static":
+                if modulename == "hospital.views" or modulename == "django.views.static":
                     pass
-                elif modulename == "front.views":
+                elif modulename == "accounts.logoutview":
                     pass
                 elif modulename == "media":
                     pass
@@ -37,7 +37,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 elif  modulename == "chat.views":
                     pass
                 else:
-                    return HttpResponseRedirect(reverse("instructor_dashboard"))
+                    return HttpResponseRedirect(reverse("admin_hospital_all"))
             elif user.user_type=="3":
                 if modulename == "customers.views" or modulename == "django.views.static":
                     pass

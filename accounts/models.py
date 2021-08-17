@@ -112,7 +112,7 @@ class PhoneOTP(models.Model):
 class AdminHOD(models.Model):
     id                  =models.AutoField(primary_key=True)
     admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
-    profile_pic         =models.FileField(default = "")
+    profile_pic         =models.FileField(null=True,default="")
     created_at          =models.DateTimeField(auto_now_add=True)
     updated_at          =models.DateTimeField(auto_now_add=True)
     objects             =models.Manager()
@@ -122,8 +122,9 @@ class Hospitals(models.Model):
     admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     hopital_name        =models.CharField(max_length=500,default="",null=True)
     about               =models.TextField(blank=True,null=True,default="")
-    registration_number =models.DateField(blank=True,null=True,default="")
-    address             =models.CharField(max_length=500,blank=True,null=True,default="")
+    # registration_number =models.DateField(blank=True,null=True,default="")
+    address1             =models.CharField(max_length=500,blank=True,null=True,default="")
+    address2             =models.CharField(max_length=500,blank=True,null=True,default="")
     city                =models.CharField(max_length=50,blank=True,null=True,default="")
     pin_code            =models.CharField(max_length=50,blank=True,null=True,default="")
     state               =models.CharField(max_length=50,blank=True,null=True,default="")
@@ -134,6 +135,7 @@ class Hospitals(models.Model):
     profile_pic         =models.FileField(upload_to="hospital/profile",max_length=500,null=True,default="")
     is_appiled          =models.BooleanField(blank=True,null=True,default=False)
     is_verified         =models.BooleanField(blank=True,null=True,default=False)
+    is_deactive         =models.BooleanField(blank=True,null=True,default=False)
     registration_proof  =models.FileField(upload_to="hospital/documents", max_length=500,blank=True,null=True,default="")
     establishment_year  =models.DateField(auto_now=False, auto_now_add=False,blank=True,null=True)
     registration_number =models.CharField(max_length=50,blank=True,null=True,default="")
@@ -273,6 +275,17 @@ class UserPayments(models.Model):
     account_info        =models.IntegerField()
     created_at          =models.DateTimeField(auto_now_add=True)
     updated_at          =models.DateTimeField(auto_now_add=True)
+
+class DoctorForHospital(models.Model):
+    id                  =models.AutoField(primary_key=True)
+    hospital            =models.ForeignKey(Hospitals, on_delete=models.CASCADE)
+    doctor              =models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE)
+    created_at          =models.DateTimeField(auto_now_add=True)
+    updated_at          =models.DateTimeField(auto_now_add=True)
+    objects             =models.Manager()
+     
+    def __str__(self):
+        return self.hospital.hospital_name
 
 @receiver(post_save,sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender,instance=None,created=False,**kwargs):

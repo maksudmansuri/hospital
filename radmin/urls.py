@@ -1,12 +1,10 @@
 from django.urls import path
 from .import views
- 
-urlpatterns = [ 
-    path('',views.indexView,name="radmin_home"),
-    path('hospital_all',views.hospitalallView,name="hospital_all"),
-    path('hospital_add',views.hospitalAddViews.as_view(),name="hospital_add"),
-    path('hospital_update',views.hospitalUpdateView,name="hospital_update"),
-    path('hospital_delete',views.hospitalDeleteView,name="hospital_delete"),
+  
+urlpatterns = [  
+    path('radmin_home',views.indexView,name="radmin_home"),
+    path('admin_hospital_all',views.hospitalallViews.as_view(),name="manage_hospital"),
+    path('hospital_delete/<id>',views.hospitalDelete,name="hospital_delete"),
 
     path('virtual',views.virtualView,name="virtual"),
     path('doctor_all',views.doctorallView,name="doctor_all"),
@@ -29,4 +27,7 @@ urlpatterns = [
     path('payments',views.paymentsviews,name="payments"),
     path('expences',views.expencesviews,name="expences"),
  
+    # ACTIVATE DEACTIVATE HOSPITAL, DOCTOR, PATIENT, LABS, PHARMACY
+    path('hospitalactivate/<id>',views.hospitalActivate,name="hospitalactivate"),
+    path('hospitaldeactivate/<id>',views.hospitalDeactivate,name="hospitaldeactivate"),
 ]

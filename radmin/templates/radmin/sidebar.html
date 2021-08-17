@@ -10,14 +10,18 @@
             <!-- Menu: main ul --> 
 
             <ul class="menu-list flex-grow-1 mt-3">
+            {% url 'manage_hospital' as manage_hospital %}
                 <li class="collapsed">
-                <a class="m-link active" data-bs-toggle="collapse" data-bs-target="#dashboard" href="#">
+                <a class="m-link {% if request.path == manage_hospital %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#dashboard" href="#">
                 <i class="icofont-ui-home fs-5"></i> <span>Hospitals</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                 <!-- Menu: Sub menu ul -->
                     <ul class="sub-menu collapse show" id="dashboard">
-                        <li><a class="ms-link active" href="{% url 'hospital_all' %}">All Hospitals</a></li>
-                        <li><a class="ms-link active" href="{% url 'hospital_add' %}">Add Hospital</a></li>
-                        <li><a class="ms-link active" href="{% url 'hospital_update' %}">Update Hospital</a></li>
+                        <li><a class="ms-link {% if request.path == manage_hospital %} active{% endif %}" href="{% url 'manage_hospital' %}">Manage Hospital</a></li>
+                        <li><a class="ms-link" href="#">Manage Doctor</a></li>
+                        <li><a class="ms-link" href="#">Manage Patient</a></li>
+                        <li><a class="ms-link" href="#">Manage Labs</a></li>
+                        <li><a class="ms-link" href="#">Manage Pharmacy</a></li>
+                        <li><a class="ms-link" href="#">Manage Accidents</a></li>
                         <li><a class="ms-link" href="coviddashboard.html"> Covid-19 Dashboard</a></li>
                     </ul>
                 </li>

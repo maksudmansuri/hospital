@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from datetime import timedelta
 import os
 from pathlib import Path
+import django_heroku
+import dj_database_url 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -55,9 +57,10 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'accounts.LoginCheckMiddleWare.LoginCheckMiddleWare',
+    # 'accounts.LoginCheckMiddleWare.LoginCheckMiddleWare',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'relief.urls'
@@ -171,6 +174,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 
+STATICFILE_STORAGE = "whitenoise.storage.CompressedMainfestStaticFilesStorage"
 
 BASE_URL="http://127.0.0.1:8000"
 
@@ -187,3 +191,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'intellecttec@gmail.com'
 EMAIL_HOST_PASSWORD ="onpiiddefwaschwi"
 EMAIL_PORT = 587
+
+
+django_heroku.settings(locals())

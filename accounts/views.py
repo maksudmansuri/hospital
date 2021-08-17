@@ -5,7 +5,8 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic.base import TemplateResponseMixin
+from django.urls.base import reverse_lazy
+from django.views.generic.base import RedirectView, TemplateResponseMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from .models import CustomUser
@@ -56,7 +57,7 @@ def dologin(request):
                 if user.user_type=="2":
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))
-                    else:
+                    else: 
                         return HttpResponseRedirect(reverse('hospital_dashboard'))
                 elif user.user_type=="3":
                     if 'next' in request.POST:
@@ -69,8 +70,11 @@ def dologin(request):
                     else:
                         return HttpResponseRedirect(reverse('home'))
                 else:
-                # For Djnago default Admin Login return HttpResponseRedirect(reverse('admin:index'))
-                    return HttpResponseRedirect(reverse('admin_home'))
+                # For Djnago default Admin Login 
+                    return HttpResponseRedirect(reverse('admin'))
+                    
+                    # return RedirectView.as_view(url=reverse_lazy('admin:index'))
+                    # return HttpResponseRedirect(reverse('admin_home'))
             else:
                 # message.add_message(request,messages.ERROR,"Please Verify Your Account First")
                 return redirect('/accounts/dologin')

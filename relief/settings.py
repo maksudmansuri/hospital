@@ -14,6 +14,7 @@ from datetime import timedelta
 import os
 from pathlib import Path
 import django_heroku
+# import django_heroku
 import dj_database_url 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,7 +30,7 @@ SECRET_KEY = 'django-insecure-cq&8ek!(y7z)db8vek(ul2p37o_gd%^s_o^mj102l&)*k9+sds
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['reliefprodemo.herokuapp.com/']
 
 
 # Application definition
@@ -194,3 +195,4 @@ EMAIL_PORT = 587
 
 
 django_heroku.settings(locals())
+

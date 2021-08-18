@@ -1,1 +1,1 @@
-web: gunicorn eca.wsgi
+web: gunicorn relief.wsgi

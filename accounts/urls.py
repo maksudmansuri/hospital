@@ -1,5 +1,6 @@
 from django.urls import path
 from .import views,logoutview
+from .import adminView
 
 urlpatterns = [ 
     # path('auth_404',views.auth404View,name="auth_404"), 
@@ -18,5 +19,9 @@ urlpatterns = [
     path('labsingup', views.LabSingup.as_view(),name='labsingup'),
     path('pharmacysingup', views.PharmacySingup.as_view(),name='pharmacysingup'),
     path('activate/<uidb64>/<token>', views.activate,name='activate'),
+
+    #adminHOD singup PAge i=only access by superuser
+    path('adminsingup',adminView.AdminSingup.as_view(),name="adminsingup" ),
+
     
 ]

@@ -17,7 +17,7 @@ class HospitalStaffs(models.Model):
     objects                 =           models.Manager()
     
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return self.name_title + self.first_name + " " + self.last_name
 
 class Departments(models.Model):
     id                  =models.AutoField(primary_key=True)

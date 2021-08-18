@@ -12,7 +12,7 @@
         <div class="row align-items-center">
             <div class="border-0 mb-4">
                 <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
-                    <h3 class="fw-bold mb-0">All Hospitals</h3>
+                    <h3 class="fw-bold mb-0">All Staff</h3>
                     <div class="col-auto d-flex w-sm-100">
                         <button type="button" class="btn btn-primary btn-set-task w-sm-100" data-bs-toggle="modal" data-bs-target="#depadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Staff</button>
                     </div>
@@ -127,14 +127,14 @@
                         </div>                        
                     </div>
                     <div class="mb-3">
-                        <label for="exampleFormControlInput1111" class="form-label">Phone</label>
-                        <input type="text" class="form-control" id="staffphone" name="phone">
+                        <label for="mobile" class="form-label">Mobile</label>
+                        <input type="text" class="form-control" id="mobile" name="mobile">
                     </div>
                     <div class="form-group" style="margin-left: 20px;">
                         <label class="custom-switch mt-2">
-                            <input type="checkbox" name="is_active" id ="is_active" class="custom-switch-input"  {% if product.is_active %} checked{% endif %}>
+                            <input type="checkbox" name="is_active" id ="is_active" class="custom-switch-input">
                             <span class="custom-switch-indicator" ></span>
-                            <span class="custom-switch-description">Product is active ?</span>
+                            <span class="custom-switch-description">Staff is active ?</span>
                         </label>
                     </div>
                    
@@ -191,8 +191,8 @@
                         </div>                        
                     </div>
                     <div class="mb-3">
-                        <label for="exampleFormControlInput1111" class="form-label">Phone</label>
-                        <input type="text" class="form-control" id="staffphone" name="phone" value="{{staff.mobile}}">
+                        <label for="mobile" class="form-label">Mobile</label>
+                        <input type="text" class="form-control" id="mobile" name="mobile" value="{{staff.mobile}}">
                     </div>
                     <div class="form-group" style="margin-left: 20px;">
                         <label class="custom-switch mt-2">
@@ -267,6 +267,6 @@
    
 
 
-    })
+    
 </script>
 {% endblock custom_js %}

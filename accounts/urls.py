@@ -1,13 +1,10 @@
+from accounts import profilePic
 from django.urls import path
 from .import views,logoutview
 from .import adminView
+from .import profilePic
 
 urlpatterns = [ 
-    # path('auth_404',views.auth404View,name="auth_404"), 
-    # path('auth_password_reset',views.auth_password_resetView,name="auth_password_reset"), 
-    # path('auth_signin',views.auth_signinView,name="auth_signin"), 
-    # path('auth_signup',views.auth_signupView,name="auth_signup"), 
-    # path('auth_two_step',views.auth_two_stepView,name="auth_two_step"),
     path("verifyOTP/<phone>", views.verifyOTP, name="OTP_Gen"),
     path("verifyPhone/<phone>", views.verifyPhone, name="verifyPhone"),
     path('dologin', views.dologin,name='dologin'),
@@ -22,6 +19,8 @@ urlpatterns = [
 
     #adminHOD singup PAge i=only access by superuser
     path('adminsingup',adminView.AdminSingup.as_view(),name="adminsingup" ),
+    #upload profile pic
+    path('profile_picUpload',profilePic.profilePicUpload,name="profile_picUpload")
 
     
 ]

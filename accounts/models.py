@@ -75,6 +75,7 @@ class CustomUser(AbstractBaseUser):
     is_Email_Verified      = models.BooleanField(blank=False, default=False)
     counter         = models.IntegerField(default=0, blank=False) #OTP counter
     otp_session_id  = models.CharField(max_length=120, null=True, default = "")
+    profile_pic         =models.FileField(upload_to="user/profile_pic",max_length=500,null=True,default="")
     USERNAME_FIELD = 'email'
 
     REQUIRED_FIELDS = ['username',]
@@ -112,7 +113,7 @@ class PhoneOTP(models.Model):
 class AdminHOD(models.Model):
     id                  =models.AutoField(primary_key=True)
     admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
-    profile_pic         =models.FileField(null=True,default="")
+    
     created_at          =models.DateTimeField(auto_now_add=True)
     updated_at          =models.DateTimeField(auto_now_add=True)
     objects             =models.Manager()

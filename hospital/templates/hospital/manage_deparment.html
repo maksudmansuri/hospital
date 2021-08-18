@@ -1,0 +1,255 @@
+{% extends 'hospital/base.html' %}
+{% load static %}
+{% block title %} :: I-Health::  Hospitals {% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block content %}
+ 
+    <!-- Body: Body -->       
+<div class="body d-flex py-lg-3 py-md-2">
+    <div class="container-xxl">
+        <div class="row align-items-center">
+            <div class="border-0 mb-4">
+                <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                    <h3 class="fw-bold mb-0">All Department</h3>
+                    <div class="col-auto d-flex w-sm-100">
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100" data-bs-toggle="modal" data-bs-target="#depadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Department</button>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- Row end  -->
+        <div class="row clearfix g-3">
+            <div class="col-sm-12">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Department Head</th> 
+                                    <th>Department Name</th> 
+                                    <th>Location</th>   
+                                    <th>Active</th>   
+                                    <th>Actions</th>  
+                                </tr>
+                            </thead> 
+                            <tbody>
+                            {% for department in departments %}
+                                <tr>
+                                    <td>
+                                        <span class="fw-bold">{{department.id}}</span>
+                                    </td>
+                                    <td>
+                                        
+                                        <span class="fw-bold ms-1">{{department.hospital_staff}}</span>
+                                    </td>
+                                    <td>
+                                        {{department.department_name}}
+                                    </td>
+                                    <td>
+                                         {{department.mobile}}
+                                    </td>
+                                   
+                                    </td>
+                                   
+                                   
+                                    {% if department.is_active %}
+                                    <td>
+                                        <a href="{% url 'deactive_department' department.id %}" class="btn btn-primary">Active</a>
+                                    </td>
+                                    {% else%}
+                                    <td>
+                                            <a href="{% url 'active_department' department.id %}"  class="btn btn-danger" >D-tive</a>
+                                    </td>
+                                    {% endif %}
+                                    <td>
+                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{department.id}}"><i class="icofont-edit text-success"></i></button>
+                                            
+                                            <a type="button" class="btn btn-outline-secondary deleterow" id="deletestaff" href="{% url 'delete_department' department.id %}" ><i class="icofont-ui-delete text-danger"></i><a>
+
+                                        </div>
+                                    </td>
+                                    
+                                   
+                                    
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><!-- Row End -->
+    </div>
+</div>
+ 
+{% endblock content %}
+{% block modal_fade %}
+<!-- Add Staff-->
+        <div class="modal fade" id="depadd" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+            <div class="modal-content">
+            <form id="depadd" method="post">
+            {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel"> Department Add</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="department_name" class="form-label">Department Name *</label>
+                        <input type="text" class="form-control" name="department_name" id="department_name">
+                    </div>
+                    <div class="mb-3">
+                        <label  class="form-label">Department Head *</label>
+                        <select class="form-select" aria-label="Default select example" name="hospital_staff">
+                         <option disabled selected>Select Staff Member</option>
+                        {% for staff in  staffs %}
+                        <option value="{{staff.id}}">{{staff}}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                    <label for="phone" class="form-label">Mobile</label>
+                    <input type="text" class="form-control" id="mobile" name="mobile">
+                    </div>
+                    <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" name="email" id="email">
+                    </div>
+
+                                           
+                    <div class="form-group" style="margin-left: 20px;">
+                        <label class="custom-switch mt-2">
+                            <input type="checkbox" name="is_active" id ="is_active" class="custom-switch-input">
+                            <span class="custom-switch-indicator" ></span>
+                            <span class="custom-switch-description">Department is active ?</span>
+                        </label>
+                    </div>
+                   
+                </div>
+               
+                <div class="modal-footer">
+                    {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button> {% endcomment %}
+                    <button type="submit" class="btn btn-primary submit_btn">Add</button>
+                </div>
+
+            </div>
+             </form>
+            </div>
+        </div>
+
+        <!-- Edit Department-->
+        {% for department in departments %}
+        <div class="modal fade" id="depedit{{department.id}}" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+            <div class="modal-content">
+            <form id="departmentupdate" method="post" action="{% url 'update_department' %}">
+            {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel">Department Edit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+ </div>
+                
+ <div class="modal-body">
+      <div class="mb-3">
+                        <label for="department_name" class="form-label">Department Name *</label>
+                    <input type="text" class="form-control" name="department_name" id="department_name" value="{{department.department_name}}">
+      </div>
+      <div class="mb-3">
+                        <label  class="form-label">Department Head *</label>
+                        <select class="form-select" aria-label="Default select example" name="hospital_staff">
+                         <option disabled selected>Select Staff Member</option>
+                        {% for staff in  staffs %}
+                        <option {% if staff == department.hospital_staff %}selected{% endif %} value="{{staff.id}}">{{staff}}</option>
+                        {% endfor %}
+                        </select>
+      </div>
+      <div class="mb-3">
+                    <label for="phone" class="form-label">Mobile</label>
+                    <input type="text" class="form-control" id="mobile" name="mobile" value="{{department.mobile}}">
+      </div>
+      <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" name="email" id="email" value="{{department.email}}">
+      </div>
+
+                                           
+       <div class="form-group" style="margin-left: 20px;">
+                        <label class="custom-switch mt-2">
+                            <input type="checkbox" name="is_active" id ="is_active" class="custom-switch-input" {% if department.is_active%}checked{% endif %} >
+                            <span class="custom-switch-indicator" ></span>
+                            <span class="custom-switch-description">Department is active ?</span>
+           </label>
+           <input type="hidden" id="departmentupdateid" name="id" value="{{department.id}}">
+        </div>
+                   
+ </div>
+               
+ <div class="modal-footer">
+                    {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button> {% endcomment %}
+                    <button type="submit" class="btn btn-primary submit_btn">Add</button>
+ </div>
+                
+               
+
+            </div>
+             </form>
+            </div>
+            </div>
+        </div> 
+        {% endfor %}
+{% endblock modal_fade %}
+
+{% block custom_js %}
+<script>
+    // project data table
+    $(document).ready(function() {
+        $('#myProjectTable')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+        $('.deleterow').on('click',function(){
+        var tablename = $(this).closest('table').DataTable();  
+        tablename
+            .row( $(this)
+            .parents('tr') )
+            .remove()
+            .draw();
+
+        } );
+       
+
+    });
+    //submit form for add staff
+    $(".submit_btn").click(function(){
+        var form=new FormData($("#depadd"));
+       // form.append("long_desc",tinyMCE.activeEditor.getContent());
+
+        //Ajax code
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange=function(){
+            if(xhr.status==200){
+                console.log(xhr.responseText);
+            }
+        }
+        xhr.open("POST","{% url 'manage_department' %}",true);
+       
+        xhr.send(form);
+        
+        setTimeout(location.reload.bind(location), 2000);
+
+        //update staff from edit page fade
+       
+
+    })
+   
+</script>
+{% endblock custom_js %}

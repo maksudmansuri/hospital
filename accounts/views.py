@@ -51,22 +51,30 @@ def dologin(request):
                 if user.user_type=="1":
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))
+                    # elif user.profile_pic:
+                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else:
                         return HttpResponseRedirect(reverse('radmin_home'))
                         # return HttpResponseRedirect(reverse('admin:index'))
                 if user.user_type=="2":
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))
+                    # elif user.profile_pic:
+                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else: 
                         return HttpResponseRedirect(reverse('hospital_dashboard'))
                 elif user.user_type=="3":
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))
+                    # elif user.profile_pic:
+                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else:
                         return HttpResponseRedirect(reverse('admin_home'))
                 elif user.user_type=="4":
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))
+                    # elif user.profile_pic:
+                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else:
                         return HttpResponseRedirect(reverse('home'))
                 else:

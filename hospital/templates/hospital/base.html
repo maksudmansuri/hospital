@@ -54,13 +54,15 @@
         {% block content %}
 
         {% endblock content %}
+        
 
         {% include 'hospital/settings.html' %}
+        {% block modal_fade %}
+        {% endblock modal_fade %}
     </div>
   
 </div>
 
-<!-- Jquery Core Js -->
 <script src="{% static '/radmin/assets/bundles/libscripts.bundle.js'%}"></script>
 
 <!-- Plugin Js -->

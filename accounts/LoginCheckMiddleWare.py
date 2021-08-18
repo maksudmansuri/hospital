@@ -17,6 +17,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     pass
                 elif modulename == "accounts.logoutview":
                     pass
+                elif modulename == "accounts.profilePic":
+                    pass
                 elif modulename == "media.views":
                     pass
                 elif modulename == "django.contrib.auth.views":
@@ -27,6 +29,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     return HttpResponseRedirect(reverse("radmin_home"))
             elif user.user_type=="2":
                 if modulename == "hospital.views" or modulename == "django.views.static":
+                    pass
+                elif modulename == "accounts.profilePic":
                     pass
                 elif modulename == "accounts.logoutview":
                     pass
@@ -40,6 +44,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     return HttpResponseRedirect(reverse("admin_hospital_all"))
             elif user.user_type=="3":
                 if modulename == "customers.views" or modulename == "django.views.static":
+                    pass
+                elif modulename == "accounts.profilePic":
                     pass
                 elif modulename == "front.views":
                     pass
@@ -58,6 +64,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
             elif user.user_type=="4":
                 if modulename == "merchant.views" or modulename == "django.views.static":
                     pass
+                elif modulename == "accounts.profilePic":
+                    pass
                 if modulename == "front.views":
                     pass
                 elif modulename == "media":
@@ -67,6 +75,8 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     # return HttpResponseRedirect(reverse("django/contrib/admin"))
             elif user.user_type=="5":
                 if modulename == "ecaadmin.views" or modulename == "django.views.static":
+                    pass
+                elif modulename == "accounts.profilePic":
                     pass
                 elif modulename == "front.views":
                     pass

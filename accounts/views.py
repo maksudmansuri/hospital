@@ -104,16 +104,16 @@ class HospitalSingup(SuccessMessageMixin,CreateView):
         OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
         print(OTP.at(user.counter))
         otp=OTP.at(user.counter)
-        # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
-        # res = conn.getresponse()
-        # data = res.read()
-        # data=data.decode("utf-8")
-        # data=ast.literal_eval(data)
-        # print(data)
-        # if data["Status"] == 'Success':
-        #     user.otp_session_id = data["Details"]
-        #     user.save()
-        #     print('In validate phone :'+user.otp_session_id)
+        conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
+        res = conn.getresponse()
+        data = res.read()
+        data=data.decode("utf-8")
+        data=ast.literal_eval(data)
+        print(data)
+        if data["Status"] == 'Success':
+            user.otp_session_id = data["Details"]
+            user.save()
+            print('In validate phone :'+user.otp_session_id)
         messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
         return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
         # else:

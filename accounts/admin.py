@@ -7,7 +7,7 @@ class AuthorAdmin(admin.ModelAdmin):
 
 admin.site.register(CustomUser, AuthorAdmin)
 admin.site.register(HospitalDoctors)
-admin.site.register(HospitalDoctors)
+admin.site.register(AdminHOD)
 admin.site.register(HospitalPhones)
 admin.site.register(DoctorForHospital)
 admin.site.register(Hospitals)

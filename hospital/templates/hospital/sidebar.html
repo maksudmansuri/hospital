@@ -23,13 +23,15 @@
                 <li><a class="m-link" href="virtual.html"><i class="icofont-ui-video-chat fs-5"></i> <span>I-Health Virtual</span></a></li>
                 {% url 'manage_staff' as manage_staff %}
                 {% url 'manage_department' as manage_department %}
+                {% url 'manage_room' as manage_room %}
                 <li class="collapsed">
-                    <a class="m-link {% if request.path == manage_staff %} active {% endif %}{% if request.path == manage_department %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Department" href="#">
-                        <i class="icofont-nurse-alt fs-5"></i>  <span>Department</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
+                    <a class="m-link {% if request.path == manage_staff %} active {% endif %}{% if request.path == manage_department %} active {% endif %}{% if request.path == manage_room %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Department" href="#">
+                        <i class="icofont-nurse-alt fs-5"></i> <span>Department</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                         <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse {% if request.path == manage_staff %} show {% endif %} {% if request.path == manage_department %} show {% endif %}" id="menu-Department">
+                        <ul class="sub-menu collapse {% if request.path == manage_staff %} show {% endif %} {% if request.path == manage_department %} show {% endif %}{% if request.path == manage_room %} show {% endif %}" id="menu-Department">
                             <li><a class="ms-link{% if request.path == manage_staff %} active {% endif %}" href="{% url 'manage_staff' %}">Manage Staff</a></li>
                             <li><a class="ms-link{% if request.path == manage_department %} active {% endif %}" href="{% url 'manage_department' %}">Manage Department</a></li>
+                            <li><a class="ms-link{% if request.path == manage_room %} active {% endif %}" href="{% url 'manage_room' %}">Manage Rooms</a></li>
                         </ul>
                 </li>
                 <li class="collapsed">

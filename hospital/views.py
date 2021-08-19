@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.files.storage import FileSystemStorage
-from hospital.models import ContactPerson, DepartmentPhones, Departments, HospitalMedias, HospitalStaffs, Insurances
+from hospital.models import ContactPerson, DepartmentPhones, Departments, HospitalMedias, HospitalRooms, HospitalStaffs, Insurances, RoomOrBadTypeandRates
 from accounts.models import CustomUser, HospitalPhones, Hospitals
 from django.urls import reverse
 
@@ -282,8 +282,8 @@ class manageDepartmentclassView(SuccessMessageMixin,CreateView):
         if is_active == "on":
             active= True
         hospital=Hospitals.objects.get(admin=request.user)
-        hospitalstaff = HospitalStaffs.objects.get(id=hospital_staff)
-        hospitaldepartments = Departments(hospital=hospital,department_name=department_name,hospital_staff=hospitalstaff,email=email,mobile=mobile,is_active=active)
+        hospitalstaff1 = HospitalStaffs.objects.get(id=hospital_staff)
+        hospitaldepartments = Departments(hospital=hospital,department_name=department_name,hospital_staff=hospitalstaff1,email=email,mobile=mobile,is_active=active)
         hospitaldepartments.save()
         # except:
         #     messages.add_message(request,messages.ERROR,"Connection Error Try after some time")
@@ -293,19 +293,18 @@ class manageDepartmentclassView(SuccessMessageMixin,CreateView):
 def updateDepartment(request):
      if request.method == "POST":
         id= request.POST.get("id")
-        name_title = request.POST.get("name_title")
-        first_name = request.POST.get("first_name")
-        last_name = request.POST.get("last_name")
+        department_name = request.POST.get("department_name")
+        hospital_staff = request.POST.get("hospital_staff")
         email = request.POST.get("email")
         mobile = request.POST.get("phone")
         is_active = request.POST.get("is_active")
         active = False
         if is_active == "on":
             active= True
+        hospitalstaff1 = HospitalStaffs.objects.get(id=hospital_staff)
         hospitaldepartment = Departments.objects.get(id=id)
-        hospitaldepartment.name_title=name_title
-        hospitaldepartment.first_name=first_name
-        hospitaldepartment.last_name=last_name
+        hospitaldepartment.department_name=department_name
+        hospitaldepartment.hospital_staff=hospitalstaff1
         hospitaldepartment.email=email
         hospitaldepartment.is_active=active
         hospitaldepartment.save()
@@ -333,3 +332,104 @@ def deleteHospitalDepartment(request,id):
     hospitaldepartment.delete()
     messages.add_message(request,messages.SUCCESS,"Successfully Delete")
     return HttpResponseRedirect(reverse("manage_department"))
+
+class manageRoomclassView(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):
+        try:
+            hospital=Hospitals.objects.get(admin=request.user)
+            roooOrbadtypeandrates = RoomOrBadTypeandRates.objects.filter(hospital=hospital)
+            rooms = HospitalRooms.objects.filter(hospital=hospital)
+            prices = RoomOrBadTypeandRates.objects.filter(hospital=hospital)
+            departments = Departments.objects.filter(hospital=hospital)
+            # departments = Departments.objects.filter(hospital=hospital)
+        except hospital.DoesNotExist:
+            messages.add_message(request,messages.ERROR,"user not available")
+            return HttpResponseRedirect(reverse("manage_staff"))        
+        param={'hospital':hospital,'rooms':rooms,'departments':departments,'prices':prices}
+        return render(request,"hospital/manage_room.html",param)
+
+    def post(self, request, *args, **kwargs):
+        floor = request.POST.get("floor")
+        room_no = request.POST.get("room_no")
+        room = request.POST.get("room")
+        department = request.POST.get("department")
+        print(room)
+        is_active = request.POST.get("is_active")
+        active = False
+        if is_active == "on":
+            active= True
+        hospital=Hospitals.objects.get(admin=request.user)
+        department = Departments.objects.get(id=department)
+        room_type = RoomOrBadTypeandRates.objects.get(id=room)
+        hospitalroom = HospitalRooms(hospital=hospital,department=department,room=room_type,floor=floor,room_no=room_no,is_active=active)
+        hospitalroom.save()
+        # except:
+        #     messages.add_message(request,messages.ERROR,"Connection Error Try after some time")
+        #     return HttpResponseRedirect(reverse("manage_staff"))
+        return HttpResponseRedirect(reverse("manage_room"))
+
+def updateRoom(request):
+    if request.method == "POST":
+        id= request.POST.get("id")
+        name_title = request.POST.get("name_title")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        email = request.POST.get("email")
+        mobile = request.POST.get("phone")
+        is_active = request.POST.get("is_active")
+        active = False
+        if is_active == "on":
+            active= True
+        hospitalroom = HospitalRooms.objects.get(id=id)
+        hospitalroom.name_title=name_title
+        hospitalroom.first_name=first_name
+        hospitalroom.last_name=last_name
+        hospitalroom.email=email
+        hospitalroom.is_active=active
+        hospitalroom.save()
+        messages.add_message(request,messages.SUCCESS,"Successfully Updated")
+        return HttpResponseRedirect(reverse("manage_room"))
+
+def activeRoom(request,id):
+    hospitalroom = HospitalRooms.objects.get(id=id)
+    if hospitalroom:
+        hospitalroom.is_active=True        
+        hospitalroom.save()
+    # hospitals_list=Hospitals.objects.filter((Q(is_appiled=True) | Q(is_verified=True))  & Q(admin__is_active=True) & Q(admin__user_type=3))
+    return HttpResponseRedirect(reverse("manage_room"))
+
+def deactiveRoom(request,id):
+    hospitalroom = HospitalRooms.objects.get(id=id)
+    if hospitalroom:
+        hospitalroom.is_active=False        
+        hospitalroom.save()
+    # hospitals_list=Hospitals.objects.filter((Q(is_appiled=True) | Q(is_verified=True))  & Q(admin__is_active=True) & Q(admin__user_type=3))
+    return HttpResponseRedirect(reverse("manage_room"))
+
+def deleteHospitalRoom(request,id):
+    hospitalroom = HospitalRooms.objects.get(id=id)
+    hospitalroom.delete()
+    messages.add_message(request,messages.SUCCESS,"Successfully Deleted")
+    return HttpResponseRedirect(reverse("manage_room"))
+
+def PriceCreate(request):
+    if request.method == "POST":
+        rooms_price = request.POST.get("rooms_price") 
+        room_type = request.POST.get("room_type")
+        is_active = request.POST.get("is_active")
+        active = False
+        if is_active == "on":
+            active= True
+        try:
+            hospital=Hospitals.objects.get(admin=request.user)
+            roomorbadtypeandrate= RoomOrBadTypeandRates(hospital=hospital,room_type=room_type,rooms_price=rooms_price,is_active=active)
+            roomorbadtypeandrate.save()
+        except hospital.DoesNotExist:
+            messages.add_message(request,messages.ERROR,"user not available")
+        return HttpResponseRedirect(reverse("manage_room"))
+
+def deletePrice(request,id):
+    roomorbadtypeandrate = RoomOrBadTypeandRates.objects.get(id=id)
+    roomorbadtypeandrate.delete()
+    messages.add_message(request,messages.SUCCESS,"Successfully Delete")
+    return HttpResponseRedirect(reverse("manage_room"))

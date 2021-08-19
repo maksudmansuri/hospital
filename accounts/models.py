@@ -193,6 +193,7 @@ class HospitalDoctors(models.Model):
     address             =models.CharField(max_length=500,blank=True,null=True,default="")
     city                =models.CharField(max_length=250,blank=True,null=True,default="")
     state               =models.CharField(max_length=250,blank=True,null=True,default="")
+    ssn_id              =models.IntegerField(default=1)
     country             =models.CharField(max_length=250,blank=True,null=True,default="")
     zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
     phone               =models.CharField(max_length=50,default="")

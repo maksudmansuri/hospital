@@ -42,7 +42,7 @@
                                     </td>
                                     <td>
                                         
-                                        <span class="fw-bold ms-1">{{department.hospital_staff}}</span>
+                                        <span class="fw-bold ms-1"> Dr.{{department.hospital_staff_doctor}}</span>
                                     </td>
                                     <td>
                                         {{department.department_name}}
@@ -105,10 +105,10 @@
                     </div>
                     <div class="mb-3">
                         <label  class="form-label">Department Head *</label>
-                        <select class="form-select" aria-label="Default select example" name="hospital_staff">
+                        <select class="form-select" aria-label="Default select example" name="hospital_staff_doctor">
                          <option disabled selected>Select Staff Member</option>
-                        {% for staff in  staffs %}
-                        <option value="{{staff.id}}">{{staff}}</option>
+                        {% for doctor in  doctors %}
+                        <option value="{{doctor.id}}"> Dr. {{doctor}}</option>
                         {% endfor %}
                         </select>
                     </div>
@@ -161,10 +161,10 @@
       </div>
       <div class="mb-3">
                         <label  class="form-label">Department Head *</label>
-                        <select class="form-select" aria-label="Default select example" name="hospital_staff">
+                        <select class="form-select" aria-label="Default select example" name="hospital_staff_doctor">
                          <option disabled selected>Select Staff Member</option>
-                        {% for staff in  staffs %}
-                        <option {% if staff == department.hospital_staff %}selected{% endif %} value="{{staff.id}}">{{staff}}</option>
+                        {% for doctor in  doctors %}
+                        <option {% if doctor == department.hospital_staff_doctor %}selected{% endif %} value="{{doctor.id}}"> Dr. {{doctor}}</option>
                         {% endfor %}
                         </select>
       </div>

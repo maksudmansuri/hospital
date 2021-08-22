@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
 from accounts import adminView
+from relief import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('radmin/', include("radmin.urls")),
@@ -25,4 +27,5 @@ urlpatterns = [
     path('patient/', include("patient.urls")),
     path('lab/', include("lab.urls")),
     path('pharmacy/', include("pharmacy.urls")),
-]
+    
+]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,6 +1,7 @@
+import hospital
 from django.db import models
-from django.db.models.fields import CharField, IntegerField, related
-from accounts.models import HospitalDoctors, Hospitals,CustomUser
+from django.db.models.fields import AutoField, CharField, IntegerField, related
+from accounts.models import DoctorForHospital, HospitalDoctors, Hospitals,CustomUser
 
 # Create your models here.
 
@@ -21,10 +22,40 @@ class HospitalStaffs(models.Model):
     def __str__(self):
         return self.name_title + self.first_name + " " + self.last_name
 
+class HospitalStaffDoctors(models.Model):
+    id                  =models.AutoField(primary_key=True)
+    email               =models.EmailField(default="", max_length=254)
+    doctor              =models.ForeignKey(HospitalDoctors, on_delete=models.CASCADE)
+    hospital            =models.ForeignKey(Hospitals, on_delete=models.CASCADE)
+    ssn_id              =models.CharField(max_length=50,default="",blank=True,null=True)
+    joindate            =models.DateField(blank=True,null=True,default="")
+    is_virtual_available=models.BooleanField(blank=True,null=True,default=False)   
+    is_online           =models.BooleanField(blank=True,null=True,default=False)   
+    is_active           =models.BooleanField(blank=True,null=True,default=False) 
+    created_at          =models.DateTimeField(auto_now=True)
+    updated_at          =models.DateTimeField(auto_now=True)
+    objects             =models.Manager()
+    
+    def __str__(self):
+        return self.doctor.fisrt_name + " " + self.doctor.last_name
+
+class HospitalStaffDoctorSchedual(models.Model):
+    id                          =models.AutoField(primary_key=True)
+    hospital                    =models.ForeignKey(Hospitals, on_delete=models.CASCADE)
+    hospitalstaffdoctor   =models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE)
+    days                        =models.DateTimeField(max_length=50,default="",blank=True,null=True)
+    SHIFT_CHOICE                =(("Morning","Morning"),("Evening","Evening"),("Full_Day","Full_Day"))
+    shift                       =models.CharField(choices=SHIFT_CHOICE, max_length=50,default="",blank=True,null=True)
+    start_time                  =models.DateTimeField(auto_now=True)
+    end_time                    =models.DateTimeField(auto_now=True)
+    created_at                  =models.DateTimeField(auto_now=True)
+    updated_at                  =models.DateTimeField(auto_now=True)
+    objects                     =models.Manager()
+
 class Departments(models.Model):
     id                  =models.AutoField(primary_key=True)
     hospital            =models.ForeignKey(Hospitals,on_delete=models.CASCADE,default="")
-    hospital_staff      =models.ForeignKey(HospitalStaffs, on_delete=models.CASCADE)
+    hospital_staff_doctor=models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE)
     department_head     =models.CharField(max_length=256,blank=True,null=True,default="")
     department_name     =models.CharField(max_length=256,blank=True,null=True,default="")
     mobile              =models.CharField(max_length=256,blank=True,null=True,default="")

@@ -78,7 +78,7 @@
                                             <a href="{% url 'hospitaldeactivate' hospital.id %}" class="btn btn-success">Activated</a>
                                         </td>
                                     {%endif%}
-                                     <td>
+                                        <td>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-primary">Action</button>
                                             <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
@@ -90,7 +90,7 @@
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
                                             </ul>
-                                        </div><!-- /btn-group -->
+                                        </div></td><!-- /btn-group -->
                                     
                                 </tr>
                             {% endfor %}

@@ -18,6 +18,13 @@ urlpatterns = [
     path('manage_room',views.manageRoomclassView.as_view(),name="manage_room"),
     path('update_room',views.updateRoom,name="update_room"),
 
+    # Add Doctor Update Doctor
+    path('manage_doctor',views.manageDoctorView.as_view(),name="manage_doctor"),
+    path('update_doctor',views.updateDoctor,name="update_doctor"),
+
+     #List  Add Update Doctor schedual  Doctor
+    path('manage_doctorschedual<id>',views.manageDoctorSchedualView.as_view(),name="manage_doctorschedual"),
+    path('update_doctorschedual<id>',views.updateDoctorSchedual,name="update_doctorschedual"),
 
     #active deactive staff
     path('active_staff/<id>',views.activeStaff,name="active_staff"),
@@ -31,6 +38,12 @@ urlpatterns = [
     path('active_room/<id>',views.activeRoom,name="active_room"),
     path('deactive_room/<id>',views.deactiveRoom,name="deactive_room"),
     path('delete_room/<id>',views.deleteHospitalRoom,name="delete_room"),
+    #active deactive delete Doctor 
+    path('active_doctor/<id>',views.activeDoctor,name="active_doctor"),
+    path('deactive_doctor/<id>',views.deactiveDoctor,name="deactive_doctor"),
+    path('delete_doctor/<id>',views.deleteHospitalDoctor,name="delete_doctor"),
+    #active deactive delete Doctor Schedual 
+    path('delete_doctorschedual/<id>',views.deleteHospitalDoctorschedual,name="delete_doctorschedual"),
     # path('add_staff',views.addStaffView.as_view(),name="add_staff"),
     #delete price add price
     path('add_price',views.PriceCreate,name="add_price"),

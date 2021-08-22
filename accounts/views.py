@@ -213,7 +213,7 @@ class DoctorSingup(SuccessMessageMixin,CreateView):
     fields=["first_name","last_name","email","phone","username","password"]
     success_message = "Hospital User Created"  
     def form_valid(self,form):
-        #Saving Custom User Object for Merchant User
+        #Saving Custom User Object for Doctor User
         print('i m here at dosignup')
         user=form.save(commit=False)
         user.is_active=True

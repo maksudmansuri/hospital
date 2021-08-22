@@ -1,4 +1,4 @@
-{% extends 'radmin/base.html' %}
+{% extends 'hospital/base.html' %}
 {% load static %}
 {% block title %} :: I-Health::  Dashboard {% endblock title %}
 
@@ -15,183 +15,229 @@
                         </div>
                     </div>
                 </div> <!-- Row end  -->
+                <!-- Tab Starts-->
                 <div class="row mb-3">
                     <div class="col-sm-12">
-                        <div class="card mb-3">
-                            <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
-                                <h6 class="mb-0 fw-bold ">Doctor Basic Inforamtion</h6>
-                            </div>
-                            <div class="card-body">
-                                <form>
-                                    <div class="row g-3 align-items-center">
-                                        <div class="col-md-6">
-                                            <label for="firstname" class="form-label">First Name</label>
-                                            <input type="text" class="form-control" id="firstname" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="lastname" class="form-label">Last Name</label>
-                                            <input type="text" class="form-control" id="lastname" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="phonenumber" class="form-label">Phone Number</label>
-                                            <input type="text" class="form-control" id="phonenumber" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="emailaddress" class="form-label">Email Address</label>
-                                            <input type="email" class="form-control" id="emailaddress" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="admitdate" class="form-label">Join Date</label>
-                                            <input type="date" class="form-control" id="admitdate" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="admittime" class="form-label">Join Time</label>
-                                            <input type="time" class="form-control" id="admittime" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="formFileMultiple" class="form-label"> Document Upload</label>
-                                            <input class="form-control" type="file" id="formFileMultiple" multiple required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label  class="form-label">Gender</label>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios11" value="option1" checked>
-                                                        <label class="form-check-label" for="exampleRadios11">
-                                                        Male
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios22" value="option2">
-                                                        <label class="form-check-label" for="exampleRadios22">
-                                                        Female
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label for="addnote" class="form-label">Add Note</label>
-                                            <textarea  class="form-control" id="addnote" rows="3"></textarea> 
-                                        </div>
+                        <ul class="nav nav-pills mb-3" role="tablist">
+                            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#doctordetails" role="tab">Doctor Basic Inforamtion</a></li>
+                            {% comment %} <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#images" role="tab">Images</a></li> {% endcomment %}
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#time" role="tab">Consultant Time</a></li>
+                            
+                        </ul>
+                        <form id="myform" method="post">
+                        {% csrf_token %}
+                        <div class="tab-content">                        
+                            <div class="tab-pane fade show active" id="doctordetails" role="tabpanel">
+                                <div class="card mb-3">
+                                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                        <h6 class="mb-0 fw-bold ">Doctor Basic Inforamtion</h6>
                                     </div>
-                                    
-                                    <button type="submit" class="btn btn-primary mt-4">Submit</button>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="card mb-3">
-                            <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
-                                <h6 class="mb-0 fw-bold ">Personal Information</h6>
-                            </div>
-                            <div class="card-body">
-                                <form>
-                                    <div class="row g-3 align-items-center">
-                                        <div class="col-md-6">
-                                            <label  class="form-label">Doctor Payment Option</label>
-                                            <select class="form-select" aria-label="Default select example">
-                                                <option selected>Payment Option</option>
-                                                <option value="1">Credit Card</option>
-                                                <option value="2">Debit Card</option>
-                                                <option value="3">Case Money</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="roominfo" class="form-label">Cabin Number</label>
-                                            <input type="text" class="form-control" id="roominfo" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="speciality" class="form-label">Speciality</label>
-                                            <input type="text" class="form-control" id="speciality" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label  class="form-label">I-Health Virtual call  Attend?</label>
-                                            <div class="row">
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="row g-3 align-items-center">
                                                 <div class="col-md-6">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios111" value="option1" checked>
-                                                        <label class="form-check-label" for="exampleRadios111">
-                                                        Yes
-                                                        </label>
-                                                    </div>
+                                                    <label for="firstname" class="form-label">First Name</label>
+                                                    <input type="text" class="form-control" id="firstname" required>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios222" value="option2">
-                                                        <label class="form-check-label" for="exampleRadios222">
-                                                        No
-                                                        </label>
+                                                    <label for="lastname" class="form-label">Last Name</label>
+                                                    <input type="text" class="form-control" id="lastname" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="phonenumber" class="form-label">Phone Number</label>
+                                                    <input type="text" class="form-control" id="phonenumber" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="emailaddress" class="form-label">Email Address</label>
+                                                    <input type="email" class="form-control" id="emailaddress" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="admitdate" class="form-label">Join Date</label>
+                                                    <input type="date" class="form-control" id="admitdate" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="admittime" class="form-label">Join Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="formFileMultiple" class="form-label"> Document Upload</label>
+                                                    <input class="form-control" type="file" id="formFileMultiple" multiple required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label  class="form-label">Gender</label>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios11" value="option1" checked>
+                                                                <label class="form-check-label" for="exampleRadios11">
+                                                                Male
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios22" value="option2">
+                                                                <label class="form-check-label" for="exampleRadios22">
+                                                                Female
+                                                                </label>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label for="speciality" class="form-label">Social link</label>
-                                            <div class="row g-3 row-cols-1 row-cols-lg-3">
-                                                <div class="col"><input type="text" class="form-control" id="speciality" required placeholder="Facebook Link"></div>
-                                                <div class="col"><input type="text" class="form-control" id="speciality" required placeholder="Instagram Link"></div>
-                                                <div class="col"><input type="text" class="form-control" id="speciality" required placeholder="linkedin Link"></div>
+                                                <div class="col-md-12">
+                                                    <label for="addnote" class="form-label">Add Note</label>
+                                                    <textarea  class="form-control" id="addnote" rows="3"></textarea> 
+                                                </div>
                                             </div>
                                             
-                                        </div>
+                                            <button type="submit" class="btn btn-primary mt-4">Submit</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="time" role="tabpanel">
+                                <div class="card mb-3">
+                                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                        <h6 class="mb-0 fw-bold ">Personal Information</h6>
+                                        <h6 class="mb-0 fw-bold ">Morning</h6>
+                                        <h6 class="mb-0 fw-bold ">Evening</h6>
                                     </div>
                                     
-                                    <button type="submit" class="btn btn-primary mt-4">Submit</button>
-                                </form>
-                            </div>  
-                        </div>
-                        <div class="card mb-3">
-                            <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
-                                <h6 class="mb-0 fw-bold ">Authentication Information</h6>
-                            </div>
-                            <div class="card-body">
-                                <form>
-                                    <div class="row g-3 align-items-center">
-                                        <div class="col-md-6">
-                                            <label for="user" class="form-label">User Name</label>
-                                            <input type="text" class="form-control" id="user" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="password" class="form-label">Password</label>
-                                            <input type="password" class="form-control" id="password" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="cnpassword" class="form-label">Confirm Password</label>
-                                            <input type="password" class="form-control" id="cnpassword" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label  class="form-label">Login Permission </label>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios07" value="option1" checked>
-                                                        <label class="form-check-label" for="exampleRadios07">
-                                                        Hospital Only
-                                                        </label>
-                                                    </div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="row g-3 align-items-center">
+                                                <div class="col-md-2">
+                                                    <label for="roominfo" class="form-label">MONDAY</label>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios08" value="option2">
-                                                        <label class="form-check-label" for="exampleRadios08">
-                                                        Any where
-                                                        </label>
-                                                    </div>
+                                                <div class="col-md-3">
+                                                    <label for="roominfo" class="form-label">Start Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="roominfo" class="form-label">End Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
                                                 </div>
                                             </div>
-                                        </div>
-                                        
-                                    </div>
-                                    
-                                    <button type="submit" class="btn btn-primary mt-4">Submit</button>
-                                </form>
-                            </div>  
+                                            <div class="row g-3 align-items-center">
+                                                <div class="col-md-2">
+                                                    <label for="roominfo" class="form-label">TUESDAY</label>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="roominfo" class="form-label">Start Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="roominfo" class="form-label">End Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
+                                                </div>
+                                            </div>
+                                            <div class="row g-3 align-items-center">
+                                                 <div class="col-md-2">
+                                                    <label for="roominfo" class="form-label">WEDNESDAY</label>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="roominfo" class="form-label">Start Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="roominfo" class="form-label">End Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
+                                                </div>
+                                                </div>
+                                                <div class="row g-3 align-items-center">
+                                                 <div class="col-md-2">
+                                                    <label for="roominfo" class="form-label">THURSDAY</label>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="roominfo" class="form-label">Start Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="roominfo" class="form-label">End Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
+                                                </div>
+                                                </div>
+                                                <div class="row g-3 align-items-center">
+                                                 <div class="col-md-2">
+                                                    <label for="roominfo" class="form-label">FRIDAY</label>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="roominfo" class="form-label">Start Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="roominfo" class="form-label">End Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
+                                                </div>
+                                                </div>
+                                                <div class="row g-3 align-items-center">
+                                                 <div class="col-md-2">
+                                                    <label for="roominfo" class="form-label">SATURDAY</label>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="roominfo" class="form-label">Start Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="roominfo" class="form-label">End Time</label>
+                                                    <input type="time" class="form-control" id="admittime" required>
+                                                </div>
+                                                </div>
+                                                <div class="row g-3 align-items-center">
+                                                 <div class="col-md-2">
+                                                    <label for="roominfo" class="form-label">SUNDAY</label>
+                                                </div>
+                                                </div>
+                                                
+                                                  
+                                                <div class="col-md-6">
+                                                    <label for="speciality" class="form-label">Speciality</label>
+                                                    <input type="text" class="form-control" id="speciality" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label  class="form-label">I-Health Virtual call  Attend?</label>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios111" value="option1" checked>
+                                                                <label class="form-check-label" for="exampleRadios111">
+                                                                Yes
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios222" value="option2">
+                                                                <label class="form-check-label" for="exampleRadios222">
+                                                                No
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <label for="speciality" class="form-label">Social link</label>
+                                                    <div class="row g-3 row-cols-1 row-cols-lg-3">
+                                                        <div class="col"><input type="text" class="form-control" id="speciality" required placeholder="Facebook Link"></div>
+                                                        <div class="col"><input type="text" class="form-control" id="speciality" required placeholder="Instagram Link"></div>
+                                                        <div class="col"><input type="text" class="form-control" id="speciality" required placeholder="linkedin Link"></div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-primary mt-4">Submit</button>
+                                        </form>
+                                    </div>  
+                                </div>                               
+                            </div>                           
+               
                         </div>
+                        </form>
                     </div>
                 </div>
+                <!--Tab End-->
+               
             </div>
         </div>
      

@@ -68,7 +68,7 @@
                                                 <span class="visually-hidden">Toggle Dropdown</span>
                                             </button>
                                             <ul class="dropdown-menu border-0 shadow py-3 px-2">
-                                                <li><a class="dropdown-item py-2 rounded"data-bs-toggle="modal" data-bs-target="#exampleModalXl{{doctor.id}}">View Schedule</a></li>
+                                                <li><a class="dropdown-item py-2 rounded" href = "{% url 'manage_doctorschedule' doctor.id %}">View Schedule</a></li>
                                                 <li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#DoctorEditModalLg{{doctor.id}}">Edit</a></li>
                                                  {% if doctor.is_active %}
                                                     <li><a class="dropdown-item py-2 rounded" href="{% url 'deactive_doctor' doctor.id %}">Activated</a></li>
@@ -610,7 +610,7 @@
                             
                                 <h3 class="modal-title h4" id="exampleModalXlLabel">Dr. {{ doctor.doctor.fisrt_name }} {{doctor.doctor.last_name}}'S Schedule</h3>
                                 <div class="col-auto d-flex w-sm-100">
-                                    <button type="button" class="btn btn-primary btn-set-task w-sm-100" style="margin-right: 80px;" data-bs-toggle="modal" data-bs-target="#depadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Schedule</button>
+                                    <button type="button" class="btn btn-primary btn-set-task w-sm-100" style="margin-right: 80px;" data-bs-toggle="modal" data-bs-target="#depadd{{doctor.id}}"><i class="icofont-plus-circle me-2 fs-6"></i>Add Schedule</button>
 
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
@@ -682,14 +682,14 @@
                                                 
                                                     <!--  Grid Rows-->
                                                 
-                                                    <div class="grid time-from-s time-to-sf schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                                    <div class="grid time-from-sf time-to-st schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                                    <div class="grid time-from-st time-to-sff schedule-row-from-sunday schedule-row-to-saturday"></div>
+                                                    <div class="grid time-from-s time-to-sf schedule-row-from-sunday schedule-row-to-saturday">a</div>
+                                                    <div class="grid time-from-sf time-to-st schedule-row-from-sunday schedule-row-to-saturday">b</div>
+                                                    <div class="grid time-from-st time-to-sff schedule-row-from-sunday schedule-row-to-saturday">c</div>
                                                 
-                                                    <div class="grid time-from-sff time-to-e schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                                    <div class="grid time-from-e time-to-ef schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                                    <div class="grid time-from-ef time-to-et schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                                    <div class="grid time-from-et time-to-eff schedule-row-from-sunday schedule-row-to-saturday"></div>
+                                                    <div class="grid time-from-sff time-to-e schedule-row-from-sunday schedule-row-to-saturday">r</div>
+                                                    <div class="grid time-from-e time-to-ef schedule-row-from-sunday schedule-row-to-saturday">r</div>
+                                                    <div class="grid time-from-ef time-to-et schedule-row-from-sunday schedule-row-to-saturday">r</div>
+                                                    <div class="grid time-from-et time-to-eff schedule-row-from-sunday schedule-row-to-saturday">r</div>
                                                 
                                                     <div class="grid time-from-eff time-to-n schedule-row-from-sunday schedule-row-to-saturday"></div>
                                                     <div class="grid time-from-n time-to-nf schedule-row-from-sunday schedule-row-to-saturday"></div>
@@ -710,13 +710,13 @@
                                                     <div class="grid schedule-wednesday time-from-s time-to-nff"></div>
                                                     <div class="grid grid-last schedule-wednesday time-from-nff time-to-nff"></div>
                                                 
-                                                    <div class="grid schedule-thursday time-from-s time-to-nff"></div>
-                                                    <div class="grid grid-last schedule-thursday time-from-nff time-to-nff"></div>
+                                                    <div class="grid schedule-thursday time-from-s time-to-nff">dfgdsfgdf111</div>
+                                                    <div class="grid grid-last schedule-thursday time-from-nff time-to-nff">dfgdfg111</div>
                                                 
-                                                    <div class="grid schedule-friday time-from-s time-to-nff"></div>
-                                                    <div class="grid grid-last schedule-friday time-from-nff time-to-nff"></div>
+                                                    <div class="grid schedule-friday time-from-s time-to-nff">gsdfgdfg</div>
+                                                    <div class="grid grid-last schedule-friday time-from-nff time-to-nff">afasdf</div>
                                                 
-                                                    <div class="grid schedule-saturday time-from-s time-to-nff"></div>
+                                                    <div class="grid schedule-saturday time-from-s time-to-nff">fgsdfg</div>
                                                     <div class="grid grid-last schedule-saturday time-from-nff time-to-nff"></div>
                                                 
                                                 </div>
@@ -732,42 +732,7 @@
         </div>
     {% endfor %}
 <!--End Schedule-->
-<!--Start Add Schedual-->
-    <div class="modal fade" id="depadd" tabindex="-1"  aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title  fw-bold" id="depaddLabel"> Schedule Add</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="deadline-form">
-                        <form>
-                            <div class="row g-3 mb-3">
-                              <div class="col-sm-6">
-                                <label for="depone" class="form-label">Schedule Day</label>
-                                <input type="text" class="form-control" id="depone">
-                              </div>
-                              <div class="col-sm-6">
-                                <label for="deptwo" class="form-label">Schedule Time</label>
-                                <input type="time" class="form-control" id="deptwo">
-                              </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="mb-3">
-                        <label  class="form-label">Schedule Note</label>
-                        <textarea class="form-control" rows="3"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </div>
-            </div>
-            </div>
-        </div>  
-<!--End Add Schedual-->
+
 {% endblock modal_fade %}
 
 

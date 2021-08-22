@@ -23,8 +23,8 @@ urlpatterns = [
     path('update_doctor',views.updateDoctor,name="update_doctor"),
 
      #List  Add Update Doctor schedual  Doctor
-    path('manage_doctorschedual<id>',views.manageDoctorSchedualView.as_view(),name="manage_doctorschedual"),
-    path('update_doctorschedual<id>',views.updateDoctorSchedual,name="update_doctorschedual"),
+    path('manage_doctorschedule/<id>',views.manageDoctorSchedualView.as_view(),name="manage_doctorschedule"),
+    path('update_doctorschedule/<id>',views.updateDoctorSchedual,name="update_doctorschedule"),
 
     #active deactive staff
     path('active_staff/<id>',views.activeStaff,name="active_staff"),

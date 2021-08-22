@@ -599,76 +599,35 @@ def deleteHospitalDoctor(request,id):
 class manageDoctorSchedualView(SuccessMessageMixin,View):
     def get(self, request, *args, **kwargs):
         id=kwargs["id"]
-
+        print(id)
         try:
             hospital=Hospitals.objects.get(admin=request.user)
             doctors = HospitalStaffDoctors.objects.filter(hospital=hospital)
             hospitalstaffdoctor = HospitalStaffDoctors.objects.get(id=id)
+            print(hospitalstaffdoctor)
             hospitalstaffdoctorschedual = HospitalStaffDoctorSchedual.objects.filter(hospitalstaffdoctor=hospitalstaffdoctor)
         except hospital.DoesNotExist:
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("manage_staff"))        
-        param={'hospital':hospital,'doctors':doctors,'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctor':'hospitalstaffdoctor'}
-        return render(request,"hospital/manage_doctor.html",param)        
+        param={'hospital':hospital,'doctors':doctors,'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual}
+        return render(request,"hospital/doctor_schedule.html",param)        
 
     def post(self, request, *args, **kwargs):
         #for CustomUSer creation
         id=kwargs["id"]
-        first_name = request.POST.get("fisrt_name")
-        last_name = request.POST.get("last_name")
-        name_title = request.POST.get("name_title")
-        username = first_name + last_name
-        user_type = 3
-        email = request.POST.get("email")
-        phone = request.POST.get("phone")
-        profile_pic = request.FILES.get("profile_pic")
-        # for HospitalDoctor user Creation
-        address = request.POST.get("address")
-        city = request.POST.get("city")
-        state = request.POST.get("state")
-        ssn_id = request.POST.get("ssn_id")
-        country = request.POST.get("country")
-        zip_Code = request.POST.get("zip_Code")
-        degree = request.POST.get("degree")
-        specialist = request.POST.get("specialist")
-        dob = request.POST.get("dob")
-        alternate_mobile = request.POST.get("alternate_mobile")
-        gender = request.POST.get("gender")
-        # for Hospital staff user creation
-        joindate = request.POST.get("joindate")
-        is_active = request.POST.get("is_active")
-        is_virtual = request.POST.get("is_virtual_available")
-        print(is_virtual)
-        is_virtual_available = False
-        if is_virtual == "Yes":
-            is_virtual_available = True
-        facebook = request.POST.get("facebook")
-        instagram = request.POST.get("instagram")
-        linkedin = request.POST.get("linkedin")
-        active = False
-        if is_active == "on":
-            active= True
-        
-        print(profile_pic)
-        profile_pic_url = ""
-        if profile_pic:
-            fs=FileSystemStorage()
-            filename=fs.save(profile_pic.name,profile_pic)
-            media_url=fs.url(filename)
-            profile_pic_url = media_url
-        print(profile_pic_url)
+        days = request.POST.get("days")
+        work = request.POST.get("work")
+        start_time = request.POST.get("start_time")
+        end_time = request.POST.get("end_time")
+        hospitalstaffdoctor = HospitalStaffDoctors.objects.get(id=id)
         hospital=Hospitals.objects.get(admin=request.user)
-
-        doctor = HospitalDoctors(fisrt_name=first_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,phone=phone,degree=degree,dob=dob,alternate_mobile=alternate_mobile,profile_pic=profile_pic_url,gender=gender,facebook=facebook,instagram=instagram,linkedin=linkedin,specialist=specialist)        
-        doctor.save()
-       
-        staffdoctor= HospitalStaffDoctors(doctor=doctor,hospital=hospital,joindate=joindate,is_active=active,ssn_id=ssn_id,is_virtual_available=is_virtual_available,email=email)
-        staffdoctor.save()
+        hospitalstaffdoctorschedual= HospitalStaffDoctorSchedual(hospital=hospital,hospitalstaffdoctor=hospitalstaffdoctor,end_time=end_time,work=work,days=days,start_time=start_time)
+        hospitalstaffdoctorschedual.save()
        
         # except:
         #     messages.add_message(request,messages.ERROR,"Connection Error Try after some time")
         #     return HttpResponseRedirect(reverse("manage_staff"))
-        return HttpResponseRedirect(reverse("manage_doctor"))
+        return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':id}))
 
 def updateDoctorSchedual(request ,id):
      if request.method == "POST":

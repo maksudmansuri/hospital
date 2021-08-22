@@ -75,7 +75,7 @@ class CustomUser(AbstractBaseUser):
     is_Email_Verified      = models.BooleanField(blank=False, default=False)
     counter         = models.IntegerField(default=0, blank=False) #OTP counter
     otp_session_id  = models.CharField(max_length=120, null=True, default = "")
-    profile_pic         =models.ImageField(upload_to="user/profile_pic",max_length=500,null=True,default="")
+    profile_pic         =models.FileField(upload_to="user/profile_pic",max_length=500,null=True,default="")
     USERNAME_FIELD = 'email'
 
     REQUIRED_FIELDS = ['username',]
@@ -133,7 +133,7 @@ class Hospitals(models.Model):
     landline            =models.CharField(max_length=50,blank=True,null=True,default="")
     SPECIALIST_TYPE_CHOICE=((1,"PHYSICIAN"),(2,"SURGEN"),(3,"CARDIOLOGY"),(4,"NEUROLOGISTS"))
     specialist          =models.CharField(max_length=256,blank=True,null=True,default="",choices=SPECIALIST_TYPE_CHOICE)
-    profile_pic         =models.ImageField(upload_to="hospital/profile",max_length=500,null=True,default="")
+    profile_pic         =models.FileField(upload_to="hospital/profile",max_length=500,null=True,default="")
     is_appiled          =models.BooleanField(blank=True,null=True,default=False)
     is_verified         =models.BooleanField(blank=True,null=True,default=False)
     is_deactive         =models.BooleanField(blank=True,null=True,default=False)
@@ -174,7 +174,7 @@ class Patients(models.Model):
     zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
     dob                 =models.DateField(blank=True,null=True,default="")
     alternate_mobile    =models.CharField(max_length=250,blank=True,null=True,default="")
-    profile_pic         =models.ImageField(upload_to="patients/profile/images",blank=True,null=True,default="")
+    profile_pic         =models.FileField(upload_to="patients/profile/images",blank=True,null=True,default="")
     gender              =models.CharField(max_length=255,null=True,default="")
     is_appiled          =models.BooleanField(blank=True,null=True,default=False)
     is_verified         =models.BooleanField(blank=True,null=True,default=False)
@@ -201,7 +201,7 @@ class HospitalDoctors(models.Model):
     specialist          =models.CharField(max_length=50,default="",blank=True,null=True)
     dob                 =models.DateField(blank=True,null=True,default="")
     alternate_mobile    =models.CharField(max_length=250,blank=True,null=True,default="")
-    profile_pic         =models.ImageField(upload_to="Doctor/profile/images/%Y/%m/%d/",blank=True,null=True)
+    profile_pic         =models.FileField(upload_to="Doctor/profile/images/%Y/%m/%d/",blank=True,null=True)
     gender              =models.CharField(max_length=255,null=True,default="")
     linkedin            =models.URLField(max_length=256,blank=True,null=True,default="")
     facebook            =models.URLField(max_length=256,blank=True,null=True,default="")

@@ -42,6 +42,9 @@ urlpatterns = [
     path('active_doctor/<id>',views.activeDoctor,name="active_doctor"),
     path('deactive_doctor/<id>',views.deactiveDoctor,name="deactive_doctor"),
     path('delete_doctor/<id>',views.deleteHospitalDoctor,name="delete_doctor"),
+    #add media delete
+    path('manage_gallery',views.manageGalleryView.as_view(),name="manage_gallery"),
+    path('delete_gallery',views.deleteGallery,name="delete_gallery"),
     #active deactive delete Doctor Schedual 
     path('delete_doctorschedual/<id>/<sid>',views.deleteHospitalDoctorschedual,name="delete_doctorschedual"),
     # path('add_staff',views.addStaffView.as_view(),name="add_staff"),

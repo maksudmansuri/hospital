@@ -1,3 +1,4 @@
+import hospital
 from django.core.files.storage import FileSystemStorage
 from django.http.response import HttpResponseRedirect
 from hospital.models import ContactPerson, HospitalMedias, Insurances
@@ -9,7 +10,8 @@ from django.urls import reverse
 from django.db.models import Q
 # Create your views here.
    
-def indexView(request):  
+def indexView(request):
+       
     return render(request,"radmin/index.html")
  
 class hospitalallViews(ListView):

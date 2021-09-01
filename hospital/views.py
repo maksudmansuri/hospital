@@ -14,12 +14,22 @@ from accounts.models import CustomUser, DoctorForHospital, HospitalDoctors, Hosp
 from django.urls import reverse
 from datetime import datetime
 
-# Create your views here. 
+# Create your views here.   
 
 class hospitaldDashboardViews(SuccessMessageMixin,ListView):
-    model = Hospitals
-    template_name = "hospital/index.html"
-
+    def get(self, request, *args, **kwargs):
+        try: 
+            hospital = Hospitals.objects.get(admin=request.user.id)
+            if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile:
+                return render(request,"hospital/index.html")
+            contacts = HospitalPhones.objects.filter(hospital=hospital)
+            insurances = Insurances.objects.filter(hospital=hospital)
+            messages.add_message(request,messages.ERROR,"Some detail still Missing !")
+            param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
+            return render(request,"hospital/hospital_update.html",param)
+        except Exception as e:
+            return HttpResponse(e)
+        
 class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
     UserModel=get_user_model()
     def get(self, request, *args, **kwargs):
@@ -49,7 +59,7 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         landline = request.POST.get("landline")
         establishment_year = request.POST.get("establishment_year")
         registration_number = request.POST.get("registration_number")
-        registration_proof = request.POST.get("registration_proof")
+        registration_proof = request.FILES.get("registration_proof")
         facebook = request.POST.get("facebook")
         instagram = request.POST.get("instagram")
         linkedin = request.POST.get("linkedin")
@@ -96,7 +106,12 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         hospital.country=country
         hospital.landline=landline
         hospital.specialist=specialist
-        hospital.registration_proof=registration_proof
+        registration_proof_url= ""
+        if registration_proof:
+            fs=FileSystemStorage()
+            filename=fs.save(registration_proof.name,registration_proof)
+            registration_proof_url=fs.url(filename)
+        hospital.registration_proof=registration_proof_url
         hospital.establishment_year=establishment_year
         hospital.alternate_mobile=alternate_mobile
         hospital.website=website
@@ -113,22 +128,22 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         hospital.admin.name_title=name_title       
         hospital.admin.save()
         print("Hospital and user saved")     
-        i=0
-        for media_content in media_content_list:
-            fs=FileSystemStorage()
-            filename=fs.save(media_content.name,media_content)
-            media_url=fs.url(filename)
-            # print(media_content[1],"gjkbdgjdfg")
-            if media_type_list[0]:                    
-                hospital.profile_pic=media_url
-                print("inside zero in images")                    
-                hospital.save()
-            hospital_media = HospitalMedias(hospital=hospital,media_type=media_type_list[i],media_content=media_url)
-            hospital_media.is_active=True
-            hospital_media.is_default=True
-            hospital_media.save() 
-            i=i+1  
-        print("Meida saved")          
+        # i=0
+        # for media_content in media_content_list:
+        #     fs=FileSystemStorage()
+        #     filename=fs.save(media_content.name,media_content)
+        #     media_url=fs.url(filename)
+        #     # print(media_content[1],"gjkbdgjdfg")
+        #     if media_type_list[0]:                    
+        #         hospital.profile_pic=media_url
+        #         print("inside zero in images")                    
+        #         hospital.save()
+        #     hospital_media = HospitalMedias(hospital=hospital,media_type=media_type_list[i],media_content=media_url)
+        #     hospital_media.is_active=True
+        #     hospital_media.is_default=True
+        #     hospital_media.save() 
+        #     i=i+1  
+        # print("Meida saved")          
         j=0
         hos_mobiles = HospitalPhones.objects.filter(is_active=True) 
         for hospital_mobile in hospital_mobile_list:
@@ -750,9 +765,48 @@ def updateDoctorSchedual(request ,id,sid):
         #     return HttpResponseRedirect(reverse("manage_staff"))
         return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':sid}))
 
-
 def deleteHospitalDoctorschedual(request,id,sid):
     doctor = HospitalStaffDoctorSchedual.objects.get(id=id)
     doctor.delete()
     messages.add_message(request,messages.SUCCESS,"Successfully Delete")
     return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':sid}))
+
+
+class manageGalleryView(SuccessMessageMixin,CreateView):
+    def get(self, request, *args, **kwargs):
+        try:
+            hospital=Hospitals.objects.get(admin=request.user)
+            hospitalmedias = HospitalMedias.objects.filter(hospital=hospital)
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"user not available")
+            return HttpResponseRedirect(reverse("manage_staff"))        
+        param={'hospital':hospital,'hospitalmedias':hospitalmedias}
+        return render(request,"hospital/manage_gallery.html",param)        
+
+    def post(self, request, *args, **kwargs):
+        media_type_list = request.POST.get('media_type')        
+        media_content_list = request.FILES.getlist('media_content[]')        
+        media_desc_list = request.POST.get('media_desc') 
+        hospital=Hospitals.objects.get(admin=request.user)
+        
+        i=0
+        for media_content in media_content_list:
+            fs=FileSystemStorage()
+            filename=fs.save(media_content.name,media_content)
+            media_url=fs.url(filename)
+            hospital_media = HospitalMedias(hospital=hospital,media_type=media_type_list,media_desc=media_desc_list,media_content=media_url)
+            hospital_media.is_active=True
+            hospital_media.save() 
+            i=i+1  
+            print("Meida saved")      
+        return HttpResponseRedirect(reverse("manage_gallery"))
+
+def deleteGallery(request):
+    if request.method == "POST":
+        checked_list = request.POST.getlist("id[]")
+        print(checked_list)
+        for deletecheck in checked_list:
+            hospital_media = HospitalMedias.objects.get(id=deletecheck)
+            hospital_media.delete()
+        messages.add_message(request,messages.SUCCESS,"Successfully gellery Deleted")
+        return HttpResponseRedirect(reverse("manage_gallery"))

@@ -1,0 +1,150 @@
+{% extends 'hospital/base.html' %}
+{% load static %}
+{% block title %} :: I-Health::  Dashboard {% endblock title %}
+
+{% block custom_css %}
+<style>
+.container1 { position: relative; float: left; margin-left: 10px; margin-top: 10px;}
+.checkbox { position: absolute; top: 0px; left: 0px; }
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+    <div class="container-xxl">
+        <div class="row align-items-center">
+            <div class="border-0 mb-4">
+                <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                    <h3 class="fw-bold mb-0">Hospital Media</h3>
+                    <div class="col-auto d-flex w-sm-100">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i class="icofont-plus-circle me-2 fs-6"></i>Add Media</button>
+                        <a type="button" class="btn btn-primary" id="delete_btn"  style="margin-left: 20px;" href = "#"><i class="icofont-plus-circle me-2 fs-6"></i>Delete Media</a>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>     
+    <div class="bd-example mb-5">
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for hospitalmedia in hospitalmedias %}
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="card-body container1">
+                    <form id="deletecheck" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <input type="checkbox" id="checkbox"  class="checkbox" value="{{hospitalmedia.id}}" name="checkbox []" >
+                    </form>
+
+                    {% if hospitalmedia.media_type == "1" %}
+                   <img style="width:220;height:200px;" src="{{hospitalmedia.media_content}}" class="card-img-top img_preview">                    
+                    {% elif hospitalmedia.media_type == "2" %}
+                    <video style="width:220;height:200px" src="{{hospitalmedia.media_content}}" class="card-img-top video_preview" controls> 
+                    {% endif %}
+                    
+                    
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block modal_fade %}
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <form id="mediaform" method="post" enctype="multipart/form-data" >
+        {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Modal title(Multiple Media allowed)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <label for="media_type" class="form-label">Media Type</label>
+                    <select class="form-select media_type" aria-label="Default select example" id="media_type" name="media_type">
+                        <option selected="" value="1">Image</option>
+                        <option value="2">Video</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label for="formFileMultiple" class="form-label"> File Upload</label>
+                    <input class="form-control" type="file" id="media_content" name="media_content[]" multiple="" required="">
+                </div>
+                <div class="col-md-12">
+                    <label for="formFileMultiple" class="form-label">Description</label>
+                    <input class="form-control" type="text" multiple="" id="media_desc" name="media_desc" required="">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Add Media</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+{% endblock modal_fade %}
+
+
+
+{% block custom_js %}
+<script>
+$('#mediaform').submit(function(event){
+
+    var formData = {
+        'media_type': $('input[name=media_type[]').val(),
+        'media_content[]': $('input[name=media_content[]]').val(),
+        'media_desc': $('input[name=media_desc]').val(),
+        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+    };
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'manage_gallery' %}",
+        data: formData,
+        encode: true 
+
+    })
+});
+
+    function myFunction(){
+        document.getElementById("deletecheck").submit();
+    };
+    $(document).ready(function(){
+        $('#delete_btn').click(function(){
+            if(confirm("Are you sure you want to delete ?")){
+                var id = [];
+                var csrf =$('input[name=csrfmiddlewaretoken]').val()
+                $(':checkbox:checked').each(function(i){
+                    id[i] = $(this).val()
+                })
+                if(id.length===0){
+                    alert("please select media to delete !")
+                }else{
+                    console.log(id)
+                    $.ajax({
+                        //type: 'POST',
+                        //url: "{% url 'manage_gallery' %}",
+                        //data: formData,
+                        //encode: true 
+                        url:"{% url 'delete_gallery' %}",
+                        method:"POST",
+                        data:{
+                            id,
+                            csrfmiddlewaretoken:csrf
+                        },
+                        success:function(response){
+                            location.reload();
+                        }
+                    })
+                }
+            }
+        })   
+    })
+</script>
+
+{% endblock custom_js %}

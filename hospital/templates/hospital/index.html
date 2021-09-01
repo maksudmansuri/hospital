@@ -504,4 +504,292 @@
       
 {% endblock content %}
 
+
+{% block modal_fade %}
+
+<!-- Modal Fullscreen -->
+<div class="modal fade" id="exampleModalFullscreen" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4" id="exampleModalFullscreenLabel">Full screen modal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               
+                <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <ul class="nav nav-pills mb-3" role="tablist">
+                            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#hospitalDetails" role="tab">Hospital Details</a></li>
+                            {% comment %} <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#images" role="tab">Images</a></li> {% endcomment %}
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contact" role="tab">Contact Details</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#insurance" role="tab">Insurance</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#personal" role="tab">Personal Details</a></li>
+                        </ul>
+                        <form id="myform" method="post">
+                        {% csrf_token %}
+                        <div class="tab-content">                        
+                            <div class="tab-pane fade show active" id="hospitalDetails" role="tabpanel">
+                                <div class="card mb-3">
+                                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                        <h6 class="mb-0 fw-bold ">Doctor Basic Inforamtion</h6>
+                                    </div>
+                                    <div class="card-body">                                        
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-md-6">
+                                                <label for="hopital_name" class="form-label">Hopital Name *</label>
+                                                <input type="text" class="form-control" id="hopital_name" name="hopital_name" placeholder="Hopital Name" value="{{hospital.hopital_name}}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label  class="form-label">Specilist IN *</label>
+                                                <select class="form-select" aria-label="Default select example" name="specialist">
+                                                    <option selected disabled>Specilist</option>
+                                                    <option {% if hospital.specialist == "1" %}selected{% endif %} value="1">PHYSICIAN</option>
+                                                    <option {% if hospital.specialist == "2" %}selected{% endif %} value="2">SURGEN</option>
+                                                    <option {% if hospital.specialist == "3" %}selected{% endif %} value="3">CARDIOLOGY</option>
+                                                    <option {% if hospital.specialist == "4" %}selected{% endif %} value="4">NEUROLOGISTS</option>
+                                                </select>
+                                            </div> 
+                                            <div class="col-md-12">
+                                                <label for="about" class="form-label">About Hospital *</label>
+                                                <textarea  class="form-control" id="about" rows="4" name="about" placeholder="write about  Hopital or Add Hospital Details" value="{{hospital.about|safe}}"></textarea>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="address1" class="form-label">Address Line 1 *</label>
+                                                <input type="text" class="form-control" id="address1" name="address1" placeholder="Hospital Address " value="{{hospital.address1}}" required>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="address2" class="form-label">Address Line 2 *</label>
+                                                <input type="text" class="form-control" id="address2" name="address2" placeholder="Hospital Address " value="{{hospital.address2}}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="city" class="form-label">City *</label>
+                                                <input type="text" class="form-control" id="city" name="city" placeholder="City" value="{{hospital.city}}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="pin_code" class="form-label">Pincode *</label>
+                                                <input type="text" class="form-control" id="pin_code" name="pin_code" placeholder="Pin Code" value="{{hospital.pin_code}}"  required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="state" class="form-label">State *</label>
+                                                <input type="text" class="form-control" id="state" name="state" placeholder="state"  required disabled value="Gujarat">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="Country" class="form-label">Country *</label>
+                                                <input type="text" class="form-control" id="country" name="country" placeholder="Country"  required disabled value="India">
+                                            </div>                                            
+                                            <div class="col-md-6">
+                                                <label for="landline" class="form-label">Landline Number *</label>
+                                                <input type="text" class="form-control" id="landline" name="landline" placeholder="landline"  required value="{{hospital.landline}}">
+                                            </div>                                           
+                                            <div class="col-md-6">
+                                                <label for="establishment_year" class="form-label">Establishment Year *</label>
+                                                <input type="date" class="form-control" id="admitdate" name="establishment_year" value="{{hospital.establishment_year|date:'Y-m-d'}}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="registration_number" class="form-label">Registration Number *</label>
+                                                <input type="text" class="form-control" id="registration_number"  name="registration_number" placeholder="Hospital Registration Number" value="{{hospital.registration_number}}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="formFileMultiple" class="form-label">Document Upload (Registration Proof) *</label>
+                                                <input class="form-control" type="file" id="registration_proof" name="registration_proof" placeholder="Hospital Documents" value="{{hospital.registration_proof}}" multiple required>
+                                            </div>                                        
+                                            <div class="col-md-12">
+                                                    <label for="speciality" class="form-label">Social link</label>
+                                                    <div class="row g-3 row-cols-1 row-cols-lg-4">
+                                                        <div class="col"><input type="url" class="form-control" id="facebook" name="facebook"  placeholder="Facebook Link"  value="{{hospital.facebook}}"></div>
+                                                        <div class="col"><input type="url" class="form-control" id="instagram" name="instagram"  placeholder="Instagram Link"  value="{{hospital.instagram}}"></div>
+                                                        <div class="col"><input type="url" class="form-control" id="linkedin" name="linkedin"  placeholder="linkedin Link"  value="{{hospital.linkedin}}"></div>
+                                                        <div class="col"><input type="url" class="form-control" id="twitter" name="twitter"  placeholder="Twitter Link"  value="{{hospital.twitter}}"></div>
+                                                    </div>
+                                                    
+                                            </div>
+                                            <div class="col-md-12">
+                                                    <label for="WebSite Link" class="form-label">WebSite Link</label>
+                                                    <div class="row g-3 row-cols-1 row-cols-lg-4">
+                                                        <div class="col"><input type="url" class="form-control" id="website" name="website"  placeholder="www.example.com"  value="{{hospital.website}}"></div>
+                                                    </div>
+                                                    
+                                            </div>                                    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="contact" role="tabpanel">
+                                <div class="card mb-3">
+                                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                        <h6 class="mb-0 fw-bold ">Hospital Contact Details</h6>
+                                    </div>
+                                        {% for contact in contacts %}
+                                        <div class="card-body">                                       
+                                            <div class="row g-3 align-items-center">
+                                                <div class="col-md-4">
+                                                    <label for="Phone" class="form-label">Phone Number *</label>
+                                                    <input type="text" class="form-control hospital_mobile" id="mobile" name="hospital_mobile[]" placeholder="Enter Phone Number" value="{{contact.hospital_mobile}}" required>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="email" class="form-label">Email *</label>
+                                                    <input type="email" class="form-control hospital_email"  value="{{contact.hospital_email}}"  id="email" name="hospital_email[]" placeholder="Enter Email" >
+                                                    <input type="hidden" name="contacts_id[]" value="{{ contact.id }}" >
+                                                </div>
+                                                
+                                            </div>
+                                        </div>   
+                                        {% endfor %}
+                                    <div class="card-body contact_div">
+                                        
+                                        <div class="row g-3 align-items-center coontact_div_row first_contact">
+                                            <div class="col-md-4">
+                                                <label for="Phone" class="form-label">Phone Number *</label>
+                                                <input type="text" class="form-control hospital_mobile" id="mobile" name="hospital_mobile[]" placeholder="Enter Phone Number" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="email" class="form-label">Email *</label>
+                                                <input type="email" class="form-control hospital_email" id="email" name="hospital_email[]" placeholder="Enter Email" >
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-3 align-items-center">
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-primary mt-4 form-control add_contact">Add</button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-danger mt-4 form-control remove_contact">Delete</button>
+                                        </div>
+                                        </div>
+                                        </div>
+                                </div>
+                                
+                            </div>                           
+                            <div class="tab-pane fade" id="insurance" role="tabpanel">=
+                                <div class="card mb-3">
+                                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                        <h6 class="mb-0 fw-bold ">Insurance Accepted</h6>
+                                    </div>
+                                    {% for insurance in insurances  %}
+                                        <div class="card-body">
+                                        <div class="row g-3 align-items-center ">
+                                            <div class="col-md-6">
+                                                <label for="insurance_type" class="form-label">Insurance Type</label>
+                                                <select class="form-select insurance_type" aria-label="Default select example" id="insurance_type" name="insurance_type[]">
+                                                    <option {% if insurance.insurance_type == "1" %}selected{% endif %} value="1">CashLess</option>
+                                                    <option  {% if insurance.insurance_type == "2" %}selected{% endif %} value="2">No Cahsless</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="Insurance" class="form-label">Insurance Name</label>
+                                                <input class="form-control insurance_name" type="text" id="insurance_name" name="insurance_name[]" value="{{insurance.insurance_name}}" >
+                                                <input type="hidden" name="insurances_id[]" value="{{ insurance.id }}" >
+                                            </div>
+                                            
+                                        </div>                                        
+                                    </div>
+                                    {% endfor %}
+                                    <div class="card-body insurance_div">
+                                        <div class="row g-3 align-items-center insurance_div_row first_insurance">
+                                            <div class="col-md-6">
+                                                <label for="insurance_type" class="form-label">Insurance Type</label>
+                                                <select class="form-select insurance_type" aria-label="Default select example" id="insurance_type" name="insurance_type[]">
+                                                    <option value="1">CashLess</option>
+                                                    <option value="2">No Cahsless</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="Insurance" class="form-label">Insurance Name</label>
+                                                <input class="form-control insurance_name" type="text" id="insurance_name" name="insurance_name[]"  >
+                                            </div>
+                                            
+                                        </div>                                        
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-3 align-items-center">
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-primary mt-4 form-control add_insurance">Add</button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-danger mt-4 form-control remove_insurance">Delete</button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                             
+                            <div class="tab-pane fade" id="personal" role="tabpanel">
+                                <div class="card mb-3">
+                                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                        <h6 class="mb-0 fw-bold ">Doctor Basic Inforamtion</h6>
+                                    </div>
+                                    <div class="card-body">                                    
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-md-2">
+                                                <label  class="form-label">Title *</label>
+                                                <select class="form-select" aria-label="Default select example" name="name_title">
+                                                <option {% if request.user.name_title == "Mr." %}selected{% endif %} value="Mr."> Mr.</option>
+                                                <option {% if request.user.name_title == "Mrs." %}selected{% endif %} value="Mrs."> Mrs.</option>
+                                                <option {% if request.user.name_title == "Miss" %}selected{% endif %} value="Miss"> Miss</option>
+                                                <option {% if request.user.name_title == "Ms." %}selected{% endif %} value="Ms."> Ms.</option>
+                                                <option {% if request.user.name_title == "Dr." %}selected{% endif %} value="Dr."> Dr.</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label for="first_name" class="form-label">First Name *</label>
+                                                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Hopital Name" value="{{request.user.first_name}}" required>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label for="last_name" class="form-label">Last Name *</label>
+                                                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Hopital Name" value="{{request.user.last_name}}" required>
+                                            </div>
+                                                <div class="col-md-6">
+                                                <label for="Username" class="form-label">Username *</label>
+                                                <input type="text" class="form-control" id="username" name="username" placeholder="Hopital Name"  required  disabled="disabled" required value="{{request.user.username}}" >
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="phone" class="form-label">Phone *</label>
+                                                <input type="tel" class="form-control" id="phone" name="phone" disabled="disabled" placeholder="Hopital Name"  required value="{{request.user.phone}}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="alternate_mobile" class="form-label">Alternate Phone</label>
+                                                <input type="tel" class="form-control" id="alternate_mobile" name="alternate_mobile" placeholder="Hopital Name" value="{{hospital.alternate_mobile}}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="email" class="form-label">Email *</label>
+                                                <input type="email" class="form-control" id="email" name="email" placeholder="Hopital Name"  required value="{{request.user.email}}" disabled="disabled">
+                                            </div>                                          
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="progress mb-3" style="height:auto">
+                                            <div class="progress-bar bg-warning" role="progressbar" id="progressbar" data-width="0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="display:none; width: 0%;height:30px;border-radius:10px;">0%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <div class="row g-3 align-items-center">                                       
+                                        
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-primary mt-4 form-control submit_btn">Update Hospital</button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                       
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock modal_fade %}
+
 {% block custom_js %}{% endblock custom_js %}

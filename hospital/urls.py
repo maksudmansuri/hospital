@@ -24,7 +24,7 @@ urlpatterns = [
 
      #List  Add Update Doctor schedual  Doctor
     path('manage_doctorschedule/<id>',views.manageDoctorSchedualView.as_view(),name="manage_doctorschedule"),
-    path('update_doctorschedule/<id>',views.updateDoctorSchedual,name="update_doctorschedule"),
+    path('update_doctorschedule/<id>/<sid>',views.updateDoctorSchedual,name="update_doctorschedule"),
 
     #active deactive staff
     path('active_staff/<id>',views.activeStaff,name="active_staff"),
@@ -43,7 +43,7 @@ urlpatterns = [
     path('deactive_doctor/<id>',views.deactiveDoctor,name="deactive_doctor"),
     path('delete_doctor/<id>',views.deleteHospitalDoctor,name="delete_doctor"),
     #active deactive delete Doctor Schedual 
-    path('delete_doctorschedual/<id>',views.deleteHospitalDoctorschedual,name="delete_doctorschedual"),
+    path('delete_doctorschedual/<id>/<sid>',views.deleteHospitalDoctorschedual,name="delete_doctorschedual"),
     # path('add_staff',views.addStaffView.as_view(),name="add_staff"),
     #delete price add price
     path('add_price',views.PriceCreate,name="add_price"),

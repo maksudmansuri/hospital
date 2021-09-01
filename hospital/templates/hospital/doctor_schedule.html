@@ -1,126 +1,109 @@
-{% extends 'radmin/base.html' %}
+{% extends 'hospital/base.html' %}
 {% load static %}
 {% block title %} :: I-Health::  Dashboard {% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
 
 {% block content %}
+   {% comment %} <div class="card">
+      <div class="card-header">
+        <h4>Bordered</h4>
+      </div>
+      <div class="card-body">
+        <div class="section-title mt-0">Light</div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Time</th>
+              <th scope="col">Monday</th>
+              <th scope="col">Tuesday</th>
+              <th scope="col">Wednessday</th>
+              <th scope="col">Thursday</th>
+              <th scope="col">Friday</th>
+              <th scope="col">Saturday</th>
+              <th scope="col">Sunday</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@fat</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>the Bird</td>
+              <td>@twitter</td>
+            </tr>
+          </tbody>
+        </table>
+        
+      </div>
+    </div> {% endcomment %}
             <!-- Body: Body -->       
-        <div class="body d-flex py-lg-3 py-md-2">
+      <div class="body d-flex py-lg-4 py-md-2">
             <div class="container-xxl">
-                <div class="row align-items-center">
+               
+                <div class="row align-items-center clearfix g-3">
                     <div class="border-0 mb-4">
                         <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
                             <h3 class="fw-bold mb-0">{{hospitalstaffdoctor}}'SDoctor Schedule</h3>
                             <div class="col-auto d-flex w-sm-100">
-                                <button type="button" class="btn btn-primary btn-set-task w-sm-100" data-bs-toggle="modal" data-bs-target="#depadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Schedule</button>
+                                <button type="button" class="btn btn-primary btn-set-task w-sm-100" data-bs-toggle="modal" data-bs-target="#depadd{{hospitalstaffdoctor.doctor.id}}"><i class="icofont-plus-circle me-2 fs-6"></i>Add Schedule</button>
                             </div>
                         </div>
                     </div>
                 </div> <!-- Row end  -->
                 <div class="row clearfix g-3">
-                  <div class="col-sm-12">
-                        <div class="card mb-3">
-                            <div class="card-body overflow-auto">
-                                <div class="schedule">
-
-                                    <div class="schedule_header">
-                                        <span class="dl">Time</span>
-                                        <span class="ds">Ti</span>
-                                    </div>
+                  <div class="col-sm-12">                        
+                            <div class="card mb-3">                              
+                              <div class="card-body">                                
+                                <table class="table  align-middle mb-0" id="myProjectTable" style="width:100%">
+                                  <thead>
+                                    <tr>
+                                    <th >Shift</th>
+                                      <th>Time</th>
+                                      <th>Monday</th>
+                                      <th>Tuesday</th>
+                                      <th>Wednessday</th>
+                                      <th>Thursday</th>
+                                      <th>Friday</th>
+                                      <th>Saturday</th>
+                                      <th>Sunday</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                  {% for hospitalstaffdoctorschedule in hospitalstaffdoctorschedual %}
+                                    <tr>
+                                      <th>{{hospitalstaffdoctorschedule.shift}}</th>
+                                      <th>{{hospitalstaffdoctorschedule.start_time|time:'h:i'}} to {{hospitalstaffdoctorschedule.end_time|time:'h:i'}}</th></a>
+                                      <td>{% if hospitalstaffdoctorschedule.monday == "YES" %}<a data-bs-toggle="modal" data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}</td>
+                                     <td>{% if hospitalstaffdoctorschedule.tuesday == "YES" %}<a data-bs-toggle="modal" data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}</td>
+                                      <td>{% if hospitalstaffdoctorschedule.wednesday == "YES" %}<a data-bs-toggle="modal" data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}</td>
+                                      <td>{% if hospitalstaffdoctorschedule.thursday == "YES" %}<a data-bs-toggle="modal" data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}</td>
+                                      <td>{% if hospitalstaffdoctorschedule.friday == "YES" %}<a data-bs-toggle="modal" data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}</td>
+                                      <td>{% if hospitalstaffdoctorschedule.saturday == "YES" %}<a data-bs-toggle="modal" data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}</td>
+                                      <td>{% if hospitalstaffdoctorschedule.sunday == "YES" %}<a data-bs-toggle="modal" data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}</td>
+                                    </tr>
+                                  {% endfor %}
+                                  </tbody>
+                                </table>
                                 
-                                    <!-- week-->
-                                    <div class="schedule_header schedule-sunday">
-                                        <span class="dl">Sunday</span>
-                                        <span class="ds">Su</span>
-                                    </div>
-                                    <div class="schedule_header schedule-monday">
-                                        <span class="dl">Monday</span>
-                                        <span class="ds">M</span>
-                                    </div>
-                                    <div class="schedule_header schedule-tuesday">
-                                        <span class="dl">Tuesday</span>
-                                        <span class="ds">T</span>
-                                    </div>
-                                    <div class="schedule_header schedule-wednesday">
-                                        <span class="dl">Wednesday</span>
-                                        <span class="ds">W</span>
-                                    </div>
-                                    <div class="schedule_header schedule-thursday">
-                                        <span class="dl">Thursday</span>
-                                        <span class="ds">Th</span>
-                                    </div>
-                                    <div class="schedule_header schedule-friday">
-                                        <span class="dl">Friday</span>
-                                        <span class="ds">F</span>
-                                    </div>
-                                    <div class="schedule_header schedule-saturday">
-                                        <span class="dl">Saturday</span>
-                                        <span class="ds">Sa</span>
-                                    </div>
-                                
-                                    <!-- Time-->
-                                <!--Set in side twelve hour schedule-->
-                                    <div class="schedule_time time-from-s">07:00 AM</div>
-                                    <div class="schedule_time time-from-sf">08:15 AM</div>
-                                    <div class="schedule_time time-from-st">10:30 AM</div>
-                                    <div class="schedule_time time-from-sff">12:45 AM</div>
-                                
-                                    <div class="schedule_time time-from-e">01:00 PM</div>
-                                    <div class="schedule_time time-from-ef">02:15 PM</div>
-                                    <div class="schedule_time time-from-et">03:30 PM</div>
-                                    <div class="schedule_time time-from-eff">04:45 PM</div>
-                                
-                                    <div class="schedule_time time-from-n">05:00 PM</div>
-                                    <div class="schedule_time time-from-nf">06:15 PM</div>
-                                    <div class="schedule_time time-from-nt">07:30 PM</div>
-                                    <div class="schedule_time time-from-etp">08:30 PM</div>
-                                    <div class="schedule_time time-from-nff">09:45 PM</div>
-                                    
-                                
-                                    <!--  Grid Rows-->
-                                
-                                    <div class="grid time-from-s time-to-sf schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                    <div class="grid time-from-sf time-to-st schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                    <div class="grid time-from-st time-to-sff schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                
-                                    <div class="grid time-from-sff time-to-e schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                    <div class="grid time-from-e time-to-ef schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                    <div class="grid time-from-ef time-to-et schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                    <div class="grid time-from-et time-to-eff schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                
-                                    <div class="grid time-from-eff time-to-n schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                    <div class="grid time-from-n time-to-nf schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                    <div class="grid time-from-nf time-to-nt schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                    <div class="grid time-from-nt time-to-etp schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                    <div class="grid time-from-etp time-to-nff schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                    <div class="grid grid-last time-from-nff time-to-nff schedule-row-from-sunday schedule-row-to-saturday"></div>
-                                
-                                    <!--   ./Grid Rows-->
-                                
-                                    <div class="grid schedule-sunday time-from-s time-to-nff"></div>
-                                    <div class="grid grid-last schedule-sunday time-from-nff time-to-nff"></div>
-                                    <div class="grid schedule-monday time-from-s time-to-nff"></div>
-                                    <div class="grid grid-last schedule-monday time-from-nff time-to-nff"></div>
-                                
-                                    <div class="grid schedule-tuesday time-from-s time-to-nff"></div>
-                                    <div class="grid grid-last schedule-tuesday time-from-nff time-to-nff"></div>
-                                
-                                    <div class="grid schedule-wednesday time-from-s time-to-nff"></div>
-                                    <div class="grid grid-last schedule-wednesday time-from-nff time-to-nff"></div>
-                                
-                                    <div class="grid schedule-thursday time-from-s time-to-nff"></div>
-                                    <div class="grid grid-last schedule-thursday time-from-nff time-to-nff"></div>
-                                
-                                    <div class="grid schedule-friday time-from-s time-to-nff"></div>
-                                    <div class="grid grid-last schedule-friday time-from-nff time-to-nff"></div>
-                                
-                                    <div class="grid schedule-saturday time-from-s time-to-nff"></div>
-                                    <div class="grid grid-last schedule-saturday time-from-nff time-to-nff"></div>
-                                
-                                </div>
+                              </div>
                             </div>
-                        </div>
+                         
                   </div>
                 </div><!-- Row End -->
             </div>
@@ -132,7 +115,7 @@
 <!--Start Add Schedual-->
 {% for doctor in doctors %}
     <div class="modal fade" id="depadd{{doctor.id}}" tabindex="-1"  aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+            <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title  fw-bold" id="depaddLabel"> Schedule Add</h5>
@@ -140,51 +123,211 @@
                 </div>
                 <div class="modal-body">
                     <div class="deadline-form">
-                        <form>
+                        <form method="post">
+                        {% csrf_token %}
                             <div class="row g-3 mb-3">
-                              <div class="col-sm-6">
-                                <label for="days" class="form-label">Schedule Day</label>
-                                <select class="form-select" aria-label="Default select example" name="days">
-                                <option  value="Monday">Monday</option>
-                                <option  value="Tuesday">Tuesday</option>
-                                <option  value="Wednessday">Wednessday</option>
-                                <option  value="Thursday">Thursday</option>
-                                <option  value="Friday">Friday</option>
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                      <label class="form-label">Days</label>
+                                      <br>
+                                      <label class="fancy-checkbox" style="margin-left:19px;">
+                                      <!--For reference -->
+                                          {% comment %} <input type="checkbox" name="checkbox" value="Monday" required="" data-parsley-errors-container="#error-checkbox"> {% endcomment %}
+                                          <input type="checkbox" name="Monday" value="YES">
+                                          <span>Monday</span>
+                                      </label>
+                                      <label class="fancy-checkbox mb-3" style="margin-left:19px;">
+                                          <input type="checkbox" name="Tuesday" value="YES">
+                                          <span>Tuesday</span>
+                                      </label>
+                                      <label class="fancy-checkbox mb-3" style="margin-left:19px;">
+                                          <input type="checkbox" name="Wednesday" value="YES">
+                                          <span>Wednesday</span>
+                                      </label>
+                                      <label class="fancy-checkbox" style="margin-left:19px;">
+                                          <input type="checkbox" name="Thursday" value="YES">
+                                          <span>Thursday</span>
+                                      </label>
+                                      <label class="fancy-checkbox" style="margin-left:19px;">
+                                          <input type="checkbox" name="Friday" value="YES">
+                                          <span>Friday</span>
+                                      </label>
+                                      <label class="fancy-checkbox" style="margin-left:19px;">
+                                          <input type="checkbox" name="Saturday" value="YES">
+                                          <span>Saturday</span>
+                                      </label>
+                                      <label class="fancy-checkbox" style="margin-left:19px;">
+                                          <input type="checkbox" name="Sunday" value="YES">
+                                          <span>Sunday</span>
+                                      </label>
+                                      <p id="error-checkbox"></p>
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                <label for="shift" class="form-label">Schedule Day</label>
+                                <select class="form-select" aria-label="Default select example" name="shift">
+                                <option  value="Morning">Morning</option>
+                                <option  value="Noon">Noon</option>
+                                <option  value="Evening">Evening</option>
+                                <option  value="All-Day">All Day</option>
+                                {% comment %} <option  value="Friday">Friday</option>
                                 <option  value="Saturday">Saturday</option>
-                                <option  value="Sunday">Sunday</option>
+                                <option  value="Sunday">Sunday</option> {% endcomment %}
                                 </select>
                               </div>
-                              <div class="col-sm-6">
+                              <div class="col-sm-3">
                                 <label for="work" class="form-label">Schedule Day</label>
                                 <select class="form-select" aria-label="Default select example" name="work">
                                 <option  value="OPD">OPD</option>
-                                <option  value="Surgery">OT</option>
+                                <option  value="OT">OT</option>
                                 <option  value="Patient Visit">Patient Visit</option>
                                 <option  value="Break">Break</option>
                                 <option  value="Not-Working">Not Working On this time</option>
                                 </select>
                               </div>
 
-                              <div class="col-sm-6">
+                              <div class="col-sm-3">
                                 <label for="start_time" class="form-label">Start Schedule Time</label>
                                 <input type="time" class="form-control" id="start_time" name="start_time">
                               </div>
-                              <div class="col-sm-6">
+                              <div class="col-sm-3">
                                 <label for="end_time" class="form-label">End Schedule Time</label>
                                 <input type="time" class="form-control" id="end_time" name="end_time">
                               </div>
                             </div>
+                            <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
                         </form>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </div>
+                
             </div>
             </div>
         </div>  
 {% endfor %}
 <!--End Add Schedual-->
+
+<!-- Start Update delete schedule-->
+{% for hospitalstaffdoctorschedule in hospitalstaffdoctorschedual %}
+    <div class="modal fade" id="depupdate{{hospitalstaffdoctorschedule.id}}" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel"> Schedule Add</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="deadline-form">
+                        <form method="post" action = "{% url 'update_doctorschedule' hospitalstaffdoctorschedule.id hospitalstaffdoctorschedule.hospitalstaffdoctor.id %}"> 
+                        {% csrf_token %}
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                      <label class="form-label">Days</label>
+                                      <br>
+                                      <label class="fancy-checkbox" style="margin-left:19px;">
+                                      <!--For reference -->
+                                          {% comment %} <input type="checkbox" name="checkbox" value="Monday" required="" data-parsley-errors-container="#error-checkbox"> {% endcomment %}
+                                          <input type="checkbox" name="Monday" value="YES" {% if hospitalstaffdoctorschedule.monday == "YES" %}checked{% endif %}>
+                                          <span>Monday</span>
+                                      </label>
+                                      <label class="fancy-checkbox mb-3" style="margin-left:19px;">
+                                          <input type="checkbox" name="Tuesday" value="YES" {% if hospitalstaffdoctorschedule.tuesday == "YES" %}checked{% endif %}>
+                                          <span>Tuesday</span>
+                                      </label>
+                                      <label class="fancy-checkbox mb-3" style="margin-left:19px;">
+                                          <input type="checkbox" name="Wednesday" value="YES" {% if hospitalstaffdoctorschedule.wednesday == "YES" %}checked{% endif %}>
+                                          <span>Wednesday</span>
+                                      </label>
+                                      <label class="fancy-checkbox" style="margin-left:19px;">
+                                          <input type="checkbox" name="Thursday" value="YES" {% if hospitalstaffdoctorschedule.thursday == "YES" %}checked{% endif %}>
+                                          <span>Thursday</span>
+                                      </label>
+                                      <label class="fancy-checkbox" style="margin-left:19px;">
+                                          <input type="checkbox" name="Friday" value="YES" {% if hospitalstaffdoctorschedule.friday == "YES" %}checked{% endif %}>
+                                          <span>Friday</span>
+                                      </label>
+                                      <label class="fancy-checkbox" style="margin-left:19px;">
+                                          <input type="checkbox" name="Saturday" value="YES" {% if hospitalstaffdoctorschedule.saturday == "YES" %}checked{% endif %}>
+                                          <span>Saturday</span>
+                                      </label>
+                                      <label class="fancy-checkbox" style="margin-left:19px;">
+                                          <input type="checkbox" name="Sunday" value="YES" {% if hospitalstaffdoctorschedule.sunday == "YES" %}checked{% endif %}>
+                                          <span>Sunday</span>
+                                      </label>
+                                      <p id="error-checkbox"></p>
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                <label for="shift" class="form-label">Schedule Day</label>
+                                <select class="form-select" aria-label="Default select example" name="shift">
+                                <option  value="Morning"{% if hospitalstaffdoctorschedule.shift == "Morning" %}selected{% endif %}>Morning</option>
+                                <option  value="Noon" {% if hospitalstaffdoctorschedule.shift == "Noon" %}selected{% endif %}>Noon</option>
+                                <option  value="Evening" {% if hospitalstaffdoctorschedule.shift == "Evening" %}selected{% endif %}>Evening</option>
+                                <option  value="All-Day" {% if hospitalstaffdoctorschedule.shift == "All-Day" %}selected{% endif %}>All Day</option>
+                                {% comment %} <option  value="Friday">Friday</option>
+                                <option  value="Saturday">Saturday</option>
+                                <option  value="Sunday">Sunday</option> {% endcomment %}
+                                </select>
+                              </div>
+                              <div class="col-sm-3">
+                                <label for="work" class="form-label">Schedule Day</label>
+                                <select class="form-select" aria-label="Default select example" name="work">
+                                <option  value="OPD"{% if hospitalstaffdoctorschedule.work == "OPD" %}selected{% endif %}>OPD</option>
+                                <option  value="OT"{% if hospitalstaffdoctorschedule.work == "OT" %}selected{% endif %}>OT</option>
+                                <option  value="Patient-Visit"{% if hospitalstaffdoctorschedule.work == "Patient-Visit" %}selected{% endif %}>Patient Visit</option>
+                                <option  value="Break"{% if hospitalstaffdoctorschedule.work == "Break" %}selected{% endif %}>Break</option>
+                                <option  value="Not-Working"{% if hospitalstaffdoctorschedule.work == "Not-Working" %}selected{% endif %}>Not Working On this time</option>
+                                </select>
+                              </div>
+
+                              <div class="col-sm-3">
+                                <label for="start_time" class="form-label">Start Schedule Time</label>
+                                <input type="time" class="form-control" id="start_time" name="start_time" value="{{hospitalstaffdoctorschedule.start_time|time:"H:i"}}" >
+                              </div>
+                              <div class="col-sm-3">
+                                <label for="end_time" class="form-label">End Schedule Time</label>
+                                <input type="time" class="form-control" id="end_time" name="end_time" value="{{hospitalstaffdoctorschedule.end_time|time:"H:i"}}">
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                        <a href="{% url 'delete_doctorschedual' hospitalstaffdoctorschedule.id hospitalstaffdoctorschedule.hospitalstaffdoctor.id  %}" class="btn btn-secondary">Delete</a>
+                </div>
+                        </form>
+                    </div>
+                </div>
+                
+            </div>
+            </div>
+        </div>  
+{% endfor %}
+<!--  End Update Delete schedule-->
 {% endblock modal_fade %}
 
-{% block custom_js %}{% endblock custom_js %}
+{% block custom_js %}
+<script>
+  $(document).ready(function() {
+        $('#myProjectTable')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+        $('.deleterow').on('click',function(){
+        var tablename = $(this).closest('table').DataTable();  
+        tablename
+            .row( $(this)
+            .parents('tr') )
+            .remove()
+            .draw();
+
+        } );
+       
+
+    });
+    </script>
+    {% endblock custom_js %}

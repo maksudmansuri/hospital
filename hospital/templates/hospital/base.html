@@ -31,23 +31,19 @@
     <div class="main px-lg-4 px-md-4">
         {% include 'hospital/navbar.html' %}
        
-        {% if messages %} 
+       {% if messages %} 
             {% for message in messages  %}
-            {% comment %} <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>{{message}}.</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div> {% endcomment %}
-            {% if message.tags == "ERROR" %}
+            {% if message.tags == "error" %}
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>{{message}}.</strong>
+                    <strong> {{message}}</strong>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+                </div>               
                 {% endif %}
-                {% if message.tags == "SUCCESS" %}
-                <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                    <strong>{{message}}.</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+                {% if message.tags == "success" %}
+                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        <strong> {{message}}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 {% endif %}
             {% endfor %}
         {% endif %}

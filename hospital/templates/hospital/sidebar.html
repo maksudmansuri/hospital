@@ -41,13 +41,13 @@
                         <!-- Menu: Sub menu ul -->
                         <ul class="sub-menu collapse {% if request.path == manage_doctor %} show {% endif %}" id="menu-Doctor">
                             <li><a class="ms-link {% if request.path == manage_doctor %} show {% endif %}" href="{% url 'manage_doctor' %}">All Doctors</a></li>
-                            <li><a class="ms-link" href="doctor-add.html">Add Doctor</a></li>
+                            {% comment %} <li><a class="ms-link" href="doctor-add.html">Add Doctor</a></li>
                             <li><a class="ms-link" href="appointment.html">Appointment</a></li>
                             <li><a class="ms-link" href="doctor-profile.html">Doctors Profile</a></li>
-                            <li><a class="ms-link" href="doctor-schedule.html">Doctor Schedule</a></li>
+                            <li><a class="ms-link" href="doctor-schedule.html">Doctor Schedule</a></li> {% endcomment %}
                         </ul>
                 </li>
-                <li class="collapsed">
+                {% comment %} <li class="collapsed">
                     <a class="m-link" data-bs-toggle="collapse" data-bs-target="#menu-Patient" href="#">
                     <i class="icofont-blind fs-5"></i> <span>Patient</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                     <!-- Menu: Sub menu ul -->
@@ -92,7 +92,7 @@
                         <li><a class="ms-link" href="icon.html"> Icons Example</a></li>
                         <li><a class="ms-link" href="contact.html"> Contact Example</a></li>
                     </ul>
-                </li>
+                </li> {% endcomment %}
                 
             </ul>
             

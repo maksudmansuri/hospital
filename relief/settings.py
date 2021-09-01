@@ -85,6 +85,8 @@ AUTH_USER_MODEL="accounts.CustomUser"
 
 SITE_ID = 1 
 
+TIME_INPUT_FORMATS = ('%H:%M',)
+
 REST_FRAMWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         # 'rest_framework.permissions.IsAuthenticatedOrReadOnly'

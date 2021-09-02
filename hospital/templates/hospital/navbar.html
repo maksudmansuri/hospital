@@ -94,24 +94,25 @@
                                 <small>{{request.user.username}}</small>
                             </div>
                             <a class="nav-link dropdown-toggle pulse p-0" href="#" role="button" data-bs-toggle="dropdown" data-bs-display="static">
-                                <img class="avatar lg rounded-circle img-thumbnail" src="assets/images/profile_av.png" alt="profile">
+                                <img class="avatar lg rounded-circle img-thumbnail" src="{{request.user.hospitals.profile_pic}}" alt="profile">
                             </a>
                             <div class="dropdown-menu rounded-lg shadow border-0 dropdown-animation dropdown-menu-end p-0 m-0">
                                 <div class="card border-0 w280">
                                     <div class="card-body pb-0">
                                         <div class="d-flex py-1">
-                                            <img class="avatar rounded-circle" src="assets/images/profile_av.png" alt="profile">
+                                            <img class="avatar rounded-circle" src="{{request.user.hospitals.profile_pic}}" alt="profile">
                                             <div class="flex-fill ms-3">
                                                 <p class="mb-0"><span class="font-weight-bold">{{request.user.username}}</span></p>
                                                 <small class="">{{request.user.email}}</small>
                                             </div>
                                         </div>
-                                        
+                                         
                                         <div><hr class="dropdown-divider border-dark"></div>
                                     </div>
                                     <div class="list-group m-2 ">
                                         <a href="virtual.html" class="list-group-item list-group-item-action border-0 "><i class="icofont-ui-video-chat fs-5 me-3"></i>I-Health Virtual</a>
-                                        <a href="patient-invoices.html" class="list-group-item list-group-item-action border-0 "><i class="icofont-dollar fs-5 me-3"></i>Patient Invoices</a>
+                                        {% comment %} <a href="patient-invoices.html" class="list-group-item list-group-item-action border-0 "><i class="icofont-dollar fs-5 me-3"></i>Patient Invoices</a> {% endcomment %}
+                                        <a href="{% url 'password_change' %}" class="list-group-item list-group-item-action border-0 "><i class="icofont-ui-password fs-6 me-3"></i>Change Password</a>
                                         <a href="{% url 'dologout' %}" class="list-group-item list-group-item-action border-0 "><i class="icofont-logout fs-6 me-3"></i>Signout</a>
                                         <div><hr class="dropdown-divider border-dark"></div>
                                         <a href="{% url 'hospital_update' %}" class="list-group-item list-group-item-action border-0 "><i class="icofont-contact-add fs-5 me-3"></i>Update Hospital Details</a>

@@ -20,14 +20,13 @@ class hospitaldDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try: 
             hospital = Hospitals.objects.get(admin=request.user.id)
-
-            print(hospital.hopital_name,hospital.about,hospital.address1,hospital.city,hospital.pin_code,hospital.state,hospital.country,hospital.landline,hospital.establishment_year,hospital.registration_number,hospital.alternate_mobile)
-            
-            if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile:
-                return render(request,"hospital/index.html")
-            
             contacts = HospitalPhones.objects.filter(hospital=hospital)
             insurances = Insurances.objects.filter(hospital=hospital)
+
+            if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
+                return render(request,"hospital/index.html")
+            
+            
             messages.add_message(request,messages.ERROR,"Some detail still Missing !")
             param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
             return render(request,"hospital/hospital_update.html",param)
@@ -52,6 +51,8 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
     def post(self, request, *args, **kwargs):
         hopital_name = request.POST.get("hopital_name")
         specialist = request.POST.get("specialist")
+        profile_pic = request.FILES.get("profile_pic")
+
         about = request.POST.get("about")
         address1 = request.POST.get("address1")
         address2 = request.POST.get("address2")
@@ -99,12 +100,19 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
             hospital.country=country
             hospital.landline=landline
             hospital.specialist=specialist
-            registration_proof_url= ""
+
+            if profile_pic:
+                fs=FileSystemStorage()
+                filename1=fs.save(profile_pic.name,profile_pic)
+                profile_pic_url=fs.url(filename1)
+                hospital.profile_pic=profile_pic_url
+
+            print(registration_proof)
             if registration_proof:
                 fs=FileSystemStorage()
                 filename=fs.save(registration_proof.name,registration_proof)
                 registration_proof_url=fs.url(filename)
-            hospital.registration_proof=registration_proof_url
+                hospital.registration_proof=registration_proof_url
             hospital.establishment_year=establishment_year
             hospital.alternate_mobile=alternate_mobile
             hospital.website=website
@@ -147,7 +155,7 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
                     if hos_mobiles:
                         for hos_mobile in hos_mobiles:
                             if hospital_mobile == hos_mobile.hospital_mobile or hospital_email_list[j] == hos_mobile.hospital_email :
-                                messages.add_message(self.request,messages.ERROR," Mobile number or email id is already exist")                    
+                                messages.add_message(request,messages.ERROR," Mobile number or email id is already exist")                    
                     print("totol blank hai for hos_mobile is newly created !")
                     hospitalphone =HospitalPhones(hospital=hospital,hospital_mobile=hospital_mobile,hospital_email=hospital_email_list[j])
                     hospitalphone.is_active =True
@@ -171,9 +179,9 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
             # except:
             #     return render(request,"radmin/hospital_add.html") 
         except Exception as e:
-            messages.add_message(self.request,messages.ERROR,e)
+            messages.add_message(request,messages.ERROR,e)
 
-        messages.add_message(self.request,messages.SUCCESS,"Succesfully Updatesd")
+        messages.add_message(request,messages.SUCCESS,"Succesfully Updated")
         return HttpResponseRedirect(reverse("hospital_update"))
 
 class manageStaffView(SuccessMessageMixin,CreateView):

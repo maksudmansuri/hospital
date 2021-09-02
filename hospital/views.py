@@ -20,8 +20,12 @@ class hospitaldDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try: 
             hospital = Hospitals.objects.get(admin=request.user.id)
-            if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile:
+
+            print(hospital.hopital_name,hospital.about,hospital.address1,hospital.city,hospital.pin_code,hospital.state,hospital.country,hospital.landline,hospital.establishment_year,hospital.registration_number,hospital.alternate_mobile)
+            
+            if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile:
                 return render(request,"hospital/index.html")
+            
             contacts = HospitalPhones.objects.filter(hospital=hospital)
             insurances = Insurances.objects.filter(hospital=hospital)
             messages.add_message(request,messages.ERROR,"Some detail still Missing !")
@@ -51,7 +55,6 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         about = request.POST.get("about")
         address1 = request.POST.get("address1")
         address2 = request.POST.get("address2")
-        address = address1 + address2
         city = request.POST.get("city")
         pin_code = request.POST.get("pin_code")
         state = "Gujarat"
@@ -65,9 +68,6 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         linkedin = request.POST.get("linkedin")
         twitter = request.POST.get("twitter")
         website = request.POST.get("website")
-        # add media
-        media_type_list = request.POST.getlist("media_type[]")
-        media_content_list = request.POST.getlist("media_content[]")
         #contact detail
         hospital_mobile_list= request.POST.getlist("hospital_mobile[]")
         hospital_email_list = request.POST.getlist("hospital_email[]")
@@ -86,113 +86,95 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         name_title = request.POST.get("name_title")
 
         print("we are indside a add hspitals")
-
-        UserModel=get_user_model()
         try:
-            UserModel = CustomUser.objects.get(id=request.user.id)
-        except UserModel.DoesNotExist:
-            return None        
-        #creeating new hospital
-        #hospital = Hospitals(admin=UserModel,hopital_name=hopital_name,about=about,registration_number=registration_number,address=address,city=city,pin_code=pin_code,state=state,country=country,landline=area_landine,specialist=specialist,registration_proof=registration_proof,establishment_year=establishment_year,alternate_mobile=alternate_mobile,website=website,linkedin=linkedin,facebook=facebook,instagram=instagram,twitter=twitter)
-        hospital = Hospitals.objects.get(admin=UserModel)
-        hospital.hopital_name=hopital_name
-        hospital.about=about
-        hospital.registration_number=registration_number
-        hospital.address1=address1
-        hospital.address2=address2
-        hospital.city=city
-        hospital.pin_code=pin_code
-        hospital.state=state
-        hospital.country=country
-        hospital.landline=landline
-        hospital.specialist=specialist
-        registration_proof_url= ""
-        if registration_proof:
-            fs=FileSystemStorage()
-            filename=fs.save(registration_proof.name,registration_proof)
-            registration_proof_url=fs.url(filename)
-        hospital.registration_proof=registration_proof_url
-        hospital.establishment_year=establishment_year
-        hospital.alternate_mobile=alternate_mobile
-        hospital.website=website
-        hospital.linkedin=linkedin
-        hospital.facebook=facebook
-        hospital.instagram=instagram
-        hospital.twitter=twitter
-        hospital.is_appiled=True
-        hospital.is_verified=False
-        hospital.save()
-        #edit customUSer
-        hospital.admin.first_name=first_name
-        hospital.admin.last_name=last_name
-        hospital.admin.name_title=name_title       
-        hospital.admin.save()
-        print("Hospital and user saved")     
-        # i=0
-        # for media_content in media_content_list:
-        #     fs=FileSystemStorage()
-        #     filename=fs.save(media_content.name,media_content)
-        #     media_url=fs.url(filename)
-        #     # print(media_content[1],"gjkbdgjdfg")
-        #     if media_type_list[0]:                    
-        #         hospital.profile_pic=media_url
-        #         print("inside zero in images")                    
-        #         hospital.save()
-        #     hospital_media = HospitalMedias(hospital=hospital,media_type=media_type_list[i],media_content=media_url)
-        #     hospital_media.is_active=True
-        #     hospital_media.is_default=True
-        #     hospital_media.save() 
-        #     i=i+1  
-        # print("Meida saved")          
-        j=0
-        hos_mobiles = HospitalPhones.objects.filter(is_active=True) 
-        for hospital_mobile in hospital_mobile_list:
-            contact_id = contacts_id[j]
-            if contact_id == "blank" and hospital_mobile != "" and hospital_email_list[j] != "" :                
-                if hos_mobiles:
-                    for hos_mobile in hos_mobiles:
-                        if hospital_mobile == hos_mobile.hospital_mobile or hospital_email_list[j] == hos_mobile.hospital_email :
-                            messages.add_message(self.request,messages.ERROR," Mobile number or email id is already exist")
-                        else: 
-                            hospitalphone =HospitalPhones(hospital=hospital,hospital_mobile=hospital_mobile,hospital_email=hospital_email_list[j])
-                            hospitalphone.is_active =True
-                            hospitalphone.save()
-                else: 
+            hospital = Hospitals.objects.get(admin=request.user.id)
+            hospital.hopital_name=hopital_name
+            hospital.about=about
+            hospital.registration_number=registration_number
+            hospital.address1=address1
+            hospital.address2=address2
+            hospital.city=city
+            hospital.pin_code=pin_code
+            hospital.state=state
+            hospital.country=country
+            hospital.landline=landline
+            hospital.specialist=specialist
+            registration_proof_url= ""
+            if registration_proof:
+                fs=FileSystemStorage()
+                filename=fs.save(registration_proof.name,registration_proof)
+                registration_proof_url=fs.url(filename)
+            hospital.registration_proof=registration_proof_url
+            hospital.establishment_year=establishment_year
+            hospital.alternate_mobile=alternate_mobile
+            hospital.website=website
+            hospital.linkedin=linkedin
+            hospital.facebook=facebook
+            hospital.instagram=instagram
+            hospital.twitter=twitter
+            hospital.is_appiled=True
+            hospital.is_verified=False
+            hospital.save()
+            #edit customUSer
+            hospital.admin.first_name=first_name
+            hospital.admin.last_name=last_name
+            hospital.admin.name_title=name_title       
+            hospital.admin.save()
+            
+            k=0
+            for insurance_name in insurance_name_list:
+                insurance_id = insurances_id[k]
+                if insurance_id == "blank" and insurance_name != "" : 
+                    insurance =Insurances(hospital=hospital,insurance_type=insurance_type_list[k],insurance_name=insurance_name)
+                    insurance.is_active =True
+                    insurance.save()
+                else:
+                    if insurance_name != "":
+                        insurance = Insurances.objects.get(id=insurance_id)
+                        insurance.insurance_type = insurance_type_list[k]
+                        insurance.insurance_name = insurance_name
+                        insurance.save()
+
+                k=k+1
+            print("insurance saved") 
+
+            j=0
+            hos_mobiles = HospitalPhones.objects.filter(is_active=True) 
+            for hospital_mobile in hospital_mobile_list:
+                print(hospital_mobile_list)
+                contact_id = contacts_id[j]
+                if contact_id == "blank" and (hospital_mobile != "" or hospital_email_list[j] != ""):
+                    if hos_mobiles:
+                        for hos_mobile in hos_mobiles:
+                            if hospital_mobile == hos_mobile.hospital_mobile or hospital_email_list[j] == hos_mobile.hospital_email :
+                                messages.add_message(self.request,messages.ERROR," Mobile number or email id is already exist")                    
+                    print("totol blank hai for hos_mobile is newly created !")
                     hospitalphone =HospitalPhones(hospital=hospital,hospital_mobile=hospital_mobile,hospital_email=hospital_email_list[j])
                     hospitalphone.is_active =True
                     hospitalphone.save()
-            else:
-                if hospital_mobile != "" or hospital_email_list[j] != "" :
-                    hospitalphone = HospitalPhones.objects.get(id=contact_id)
-                    hospitalphone.hospital_mobile = hospital_mobile
-                    hospitalphone.hospital_email = hospital_email_list[j]
-                    hospitalphone.save()
-            j=j+1
+                else:
+                    if hospital_mobile != "" or hospital_email_list[j] != "" :
+                        print("update phone number and wemail id !")
+                        hospitalphone = HospitalPhones.objects.get(id=contact_id)
+                        hospitalphone.hospital_mobile = hospital_mobile
+                        hospitalphone.hospital_email = hospital_email_list[j]
+                        hospitalphone.save()
+                j=j+1
 
-        print("phone saved")
-        k=0
-        for insurance_name in insurance_name_list:
-            insurance_id = insurances_id[k]
-            if insurance_id == "blank" and insurance_name != "" : 
-                insurance =Insurances(hospital=hospital,insurance_type=insurance_type_list[k],insurance_name=insurance_name)
-                insurance.is_active =True
-                insurance.save()
-            else:
-                if insurance_name != "":
-                    insurance = Insurances.objects.get(id=insurance_id)
-                    insurance.insurance_type = insurance_type_list[k]
-                    insurance.insurance_name = insurance_name
-                    insurance.save()
+            print("phone saved")
 
-            k=k+1
-        print("insurance saved")      
-        
-        print("All data saved")
+                
+            
+            print("All data saved")
 
-        messages.add_message(self.request,messages.SUCCESS,"Hospital Account Created Succesfully")
-        return HttpResponseRedirect(reverse("hospital_dashboard"))
-        # except:
-        #     return render(request,"radmin/hospital_add.html")  
+           
+            # except:
+            #     return render(request,"radmin/hospital_add.html") 
+        except Exception as e:
+            messages.add_message(self.request,messages.ERROR,e)
+
+        messages.add_message(self.request,messages.SUCCESS,"Succesfully Updatesd")
+        return HttpResponseRedirect(reverse("hospital_update"))
 
 class manageStaffView(SuccessMessageMixin,CreateView):
     def get(self, request, *args, **kwargs):

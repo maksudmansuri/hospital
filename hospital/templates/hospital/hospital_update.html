@@ -34,6 +34,17 @@
                                     </div>
                                     <div class="card-body">                                        
                                         <div class="row g-3 align-items-center">
+                                            <div class="col-md-4 profile-av mx-auto text-center w220">
+                                                <label for="profile_pic" class="form-label">Profile Pic</label>
+                                                    <br> 
+                                                <img alt="Avatar" style="width:70%;display:none" class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
+                                                
+                                                    
+                                            </div>
+                                             <div class="col-md-6">
+                                                <label for="profile_pic" class="form-label">Select Profile Picture *</label>
+                                                <input type="file" class="form-control select_media" name="profile_pic">
+                                            </div>
                                             <div class="col-md-6">
                                                 <label for="hopital_name" class="form-label">Hopital Name *</label>
                                                 <input type="text" class="form-control" id="hopital_name" name="hopital_name" placeholder="Hopital Name" value="{{hospital.hopital_name}}" required>
@@ -99,15 +110,11 @@
                                                         <div class="col"><input type="url" class="form-control" id="instagram" name="instagram"  placeholder="Instagram Link"  value="{{hospital.instagram}}"></div>
                                                         <div class="col"><input type="url" class="form-control" id="linkedin" name="linkedin"  placeholder="linkedin Link"  value="{{hospital.linkedin}}"></div>
                                                         <div class="col"><input type="url" class="form-control" id="twitter" name="twitter"  placeholder="Twitter Link"  value="{{hospital.twitter}}"></div>
-                                                    </div>
-                                                    
+                                                    </div>                                                    
                                             </div>
                                             <div class="col-md-12">
-                                                    <label for="WebSite Link" class="form-label">WebSite Link</label>
-                                                    <div class="row g-3 row-cols-1 row-cols-lg-4">
-                                                        <div class="col"><input type="url" class="form-control" id="website" name="website"  placeholder="www.example.com"  value="{{hospital.website}}"></div>
-                                                    </div>
-                                                    
+                                                <label for="WebSite Link" class="form-label">WebSite Link</label>                                               
+                                                    <div class="col"><input type="url" class="form-control" id="website" name="website"  placeholder="www.example.com"  value="{{hospital.website}}"></div>
                                             </div>                                    
                                         </div>
                                     </div>
@@ -144,6 +151,7 @@
                                             <div class="col-md-4">
                                                 <label for="email" class="form-label">Email *</label>
                                                 <input type="email" class="form-control hospital_email" id="email" name="hospital_email[]" placeholder="Enter Email" >
+                                                <input type="hidden" name="contacts_id[]" value="blank" >
                                             </div>
                                             
                                         </div>
@@ -160,7 +168,7 @@
                                      </div>
                                 </div>
                                
-                            </div>                           
+                            </div>                                          
                             <div class="tab-pane fade" id="insurance" role="tabpanel">=
                                 <div class="card mb-3">
                                     <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
@@ -197,6 +205,7 @@
                                             <div class="col-md-6">
                                                 <label for="Insurance" class="form-label">Insurance Name</label>
                                                 <input class="form-control insurance_name" type="text" id="insurance_name" name="insurance_name[]"  >
+                                                <input type="hidden" name="insurances_id[]" value="blank" >
                                             </div>
                                             
                                         </div>                                        
@@ -362,6 +371,7 @@
         }
     });
 
+
 // for insurance details tab
     $(".add_insurance").click(function(){
         var about_row=$(".first_insurance").clone();
@@ -417,10 +427,31 @@
         });
         xhr.send(form);
         setTimeout(location.reload.bind(location), 2000);
-        window.location.href = "{% url 'hospital_dashboard' %}";
+       // window.location.href = "{% url 'hospital_dashboard' %}";
 
     })
 
+</script>
+
+<script>
+$(document).on("change",".select_media",function(){
+        var img_preview=$(this).parents(".media_div_row").find(".img_preview");
+        showPreviewMedia(this,img_preview);
+
+    });
+
+    function showPreviewMedia(input,img_preview){
+        if(input.files && input.files[0]){
+            var reader=new FileReader();
+            reader.onload=function(e){
+            img_preview.attr("src",e.target.result);
+            img_preview.show();
+            img_preview.css({"border":"5px solid primary"});
+            img_preview.css({"border-radius":"2px"});
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 </script>
 
 

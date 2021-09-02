@@ -14,8 +14,7 @@ from accounts.models import CustomUser, DoctorForHospital, HospitalDoctors, Hosp
 from django.urls import reverse
 from datetime import datetime
 
-# Create your views here.   
-
+# Create your views here. 
 class hospitaldDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try: 

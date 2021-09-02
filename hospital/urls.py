@@ -1,10 +1,12 @@
 from django.urls import path
 from .import views
+from accounts import logoutview as profileview
 
 urlpatterns = [   
     # path('',views.indexView,name="hospital_home"),
     path('',views.hospitaldDashboardViews.as_view(),name="hospital_dashboard"),
     path('hospital_update',views.hospitalUpdateViews.as_view(),name="hospital_update"),
+    path('hospital_profile',profileview.hospitalProfileViews.as_view(),name="hospital_profile"),
     
     #Staff list ,add ,update ,delete
     path('manage_staff',views.manageStaffView.as_view(),name="manage_staff"),

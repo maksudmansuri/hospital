@@ -25,15 +25,17 @@
                 {% url 'manage_department' as manage_department %}
                 {% url 'manage_room' as manage_room %}
                 {% url 'manage_gallery' as manage_gallery %}
+                {% url 'manage_price' as manage_price %}
                 <li class="collapsed">
-                    <a class="m-link {% if request.path == manage_staff %} active {% endif %}{% if request.path == manage_department %} active {% endif %}{% if request.path == manage_room %} active {% endif %}{% if request.path == manage_gallery %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Department" href="#">
+                    <a class="m-link {% if request.path == manage_staff %} active {% endif %}{% if request.path == manage_department %} active {% endif %}{% if request.path == manage_room %} active {% endif %}{% if request.path == manage_gallery %} active {% endif %}{% if request.path == manage_price %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Department" href="#">
                         <i class="icofont-nurse-alt fs-5"></i> <span>Department</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                         <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse {% if request.path == manage_staff %} show {% endif %} {% if request.path == manage_department %} show {% endif %}{% if request.path == manage_room %} show {% endif %}{% if request.path == manage_gallery %} show {% endif %}" id="menu-Department">
+                        <ul class="sub-menu collapse {% if request.path == manage_staff %} show {% endif %} {% if request.path == manage_department %} show {% endif %}{% if request.path == manage_room %} show {% endif %}{% if request.path == manage_gallery %} show {% endif %}{% if request.path == manage_price %} show {% endif %}" id="menu-Department">
                             <li><a class="ms-link{% if request.path == manage_staff %} active {% endif %}" href="{% url 'manage_staff' %}">Manage Staff</a></li>
                             <li><a class="ms-link{% if request.path == manage_department %} active {% endif %}" href="{% url 'manage_department' %}">Manage Department</a></li>
                             <li><a class="ms-link{% if request.path == manage_room %} active {% endif %}" href="{% url 'manage_room' %}">Manage Rooms</a></li>
                             <li><a class="ms-link{% if request.path == manage_gallery %} active {% endif %}" href="{% url 'manage_gallery' %}">Manage Gallery</a></li>
+                            <li><a class="ms-link{% if request.path == manage_price %} active {% endif %}" href="{% url 'manage_price' %}">Manage Services and Prices</a></li>
                         </ul>
                 </li>
                 {% url 'manage_doctor' as manage_doctor %}
@@ -42,7 +44,20 @@
                         <i class="icofont-doctor-alt fs-5"></i>  <span>Doctor</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                         <!-- Menu: Sub menu ul -->
                         <ul class="sub-menu collapse {% if request.path == manage_doctor %} show {% endif %}" id="menu-Doctor">
-                            <li><a class="ms-link {% if request.path == manage_doctor %} show {% endif %}" href="{% url 'manage_doctor' %}">All Doctors</a></li>
+                            <li><a class="ms-link {% if request.path == manage_doctor %} active {% endif %}" href="{% url 'manage_doctor' %}">All Doctors</a></li>
+                            {% comment %} <li><a class="ms-link" href="doctor-add.html">Add Doctor</a></li>
+                            <li><a class="ms-link" href="appointment.html">Appointment</a></li>
+                            <li><a class="ms-link" href="doctor-profile.html">Doctors Profile</a></li>
+                            <li><a class="ms-link" href="doctor-schedule.html">Doctor Schedule</a></li> {% endcomment %}
+                        </ul>
+                </li>
+                {% url 'manage_patient' as manage_patient %}
+                <li class="collapsed">
+                    <a class="m-link{% if request.path == manage_patient %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Patient" href="#">
+                        <i class="icofont-doctor-alt fs-5"></i>  <span>Patient</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
+                        <!-- Menu: Sub menu ul -->
+                        <ul class="sub-menu collapse {% if request.path == manage_patient %} show {% endif %}" id="menu-Patient">
+                            <li><a class="ms-link {% if request.path == manage_patient %} active {% endif %}" href="{% url 'manage_patient' %}">All Patients</a></li>
                             {% comment %} <li><a class="ms-link" href="doctor-add.html">Add Doctor</a></li>
                             <li><a class="ms-link" href="appointment.html">Appointment</a></li>
                             <li><a class="ms-link" href="doctor-profile.html">Doctors Profile</a></li>

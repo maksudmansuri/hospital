@@ -1,3 +1,6 @@
+from os import stat_result
+
+from django.db.models.deletion import DO_NOTHING
 import hospital
 from django.db import models
 from django.db.models.fields import AutoField, CharField, IntegerField, related
@@ -188,3 +191,45 @@ class HospitalTreatments(models.Model):
 #     number_of_Days = models.IntegerField()
 #     shift_start_time = models.TimeField(auto_now=False, auto_now_add=False)
 #     shift_end_time = models.TimeField(auto_now=False, auto_now_add=False)
+
+class HospitalsPatients(models.Model):
+    id                  =models.AutoField(primary_key=True)
+    hospital            =models.ForeignKey(Hospitals, on_delete=models.DO_NOTHING)
+    name_title          =models.CharField(max_length=256,blank=True,null=True,default="")
+    first_name          =models.CharField(max_length=250,blank=True,null=True,default="")
+    last_name           =models.CharField(max_length=250,blank=True,null=True,default="")
+    address             =models.CharField(max_length=500,blank=True,null=True,default="")
+    city                =models.CharField(max_length=250,blank=True,null=True,default="")
+    state               =models.CharField(max_length=250,blank=True,null=True,default="")
+    country             =models.CharField(max_length=250,blank=True,null=True,default="")
+    zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
+    age                 =models.CharField(blank=True,null=True,default="",max_length=25)
+    phone               =models.CharField(max_length=250,blank=True,null=True,default="")
+    email               =models.EmailField(max_length=254,blank=True,null=True,default="")
+    treatment           =models.CharField(max_length=250,blank=True,null=True,default="")
+    ID_number           =models.CharField(max_length=250,blank=True,null=True,default="")
+    ID_proof            =models.FileField(upload_to="patients/profile/images",blank=True,null=True,default="")
+    status              =models.CharField(max_length=250,blank=True,null=True,default="")
+    gender              =models.CharField(max_length=255,null=True,default="")
+    add_notes           =models.TextField(null=True,blank=True,default="")
+    added_by_hospital   =models.BooleanField(blank=True,null=True,default=False)
+    is_active          =models.BooleanField(blank=True,null=True,default=False)
+    created_at          =models.DateTimeField(auto_now=True)
+    updated_at          =models.DateTimeField(auto_now=True)
+    objects             =models.Manager()
+    
+    def __str__(self): 
+        return self.fisrt_name +" "+ self.last_name
+
+
+class HospitalServices(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE)
+    service_name            =           models.CharField(max_length=500,blank=True,null=True,default="")
+    service_charge         =           models.FloatField(blank=True,null=True,default=0.0)
+    created_at              =           models.DateTimeField(auto_now=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+    
+    def __str__(self): 
+        return self.service_name

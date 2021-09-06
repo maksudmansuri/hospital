@@ -2,7 +2,16 @@
 {% load static %}
 {% block title %} :: I-Health::  Hospitals Rooms{% endblock title %}
 
-{% block custom_css %}{% endblock custom_css %}
+{% block custom_css %}
+<style>
+.ScrollStyle
+{
+    max-height: 150px;
+    overflow-y: scroll;
+}
+
+</style>
+{% endblock custom_css %}
 
 {% block content %}
  
@@ -128,8 +137,8 @@
                     </div>
                    
                 </div>
-                <div class="card-body basic-custome-color">
-                    <div class="table-responsive">
+                <div class="card-body basic-custome-color ">
+                    <div class="table-responsive ScrollStyle">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -139,10 +148,10 @@
                                 <th scope="col">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="auto-index">
                             {% for price in prices %}
                                 <tr>
-                                <th scope="row">{{price.id}}</th>
+                                <td>{{forloop.counter}}</td>
                                 <td>{{price.room_type}}</td>
                                 <td>{{price.rooms_price}}</td>
                                 <td> 
@@ -352,7 +361,13 @@
 
     })
    
+var addSerialNumber = function () {
+    $('table tr').each(function(index) {
+        $(this).find('td:nth-child(1)').html(index+1);
+    });
+};
 
+addSerialNumber();
 
     
 </script>

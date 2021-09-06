@@ -19,7 +19,6 @@ class MyAccountManager(BaseUserManager):
     use_in_migrations = True
     def create_user(self, email, username,password=None):
         if not email:
-            pass
             raise ValueError("User must have an Email Address")
         if not username:
             raise ValueError("User must have an username ")
@@ -40,8 +39,7 @@ class MyAccountManager(BaseUserManager):
         user = self.create_user(
                 email=self.normalize_email(email),
                 password=password,
-                username=username,
-                            
+                username=username,                           
                 
             )
         
@@ -54,12 +52,11 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-class CustomUser(AbstractBaseUser): 
-    
+class CustomUser(AbstractBaseUser):     
     email = models.EmailField(verbose_name="email", max_length=254, unique=True,error_messages={'unique':"This email has already been registered."})
     username = models.CharField(max_length=254,unique=True)
-    date_joined = models.DateTimeField(verbose_name="date joined", auto_now_add=True)
-    last_login = models.DateTimeField(verbose_name="date joined" ,auto_now=True)
+    date_joined = models.DateTimeField(verbose_name="date joined", auto_now_add=True,null=True,blank=True)
+    last_login = models.DateTimeField(verbose_name="date joined" ,auto_now_add=True,null=True,blank=True)
     # is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -113,7 +110,6 @@ class PhoneOTP(models.Model):
 class AdminHOD(models.Model):
     id                  =models.AutoField(primary_key=True)
     admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)
-    
     created_at          =models.DateTimeField(auto_now_add=True)
     updated_at          =models.DateTimeField(auto_now_add=True)
     objects             =models.Manager()
@@ -142,7 +138,7 @@ class Hospitals(models.Model):
     registration_number =models.CharField(max_length=50,blank=True,null=True,default="")
     alternate_mobile    =models.CharField(max_length=50,blank=True,null=True,default="")
     website             =models.URLField(max_length=256,blank=True,null=True,default="")
-    linkedin             =models.URLField(max_length=256,blank=True,null=True,default="")
+    linkedin            =models.URLField(max_length=256,blank=True,null=True,default="")
     facebook            =models.URLField(max_length=256,blank=True,null=True,default="")
     instagram           =models.URLField(max_length=256,blank=True,null=True,default="")
     twitter             =models.URLField(max_length=256,blank=True,null=True,default="")
@@ -172,17 +168,18 @@ class Patients(models.Model):
     state               =models.CharField(max_length=250,blank=True,null=True,default="")
     country             =models.CharField(max_length=250,blank=True,null=True,default="")
     zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
-    dob                 =models.DateField(blank=True,null=True,default="")
+    dob                 =models.DateField(blank=True,null=True)
     alternate_mobile    =models.CharField(max_length=250,blank=True,null=True,default="")
     profile_pic         =models.FileField(upload_to="patients/profile/images",blank=True,null=True,default="")
     gender              =models.CharField(max_length=255,null=True,default="")
+    bloodgroup          =models.CharField(max_length=255,null=True,default="")
     is_appiled          =models.BooleanField(blank=True,null=True,default=False)
     is_verified         =models.BooleanField(blank=True,null=True,default=False)
-    created_at          =models.DateTimeField(auto_now_add=True)
-    updated_at          =models.DateTimeField(auto_now_add=True)
+    created_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    updated_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
     objects             =models.Manager()
     
-    def __str__(self):
+    def __str__(self): 
         return self.fisrt_name +" "+ self.last_name
 
 class HospitalDoctors(models.Model):
@@ -208,8 +205,8 @@ class HospitalDoctors(models.Model):
     instagram           =models.URLField(max_length=256,blank=True,null=True,default="")
     is_appiled          =models.BooleanField(blank=True,null=True,default=False)
     is_verified         =models.BooleanField(blank=True,null=True,default=False)
-    created_at          =models.DateTimeField(auto_now_add=True)
-    updated_at          =models.DateTimeField(auto_now_add=True)
+    created_at          =models.DateTimeField(auto_now=True,blank=True,null=True)
+    updated_at          =models.DateTimeField(auto_now_add=True,blank=True,null=True)
     objects             =models.Manager()
     
     def __str__(self):

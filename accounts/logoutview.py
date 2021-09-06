@@ -18,6 +18,6 @@ class hospitalProfileViews(SuccessMessageMixin,DetailView):
             contacts = HospitalPhones.objects.filter(hospital=hospital)
             insurances = Insurances.objects.filter(hospital=hospital)
             param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
-            return render(request,"hospital/hospital_update.html",param)
+            return render(request,"hospital/hospital_profile.html",param)
         except Exception as e:
             return HttpResponse(e)

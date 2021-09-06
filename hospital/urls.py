@@ -12,10 +12,16 @@ urlpatterns = [
     path('manage_staff',views.manageStaffView.as_view(),name="manage_staff"),
     path('update_staff',views.updateStaff,name="update_staff"),
     
+    #patient list ,add ,update ,delete
+    path('manage_patient',views.managePatientView.as_view(),name="manage_patient"),
+    path('update_patient',views.updatePatientView,name="update_patient"),
+     path('delete__hospital_patient/<id>',views.deleteHospitalPatient,name="delete__hospital_patient"),
+    
+    
     #deaprtment manage add update delete 
     path('manage_department',views.manageDepartmentclassView.as_view(),name="manage_department"),
     path('update_department',views.updateDepartment,name="update_department"),
-
+ 
     #deaprtment manage add update delete 
     path('manage_room',views.manageRoomclassView.as_view(),name="manage_room"),
     path('update_room',views.updateRoom,name="update_room"),
@@ -23,6 +29,11 @@ urlpatterns = [
     # Add Doctor Update Doctor
     path('manage_doctor',views.manageDoctorView.as_view(),name="manage_doctor"),
     path('update_doctor',views.updateDoctor,name="update_doctor"),
+
+    # Price Doctor Update Doctor
+    path('manage_price',views.managePricesView.as_view(),name="manage_price"),
+    path('update_service_price',views.updateServicePrice,name="update_service_price"),
+    path('delete_service_price/<id>',views.deleteServicePrice,name="delete_service_price"),
 
      #List  Add Update Doctor schedual  Doctor
     path('manage_doctorschedule/<id>',views.manageDoctorSchedualView.as_view(),name="manage_doctorschedule"),

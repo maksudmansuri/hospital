@@ -1,6 +1,6 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views.generic.edit import UpdateView
-from accounts.models import Patients
+from accounts.models import Hospitals, Patients
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404, render
 from django.views.generic.list import ListView
@@ -25,8 +25,6 @@ class patientdDashboardViews(SuccessMessageMixin,ListView):
         except Exception as e:
             return HttpResponse(e)
     
-   
-
 
 class patientdUpdateViews(SuccessMessageMixin,UpdateView):
     def get(self, request, *args, **kwargs):
@@ -77,3 +75,9 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
             return HttpResponseRedirect(reverse("patient_home"))
         except Exception as e:
             HttpResponse(e)
+
+class HospitalListViews(ListView):
+    def get(self, request, *args, **kwargs):
+        hospitals = Hospitals.objects.filter(is_active=True)
+        param = {'hospitals':hospitals}  
+        return render(request,"patient/hospital_list.html",param)

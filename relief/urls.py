@@ -23,6 +23,7 @@ from accounts import views as accViews
 from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', accViews.dologin,name='dologin'),
     path('radmin/', include("radmin.urls")),
     path('accounts/', include("accounts.urls")),
     path('hospital/', include("hospital.urls")),

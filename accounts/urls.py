@@ -7,7 +7,7 @@ from .import profilePic
 urlpatterns = [  
     path("verifyOTP/<phone>", views.verifyOTP, name="OTP_Gen"),
     path("verifyPhone/<phone>", views.verifyPhone, name="verifyPhone"),
-    path('dologin', views.dologin,name='dologin'),
+    # path('dologin', views.dologin,name='dologin'),
     path('logout', logoutview.logout_view,name='dologout'),
     path('dosingup', views.adminSingup,name='dosingup'),
     path('hospitalsingup', views.HospitalSingup.as_view(),name='hospitalsingup'),

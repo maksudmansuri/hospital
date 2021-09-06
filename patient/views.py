@@ -1,6 +1,7 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
-from accounts.models import Hospitals, Patients
+from accounts.models import HospitalPhones, Hospitals, Patients
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404, render
 from django.views.generic.list import ListView
@@ -78,6 +79,14 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
 
 class HospitalListViews(ListView):
     def get(self, request, *args, **kwargs):
-        hospitals = Hospitals.objects.filter(is_verified=True,is_deactive=False)
+        hospitals = Hospitals.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True)
         param = {'hospitals':hospitals}  
-        return render(request,"patient/hospital_list.html",param)
+        return render(request,"patient/hospital_details.html",param)
+    
+class HospitalDetailsViews(DetailView):
+    def get(self, request, *args, **kwargs):
+        hosital_id=kwargs['id']
+        hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
+        hospitalcontact = HospitalPhones.objects.filter(hospital=hospital).first()
+        param = {'hospital':hospital,'hospitalcontact':hospitalcontact}  
+        return render(request,"patient/hospital_details.html",param)

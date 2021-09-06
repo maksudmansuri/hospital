@@ -26,7 +26,6 @@
                         <div class="col-lg-3 col-md-12">
                             <div class="shop-w-master">
                                 <h1 class="shop-w-master__heading u-s-m-b-30"><i class="fas fa-filter u-s-m-r-8"></i>
-
                                     <span>FILTERS</span></h1>
                                 <div class="shop-w-master__sidebar sidebar--bg-snow">
                                     <div class="u-s-m-b-30">
@@ -988,48 +987,13 @@
                                 </div>
                                 <div class="shop-p__collection">
                                     <div class="row is-grid-active">
-                                        <div class="col-lg-4 col-md-6 col-sm-6">
-                                            <div class="product-m">
-                                                <div class="product-m__thumb">
-
-                                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                                        <img class="aspect__img" src="images/product/men/product6.jpg" alt=""></a>
-                                                    <div class="product-m__quick-look">
-
-                                                        <a class="fas fa-search" data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick Look"></a></div>
-                                                    <div class="product-m__add-cart">
-
-                                                        <a class="btn--e-brand" data-modal="modal" data-modal-id="#add-to-cart">Add to Cart</a></div>
-                                                </div>
-                                                <div class="product-m__content">
-                                                    <div class="product-m__category">
-
-                                                        <a href="shop-side-version-2.html">Men Clothing</a></div>
-                                                    <div class="product-m__name">
-
-                                                        <a href="product-detail.html">New Fashion B Nice Elegant</a></div>
-                                                    <div class="product-m__rating gl-rating-style"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-
-                                                        <span class="product-m__review">(23)</span></div>
-                                                    <div class="product-m__price">$125.00</div>
-                                                    <div class="product-m__hover">
-                                                        <div class="product-m__preview-description">
-
-                                                            <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span></div>
-                                                        <div class="product-m__wishlist">
-
-                                                            <a class="far fa-heart" href="#" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"></a></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                       
                                         {% for hospital in hospitals  %}
                                         <div class="col-lg-4 col-md-6 col-sm-6">
                                             <div class="product-m">
                                                 <div class="product-m__thumb">
 
-                                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
+                                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="{% url 'hospital_details' hospital.id %}">
 
                                                         <img class="aspect__img" src="{{hospital.profile_pic}}" alt=""></a>
                                                     <div class="product-m__quick-look">
@@ -1042,13 +1006,13 @@
                                                 <div class="product-m__content">
                                                     <div class="product-m__category">
 
-                                                        <a href="shop-side-version-2.html">{{hospital.profile_pic}}</a></div>
+                                                        <a href="shop-side-version-2.html">{{hospital.specialist}}</a></div>
                                                     <div class="product-m__name">
 
-                                                        <a href="product-detail.html">{{hospital.hospital_name}}</a></div>
+                                                        <a href="{% url 'hospital_details' hospital.id %}">{{hospital.hopital_name}}</a></div>
                                                     <div class="product-m__rating gl-rating-style"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
 
-                                                        <span class="product-m__review">{{hospital.hopital_name}}</span></div>
+                                                        <span class="product-m__review">{{hospital.landline}}</span></div>
                                                     <div class="product-m__price">{{hospital.city}}</div>
                                                     <div class="product-m__hover">
                                                         <div class="product-m__preview-description">
@@ -1188,7 +1152,7 @@
 
                                             <span class="pd-detail__review u-s-m-l-4">
 
-                                                <a href="product-detail.html">23 Reviews</a></span></div>
+                                                <a href="#">23 Reviews</a></span></div>
                                     </div>
                                     <div class="u-s-m-b-15">
                                         <div class="pd-detail__inline">

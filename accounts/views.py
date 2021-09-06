@@ -5,7 +5,7 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.urls.base import reverse_lazy
+from django.urls.base import reverse_lazy, translate_url
 from django.views.generic.base import RedirectView, TemplateResponseMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
@@ -248,7 +248,8 @@ class AuthorizedSingup(SuccessMessageMixin,CreateView):
         #Saving Custom User Object for Merchant User
         print('i m here at Hospital singup')
         user=form.save(commit=False)
-        user.user_type="1"
+        user.user_type=1
+        user.is_active=True
         user.set_password(form.cleaned_data["password"])
         print('just one step ahead save?')   
         user.save() # Save the data

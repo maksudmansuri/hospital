@@ -78,6 +78,6 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
 
 class HospitalListViews(ListView):
     def get(self, request, *args, **kwargs):
-        hospitals = Hospitals.objects.filter(is_active=True)
+        hospitals = Hospitals.objects.filter(is_verified=True,is_deactive=False)
         param = {'hospitals':hospitals}  
         return render(request,"patient/hospital_list.html",param)

@@ -12,7 +12,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
 
         user=request.user
         if user.is_authenticated:
-            if user.user_type=="1":
+            if user.user_type==1:
                 if modulename == "radmin.views" or modulename == "django.views.static":
                     pass
                 elif modulename == "accounts.logoutview":

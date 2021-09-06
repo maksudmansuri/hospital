@@ -22,7 +22,7 @@
 </head>
 <body>
 
-<div id="ihealth-layout" class="theme-tradewind">
+<div id="ihealth-layout" class="theme-tradewind header--box-shadow">
     
     <!-- sidebar --> 
     {% include 'patient/sidebar.html' %}
@@ -51,6 +51,9 @@
         {% block content %}
 
         {% endblock content %}
+
+        {% block modal_fade %}
+        {% endblock modal_fade %}
 
         {% include 'radmin/settings.html' %}
     </div>

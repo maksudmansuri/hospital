@@ -1,0 +1,218 @@
+{% extends 'hospital/base.html' %}
+{% load static %}
+{% block title %} :: I-Health::  Laboratory Appointment{% endblock title %}
+
+{% block custom_css %}
+<style>
+.ScrollStyle
+{
+    max-height: 150px;
+    overflow-y: scroll;
+}
+
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+ 
+    <!-- Body: Body -->       
+<div class="body d-flex py-lg-3 py-md-2">
+    <div class="container-xxl">
+        <div class="row align-items-center">
+            <div class="border-0 mb-4">
+                <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                    <h3 class="fw-bold mb-0">All Appointment</h3>
+                    {% comment %} <div class="col-auto d-flex w-sm-100">
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " data-bs-toggle="modal" data-bs-target="#depadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Room</button>
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;" data-bs-toggle="modal" data-bs-target="#priceadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Price</button>
+                    </div> {% endcomment %}
+                   
+                </div>
+            </div>
+        </div> <!-- Row end  -->
+        <div class="row clearfix g-3">
+            <div class="col-sm-12">
+                <div class="card mb-3">
+                    <div class="card-body" id='mydiv'>
+                        <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Full Name</th> 
+                                    <th>Test For</th>    
+                                    <th>Updated Date</th>   
+                                    <th>Status</th>   
+                                    <th>Actions</th>  
+                                </tr>
+                            </thead> 
+                            <tbody>
+                            {% for book in booking_labtest_list %}
+                                <tr>
+                                    <td>
+                                        <span class="fw-bold">{{forloop.counter}}</span>
+                                    </td>
+                                    <td>
+                                        
+                                        <span class="fw-bold ms-1"  >{{book.booking.patient.admin.name_title}} {{book.booking.patient.first_name}} {{book.booking.patient.last_name}}</span>
+                                    </td>
+                                    <td>
+                                                    {% for service in book.labtest  %}
+                                                    <h6>{{service.service.service_name}}</h6>
+                                                    {% endfor %}
+                                               
+                                    </td>                                   
+                                    <td>
+                                        {{book.booking.applied_time}} , {{book.booking.applied_date}}
+                                    </td>
+                                    <td>
+                                    <select class="form-select status" aria-label="Default select example" data-index="{{book.booking.id}}" id="status" name="status"{% if book.booking.status == "rejected"%} disabled {%endif%} >
+                                                     <option selected disabled >Status</option>
+                                                    <option value="accepted" {% if book.booking.status == "accepted" %}selected{% endif %} >Accepted</option>
+                                                    <option value="rejected" {% if book.booking.status == "rejected" %}selected{% endif %}>Rejected</option>
+                                                    <option value="taken" {% if book.booking.status == "taken" %}selected{% endif %}>Taken</option>
+                                                </select>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                            {% comment %}<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{room.id}}"><i class="icofont-edit text-success"></i></button>{% endcomment %}
+                                            
+                                           <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom"  {% if book.booking.status == "rejected" or book.booking.status == "taken" %} href="{% url 'delete_lab_appointment' book.booking.id %}" disabled {% endif %}><i class="icofont-ui-delete text-danger"></i><a> 
+                                           
+                                        </div>
+                                    </td>
+                                    
+                                   
+                                    
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><!-- Row End -->
+    </div>
+</div>
+ 
+{% endblock content %}
+{% block modal_fade %}
+    {% for room in rooms %}
+        <div class="modal fade" id="depedit{{room.id}}" tabindex="-1"  aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+                <div class="modal-content">
+                <form id="roomupdate" method="post" action="{% url 'update_room' %}">
+                {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title  fw-bold" id="depaddLabel">Edit Appointment</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="modal-body">               
+                        <div class="deadline-form">                        
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-6">
+                                    <label for="room_no" class="form-label">Room No *</label>
+                                    <input type="text" class="form-control" id="room_no" name="room_no" value="{{room.room_no}}">
+                                </div> 
+                                <div class="col-sm-6">
+                                <label for="depone" class="form-label">Floor</label>
+                                <input type="text" class="form-control" id="floor" name="floor" value="{{room.floor}}">
+                                </div>                       
+                                <div class="col-sm-6">
+                                    <label  class="form-label">Room Type *</label>
+                                    <select class="form-select" aria-label="Default select example" name="room" value="{{room.room}}">
+                                    {% for price in prices %}
+                                        <option value="{{price.id}}">{{price}} -INR{{price.rooms_price}}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label  class="form-label">Department *</label>
+                                    <select class="form-select" aria-label="Default select example" name="department">
+                                    {% for department in departments %}
+                                        <option {% if room.department == department %}selected{% endif %} value="{{department.id}}">{{department}}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-6"></div>
+                            <div class="col-sm-6">
+                                <label class="custom-switch mt-2">
+                                    <input type="checkbox" name="is_active" id ="is_active" class="custom-switch-input" {% if room.is_active %}checked{% endif %}>
+                                    <span class="custom-switch-indicator" ></span>
+                                    <span class="custom-switch-description">Room is active ?</span>
+                                </label>
+                                </div>
+                            
+                            </div>                        
+                        </div>
+                        
+                    
+                    </div>
+                
+                    <div class="modal-footer">
+                        {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button> {% endcomment %}
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+
+                </div>
+                </form>
+                </div>
+            </div>
+        </div> 
+    {% endfor %}
+
+{% endblock modal_fade %}
+
+{% block custom_js %}
+
+<script>
+
+    $(document).ready(function() {
+    $('select.status').change(function(){      
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'view_lab_appointment' %}",
+            data:{
+                'a_id':$(this).data('index'),
+                //'status':$('#status').val(),
+                'status':$(this).val(),
+                'csrfmiddlewaretoken': "{{csrf_token}}",
+                'action': 'post'
+
+            },
+            success: function (json) {
+                console.log(json)
+            },
+            error: function (xhr, errmsg, err) {
+
+            }
+           
+        });
+      
+        });
+    });
+
+   /** $(document).on('change','#status',function(e){
+        console.log("i m here at change status")
+        console.log($(this).data('index'))
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'manage_appointment' %}" 
+            data:{
+                'a_id':$(this).data('index'),
+                'status':$('#status').val(),
+                'csrfmiddlewaretoken': "{{csrf_token}}",
+                'action': 'post'
+
+            }
+        });
+          $.ajax({
+                type: 'POST',
+                url: 'Change-status.php',
+                data: {selectFieldValue: $('select.changeStatus').val(), projectId: $('input[name$="projectId"]').val()},
+                dataType: 'html'
+            });
+    }) **/
+</script>
+{% endblock custom_js %}

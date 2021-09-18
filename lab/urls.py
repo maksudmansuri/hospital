@@ -12,7 +12,7 @@ urlpatterns = [
     path('delete_lab_services/<id>',views.deleteServicesViews,name="delete_lab_services"),
     
     path('view_lab_appointment',views.ViewAppointmentViews.as_view(),name="view_lab_appointment"),
-    path('delete_lab_appointment',views.deleteServicesViews,name="delete_lab_appointment"),
+    path('delete_lab_appointment/<id>',views.dateleLabAppointment,name="delete_lab_appointment"),
 
     #add media delete
     path('manage_main_gallery',views.ManageMainGalleryView.as_view(),name="manage_main_gallery"),

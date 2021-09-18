@@ -8,6 +8,7 @@ urlpatterns = [
     path('hospital_details/<id>', views.HospitalDetailsViews.as_view(), name="hospital_details"),
     path('bookappoinment/<id>/<did>', views.DoctorsBookAppoinmentViews.as_view(), name="bookappoinment"),
     path('bookanappointment', views.BookAnAppointmentViews.as_view(), name="bookanappointment"),
+    path('labbookanappointment', views.BookAnAppointmentForLABViews.as_view(), name="labbookanappointment"),
     path('viewbookedanappointment', views.ViewBookedAnAppointmentViews.as_view(), name="viewbookedanappointment"),
     path('cancelbookedanappointment/<id>', views.CancelBookedAnAppointmentViews, name="cancelbookedanappointment"),
     

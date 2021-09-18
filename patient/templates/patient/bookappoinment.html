@@ -311,10 +311,10 @@
             data: {
                 'doctorid':$('#hdocid').val(),
                 'serviceid':$('#serviceid').val(),
-                'time':scdat,
-                'date':schtime,
+                'time':schtime,
+                'date':scdat,
                 'csrfmiddlewaretoken': "{{csrf_token}}",
-                'action': 'post'
+                'action': 'Hospital'
             },
             success: function (json) {
                 console.log(json)

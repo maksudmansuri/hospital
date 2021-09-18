@@ -697,21 +697,36 @@
                                         <div class="fade-r"></div>
                                     </div>
                                 </div>
-                                <div class="inner-wrap">
-                                        <select class="form-select mb-3" aria-label="Default select example" id ="serviceid">
+                               
+                                <div class="inner-wrap ">
+                                    <div class="about_div">
+                                     <div class="about_div_row first_about">
+                                        <select class="form-select mb-3" aria-label="Default select example" id ="serviceid" name="serviceid[]">
                                             {% for service in services %}
                                             <option value="{{service.id}}">{{service.service_name}} -> Rs  {{service.service_charge}}</option>
                                             {% endfor %}
                                         </select>
-                                        
+                                    </div>  
+                                    </div>
+                                        <div class="row">
+                                        <div class="col-lg-6">
+                                            <button class="btn btn-primary btn-block add_about" type="button">ADD More Test</button>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <button class="btn btn-danger btn-block remove_about" type="button">REMOVE Test</button>
+                                        </div>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <div>
                                         <button type="button"  data-bs-dismiss="modal" aria-label="Close" class="btn btn-primary disabled request" id="sbt_button" > Request appointment
                                             <span name = "schdate">On</span>
                                             <span class="day fw-bold text-dark"  id="schdate"></span>
                                             <span  name = "schtime">At</span>
                                             <span class="time fw-bold text-dark" id="schtime"></span>
                                             <i class="icofont-dotted-right fs-3" ></i>
-                                        </button>
-                                   
+                                        </button></div>
+                                
                                 </div>
 
 
@@ -733,15 +748,18 @@
         e.preventDefault();
         var scdat = document.getElementById('schdate').innerHTML
         var schtime = document.getElementById('schtime').innerHTML
+        var  val1= $("select[name=\'serviceid[]\']").map(function() {return $(this).val();}).toArray();
+        console.log(val1)
         $.ajax({
             type: 'POST',
-            url: "{% url 'bookanappointment' %}",
-            data: {              
-                'serviceid':$('#serviceid').val(),
+            url: "{% url 'labbookanappointment' %}",
+            data: {
+                'doctorid':'blank',
+                'serviceid[]':val1,
                 'time':schtime,
                 'date':scdat,
                 'csrfmiddlewaretoken': "{{csrf_token}}",
-                'action': 'post'
+                'action': 'Laboratory'
             },
             success: function (json) {
                 console.log(json)
@@ -753,6 +771,17 @@
     })
         
 
+    $(".add_about").click(function(){
+        var about_row=$(".first_about").clone();
+        about_row.removeClass("first_about");  
+        about_row.find(".about_title").val("");
+        $(".about_div").append(about_row);
+    });
+    $(".remove_about").click(function(){
+        if ($(".about_div").find(".about_div_row").length>1){
+            $(".about_div").children().last().remove();
+        }
+    });
 {% comment %} $(document).ready(function(){
         $('#sbt_button').click(function(){
             console.log("hello inside stb_buutoon")
@@ -781,4 +810,5 @@
     })  {% endcomment %}
 
 </script>
+
 {% endblock custom_js %}

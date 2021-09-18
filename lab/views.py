@@ -1,3 +1,5 @@
+
+from patient.models import LabTest, slot
 from lab.models import Medias
 from hospital.models import ServiceAndCharges
 from django.core.files.storage import FileSystemStorage
@@ -10,6 +12,10 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse
 from django.contrib import messages
+from datetime import datetime
+import datetime
+import pytz
+IST = pytz.timezone('Asia/Kolkata')
 
 # Create your views here.
 
@@ -208,7 +214,69 @@ def deleteMainGallery(request):
 
 
 class ViewAppointmentViews(SuccessMessageMixin,View):
-    pass
+    def get(self, request, *args, **kwargs):
+        try:
+            bookings = slot.objects.filter(lab=request.user.labs,is_active=True,is_taken=False)
+            booking_labtest_list =[]
+            for booking in bookings:
+                labtest = LabTest.objects.filter(slot=booking)
+                booking_labtest_list.append({'booking':booking,'labtest':labtest})
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"user not available")
+            return HttpResponseRedirect(reverse("view_lab_appointment"))        
+        param={'booking_labtest_list':booking_labtest_list}
+        return render(request,"lab/manage_appointment.html",param)        
+
+    def post(self, request, *args, **kwargs):
+        id = request.POST.get('a_id')        
+        status = request.POST.get('status')
+        is_accepted = False
+        is_taken = False
+        is_rejected =False
+        is_applied = False        
+        try:
+            booking = slot.objects.get(id=id)
+            showtime = datetime.datetime.now(tz=IST)
+            print(status)
+        
+            if status == 'accepted':
+                is_accepted = True
+                booking.accepted_date= showtime
+            elif status == 'taken':
+                is_taken= True
+                booking.taken_date= showtime
+                # treatmentreliefpetient = TreatmentReliefPetient(patient=booking.patient.patients,booking=booking,status="CHECKUPED",amount_paid=booking.service.service_charge,is_active=True)
+                # treatmentreliefpetient.save()
+            elif status == 'rejected':
+                is_rejected = True
+                booking.rejected_date= showtime
+            else:
+                is_applied =True
+            booking.is_accepted=is_accepted
+            booking.is_rejected=is_rejected
+            booking.is_taken=is_taken
+            booking.status=status        
+            booking.is_applied=is_applied
+            booking.save()
+        except Exception as e:
+            print(e)
+            # return HttpResponse(e)
+       
+        print("Appoinment update saved")      
+        return HttpResponseRedirect(reverse("view_lab_appointment"))
+
+
+def dateleLabAppointment(request, id):
+    booking = get_object_or_404(slot,id=id)
+    labtests = LabTest.objects.filter(slot=booking)
+    for labtest in labtests:
+        labtest.is_active =False
+        labtest.save()
+    booking.is_active = False
+    booking.save()
+    messages.add_message(request,messages.SUCCESS,"Appointment Successfully Deleted")
+    return HttpResponseRedirect(reverse("view_lab_appointment"))
+
 
 class UploadReportViews(SuccessMessageMixin,CreateView):
     pass

@@ -1,0 +1,361 @@
+{% extends 'pharmacy/base.html' %}
+{% load static %}
+{% block title %} :: Relief PRO::  Pharmacy {% endblock title %}
+
+{% block custom_css %}
+<style>
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+     <!-- Body: Body -->
+        <div class="body d-flex py-3">
+            <div class="container-xxl">
+                <div class="row align-items-center">
+                    <div class="border-0 mb-4">
+                        <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                            <h3 class="fw-bold mb-0">Update Pharmacy </h3>
+                            <div class="col-auto d-flex w-sm-100">
+                                <button type="button" class="btn btn-primary btn-set-task w-sm-100 form-control submit_btn"><i class="icofont-plus-circle me-2 fs-6"></i>UPDATE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- Row end  -->
+              
+                <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <ul class="nav nav-pills mb-3" role="tablist">
+                            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#hospitalDetails" role="tab">Pharmacy Details</a></li>
+                            {% comment %} <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#images" role="tab">Images</a></li> 
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contact" role="tab">Contact Details</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#insurance" role="tab">Insurance</a></li>{% endcomment %}
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#personal" role="tab">Personal Details</a></li>
+                        </ul>
+                        <div class="row" id="progress_div">
+                            <div class="col-lg-12">
+                                <div class="progress mb-3" style="height:auto">
+                                <div class="progress-bar bg-warning" role="progressbar" id="progressbar" data-width="0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="display:none; width: 0%;height:30px;border-radius:10px;">0%</div>
+                                </div>
+                        </div>
+                        </div>
+                        <form id="myform" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="tab-content">                     
+                            <div class="tab-pane fade show active" id="hospitalDetails" role="tabpanel">
+                                <div class="card mb-3">
+                                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                        <h6 class="mb-0 fw-bold ">Pharmacy Basic Inforamtion</h6>
+                                    </div>
+                                    <div class="card-body">                                
+                                        <div class="row g-3 align-items-center media_div_row">
+                                            <div class="col-md-3 profile-av mx-auto text-center w220">
+                                                <label for="profile_pic" class="form-label">Upload Pharmacy Logo</label>
+                                                    <br> 
+                                                <img alt="Avatar" src="{{pharmacy.profile_pic}}" {% if pharmacy.profile_pic %}style="width:70%;"{% else %} style="width:70%;display:none" {% endif %}class="avatar xl rounded-circle img-thumbnail shadow-sm img_preview">
+                                            </div>
+                                            
+                                            <div class="col-md-3">
+                                                <label for="profile_pic" class="form-label">Select Pharmacy Logo *</label>
+                                                <input type="file" class="form-control select_media" name="profile_pic">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="pharmacy_name" class="form-label">Pharmacy Name *</label>
+                                                <input type="text" class="form-control" id="lab_name" name="pharmacy_name" placeholder="Pharmacy Name" value="{{pharmacy.pharmacy_name}}">
+                                            </div>
+                                            {% comment %} <div class="col-md-6">
+                                                <label  class="form-label">Specilist IN *</label>
+                                                <select class="form-select" aria-label="Default select example" name="specialist">
+                                                    <option selected disabled>Specilist</option>
+                                                    <option {% if Pharmacy.specialist == "X-ray" %}selected{% endif %} value="X-ray">X-RAY</option>
+                                                    <option {% if Pharmacy.specialist == "Sonography" %}selected{% endif %} value="Sonography">Sonography</option>
+                                                    <option {% if Pharmacy.specialist == "MRI" %}selected{% endif %} value="MRI">MRI</option>
+                                                    <option {% if Pharmacy.specialist == "NEUROLOGISTS" %}selected{% endif %} value="NEUROLOGISTS">NEUROLOGISTS</option>
+                                                </select>
+                                            </div>  {% endcomment %}
+                                            <div class="col-md-12">
+                                                <label for="about" class="form-label">About Pharmacy *</label>
+                                                <textarea  class="form-control" id="about" rows="4" name="about" placeholder="write about  pharmacy or Add Pharmacy Details">{{pharmacy.about}}</textarea>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="address1" class="form-label">Address Line 1 *</label>
+                                                <input type="text" class="form-control" id="address" name="address" placeholder="pharmacy Address " value="{{pharmacy.address}}">
+                                            </div>                                            
+                                            <div class="col-md-6">
+                                                <label for="city" class="form-label">City *</label>
+                                                <input type="text" class="form-control" id="city" name="city" placeholder="City" value="{{pharmacy.city}}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="pin_code" class="form-label">Pincode *</label>
+                                                <input type="text" class="form-control" id="pin_code" name="pin_code" placeholder="Pin Code" value="{{pharmacy.pin_code}}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="state" class="form-label">State *</label>
+                                                <input type="text" class="form-control" id="state" name="state" placeholder="state"  disabled value="Gujarat">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="Country" class="form-label">Country *</label>
+                                                <input type="text" class="form-control" id="country" name="country" placeholder="Country" disabled value="India">
+                                            </div>                                            
+                                            <div class="col-md-6">
+                                                <label for="landline" class="form-label">Landline Number *</label>
+                                                <input type="text" class="form-control" id="landline" name="landline" placeholder="landline"  value="{{pharmacy.landline}}">
+                                            </div>                                           
+                                            <div class="col-md-6">
+                                                <label for="establishment_year" class="form-label">Establishment Year </label>
+                                                <input type="date" class="form-control" id="admitdate" name="establishment_year" value="{{pharmacy.establishment_year|date:'Y-m-d'}}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="registration_number" class="form-label">Registration Number </label>
+                                                <input type="text" class="form-control" id="registration_number"  name="registration_number" placeholder="pharmacy Registration Number" value="{{pharmacy.registration_number}}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="formFileMultiple" class="form-label">Document Upload (Registration Proof) </label>
+                                                <input class="form-control" type="file" id="registration_proof" name="registration_proof" placeholder="pharmacy Documents" value="{{pharmacy.registration_proof}}" multiple>
+                                            </div>                                        
+                                            <div class="col-md-12">
+                                                    <label for="speciality" class="form-label">Social link</label>
+                                                    <div class="row g-3 row-cols-1 row-cols-lg-4">
+                                                        <div class="col"><input type="url" class="form-control" id="facebook" name="facebook"  placeholder="Facebook Link"  value="{{pharmacy.facebook}}"></div>
+                                                        <div class="col"><input type="url" class="form-control" id="instagram" name="instagram"  placeholder="Instagram Link"  value="{{pharmacy.instagram}}"></div>
+                                                        <div class="col"><input type="url" class="form-control" id="linkedin" name="linkedin"  placeholder="linkedin Link"  value="{{pharmacy.linkedin}}"></div>
+                                                        <div class="col"><input type="url" class="form-control" id="twitter" name="twitter"  placeholder="Twitter Link"  value="{{pharmacy.twitter}}"></div>
+                                                    </div>                                                    
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="WebSite Link" class="form-label">WebSite Link</label>                                               
+                                                    <div class="col"><input type="url" class="form-control" id="website" name="website"  placeholder="www.example.com"  value="{{pharmacy.website}}"></div>
+                                            </div>                                    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                                                     
+                                                       
+                            <div class="tab-pane fade" id="personal" role="tabpanel">
+                                <div class="card mb-3">
+                                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                        <h6 class="mb-0 fw-bold ">Pharmacy Basic Inforamtion</h6>
+                                    </div>
+                                    <div class="card-body">                                    
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-md-2">
+                                                <label  class="form-label">Title *</label>
+                                                <select class="form-select" aria-label="Default select example" name="name_title">
+                                                <option {% if request.user.name_title == "Mr." %}selected{% endif %} value="Mr."> Mr.</option>
+                                                <option {% if request.user.name_title == "Mrs." %}selected{% endif %} value="Mrs."> Mrs.</option>
+                                                <option {% if request.user.name_title == "Miss" %}selected{% endif %} value="Miss"> Miss</option>
+                                                <option {% if request.user.name_title == "Ms." %}selected{% endif %} value="Ms."> Ms.</option>
+                                                <option {% if request.user.name_title == "Dr." %}selected{% endif %} value="Dr."> Dr.</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label for="first_name" class="form-label">First Name *</label>
+                                                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Pharmacy Name" value="{{request.user.first_name}}" required>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label for="last_name" class="form-label">Last Name *</label>
+                                                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Pharmacy Name" value="{{request.user.last_name}}" required>
+                                            </div>
+                                             <div class="col-md-6">
+                                                <label for="Username" class="form-label">Username *</label>
+                                                <input type="text" class="form-control" id="username" name="username" placeholder="Pharmacy Name"  required  disabled="disabled" required value="{{request.user.username}}" >
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="phone" class="form-label">Phone *</label>
+                                                <input type="tel" class="form-control" id="phone" name="phone" disabled="disabled" placeholder="Pharmacy Name"  required value="{{request.user.phone}}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="alternate_mobile" class="form-label">Alternate Phone</label>
+                                                <input type="tel" class="form-control" id="alternate_mobile" name="alternate_mobile" placeholder="Pharmacy Name" value="{{pharmacy.alternate_mobile}}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="email" class="form-label">Email *</label>
+                                                <input type="email" class="form-control" id="email" name="email" placeholder="Pharmacy Name"  required value="{{request.user.email}}" disabled="disabled">
+                                            </div>                                          
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>                       
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+     
+{% endblock content %}
+
+{% block custom_js %}
+
+
+<script>
+ 
+//for medias tab
+    $(".add_media").click(function(){
+        var media_row=$(".first_media").clone();
+        media_row.removeClass("first_media");  
+        media_row.replaceAll("src","")
+        media_row.find(".select_media").val("");
+        media_row.find(".img_preview").attr("src","").css({"border":"none"}).css({"border-radius":"0px"}).hide();
+        media_row.find(".video_preview").attr("src","").css({"border":"none"}).css({"border-radius":"0px"}).hide();
+
+        $(".media_div").append(media_row);
+    });
+    $(".remove_media").click(function(){
+        if ($(".media_div").find(".media_div_row").length>1){
+            $(".media_div").children().last().remove();
+        }
+    });
+
+    $(document).on("change",".select_media",function(){
+        var media_type=$(this).parents(".media_div_row").find(".media_type").val();
+        var img_preview=$(this).parents(".media_div_row").find(".img_preview");
+        var vid_preview=$(this).parents(".media_div_row").find(".video_preview");
+        showPreviewMedia(this,media_type,img_preview,vid_preview);
+
+    });
+
+    function showPreviewMedia(input,media_type,img_preview,video_preview){
+        if(input.files && input.files[0]){
+            var reader=new FileReader();
+            reader.onload=function(e){
+                if(media_type=="1"){
+                    img_preview.attr("src",e.target.result);
+                    img_preview.show();
+                    img_preview.css({"border":"5px solid orange"});
+                    img_preview.css({"border-radius":"10px"});
+                }
+                if(media_type=="2"){
+                    video_preview.attr("src",e.target.result);
+                    video_preview.show();
+                    video_preview.css({"border":"5px solid orange"});
+                    video_preview.css({"border-radius":"10px"});
+                    video_preview.load();
+                    video_preview.play();
+                    
+                }                
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+ //For Treatment
+    $(".add_treatment").click(function(){
+        var about_row=$(".first_treatment").clone();
+        about_row.removeClass("first_treatment");  
+        about_row.find(".treatment").val("");
+        about_row.find(".treatment_rates").val("");
+        $(".treatment_div").append(about_row);
+    });
+    $(".remove_treatment").click(function(){
+        if ($(".treatment_div").find(".treatment_div_row").length>1){
+            $(".treatment_div").children().last().remove();
+        }
+    });
+// for Contact details tab
+    $(".add_contact").click(function(){
+        var about_row=$(".first_contact").clone();
+        about_row.removeClass("first_contact");  
+        about_row.find(".hospital_email").val("");
+        about_row.find(".hospital_mobile").val("");
+        $(".contact_div").append(about_row);
+    });
+    $(".remove_contact").click(function(){
+        if ($(".contact_div").find(".coontact_div_row").length>1){
+            $(".contact_div").children().last().remove();
+        }
+    });
+
+
+// for insurance details tab
+    $(".add_insurance").click(function(){
+        var about_row=$(".first_insurance").clone();
+        about_row.removeClass("first_insurance");  
+        about_row.find(".insurance_type").val("");
+        about_row.find(".insurance_name").val("");
+        $(".insurance_div").append(about_row);
+    });
+    $(".remove_insurance").click(function(){
+        if ($(".insurance_div").find(".insurance_div_row").length>1){
+            $(".insurance_div").children().last().remove();
+        }
+    });
+
+    // for Other Service details tab
+    $(".add_other").click(function(){
+        var about_row=$(".first_other").clone();
+        about_row.removeClass("first_other");  
+        about_row.find(".other_service").val("");
+        about_row.find(".other_rates").val("");
+        $(".other_div").append(about_row);
+    });
+    $(".remove_other").click(function(){
+        if ($(".other_div").find(".other_div_row").length>1){
+            $(".other_div").children().last().remove();
+        }
+    });
+
+    $(".submit_btn").click(function(){
+        var form=new FormData($("#myform")[0]);
+       // form.append("long_desc",tinyMCE.activeEditor.getContent());
+
+        //Ajax code
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange=function(){
+            if(xhr.status==200){
+                console.log(xhr.responseText);
+            }
+        }
+        xhr.open("POST","{% url 'pharmacy_update' %}",true);
+        $("#progressbar").show();
+        
+        
+
+        //Updating Prograssbar
+        xhr.upload.addEventListener("progress",function(ev){
+            if(ev.lengthComputable){
+                var percentage=(ev.loaded/ev.total*100|0);
+                $("#progressbar").css({"width":""+percentage+"%"}).text("Uploading..."+percentage+"%");
+                console.log(percentage);
+                
+            }
+        });
+        xhr.send(form);
+        setTimeout(location.reload.bind(location), 2000);
+       // window.location.href = "{% url 'hospital_dashboard' %}";
+
+    })
+
+</script>
+
+<script>
+$(document).on("change",".select_media",function(){
+        var img_preview=$(this).parents(".media_div_row").find(".img_preview");
+        showPreviewMedia(this,img_preview);
+
+    });
+
+    function showPreviewMedia(input,img_preview){
+        if(input.files && input.files[0]){
+            var reader=new FileReader();
+            reader.onload=function(e){
+            img_preview.attr("src",e.target.result);
+            img_preview.show();
+            img_preview.css({"border":"5px solid primary"});
+            img_preview.css({"border-radius":"2px"});
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+
+
+{% endblock custom_js %}

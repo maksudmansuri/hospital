@@ -72,10 +72,10 @@
                                                 <label  class="form-label">Specilist IN *</label>
                                                 <select class="form-select" aria-label="Default select example" name="specialist">
                                                     <option selected disabled>Specilist</option>
-                                                    <option {% if hospital.specialist == "1" %}selected{% endif %} value="1">PHYSICIAN</option>
-                                                    <option {% if hospital.specialist == "2" %}selected{% endif %} value="2">SURGEN</option>
-                                                    <option {% if hospital.specialist == "3" %}selected{% endif %} value="3">CARDIOLOGY</option>
-                                                    <option {% if hospital.specialist == "4" %}selected{% endif %} value="4">NEUROLOGISTS</option>
+                                                    <option {% if hospital.specialist == "PHYSICIAN" %}selected{% endif %} value="PHYSICIAN">PHYSICIAN</option>
+                                                    <option {% if hospital.specialist == "SURGEN" %}selected{% endif %} value="SURGEN">SURGEN</option>
+                                                    <option {% if hospital.specialist == "CARDIOLOGY" %}selected{% endif %} value="CARDIOLOGY">CARDIOLOGY</option>
+                                                    <option {% if hospital.specialist == "NEUROLOGISTS" %}selected{% endif %} value="NEUROLOGISTS">NEUROLOGISTS</option>
                                                 </select>
                                             </div> 
                                             <div class="col-md-12">

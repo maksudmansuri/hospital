@@ -1,0 +1,230 @@
+{% extends 'lab/base.html' %}
+{% load static %}
+{% block title %} :: I-Health:: Laboratory Tests{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block content %}
+
+<!-- Body: Body -->
+<div class="body d-flex py-lg-3 py-md-2">
+    <div class="container-xxl">
+        <div class="row align-items-center">
+            <div class="border-0 mb-4">
+                <div
+                    class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                    <h3 class="fw-bold mb-0">All Tests and Charges</h3>
+                    <div class="col-auto d-flex w-sm-100">
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " data-bs-toggle="modal"
+                            data-bs-target="#depadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Tests</button>
+                        {% comment %} <button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;"
+                            data-bs-toggle="modal" data-bs-target="#priceadd"><i
+                                class="icofont-plus-circle me-2 fs-6"></i>Add Price</button> {% endcomment %}
+                    </div>
+
+                </div>
+            </div>
+        </div> <!-- Row end  -->
+        <div class="row clearfix g-3">
+            <div class="col-sm-12">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Service ID</th>
+                                    <th>Service Name</th>
+                                    <th>Charges</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for service in serviceandcharges %}
+                                <tr>
+                                    <td>
+                                        <span class="fw-bold">{{forloop.counter}}</span>
+                                    </td>
+                                    <td>
+
+                                        <span class="fw-bold ms-1">{{service.service_name}}</span>
+                                    </td>
+                                    <td>
+                                       Price is Rs. {{service.service_charge}}
+                                    </td>
+                                   
+                                    <td>
+                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                            <button type="button" class="btn btn-outline-secondary"
+                                                data-bs-toggle="modal" data-bs-target="#depedit{{service.id}}"><i
+                                                    class="icofont-edit text-success"></i></button>
+
+                                            <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom"
+                                                href="{% url 'delete_lab_services' service.id %}"><i
+                                                    class="icofont-ui-delete text-danger"></i><a>
+
+                                        </div>
+                                    </td>
+
+
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><!-- Row End -->
+    </div>
+</div>
+
+{% endblock content %}
+{% block modal_fade %}
+
+
+<!-- Add Service and price-->
+<div class="modal fade" id="depadd" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+        <div class="modal-content">
+            <form id="servicedd" method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel">Add Test</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="deadline-form">
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                                <label for="room_no" class="form-label">Service Name *</label>
+                                <select class="form-select" aria-label="Default select example"
+                                    name="service_name" requried>
+                                    <option selected disabled>Select Service</option>
+                                    <option value="COVID RT-PCR">COVID RT-PCR</option>
+                                    <option value="X-RAY">X-RAY</option>
+                                    <option value="BLOOD TEST">BLOOD TEST</option>
+                                    <option value="Diabetes">Diabetes</option>
+                                    <option value="Cancer">Cancer</option>
+                                    <option value="Skin">Skin</option>
+                                    <option value="Kidney">Kidney</option>
+                                    <option value="BETA HCG">BETA HCG</option>
+                                    <option value="COMPLETE BLOOD COUNT">COMPLETE BLOOD COUNT</option>
+                                    <option value="THYROID">THYROID</option>
+                                    <option value="VITAMIN D">VITAMIN D</option>
+                                    <option value="LIVER FUNCTION">LIVER FUNCTION</option>
+                                    <option value="Hb1c">Hb1c</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="depone" class="form-label">Service Charges *</label>
+                                <input type="text" class="form-control" id="service_charge" name="service_charge" requried>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
+                    {% endcomment %}
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+
+        </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Rooms-->
+{% for service in serviceandcharges %}
+<div class="modal fade" id="depedit{{service.id}}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+        <div class="modal-content">
+            <form id="roomupdate" method="post" action="{% url 'update_lab_services' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title  fw-bold" id="depaddLabel">Update Test</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="deadline-form">
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                                <label for="room_no" class="form-label">Service Name *</label>
+                                <select class="form-select" aria-label="Default select example"
+                                    name="service_name" requried>
+                                    <option selected disabled>Select Service</option>
+                                    <option value="COVID RT-PCR" {% if service.service_name == "COVID RT-PCR" %}selected{% endif %}>COVID RT-PCR</option>
+                                    <option value="X-RAY" {% if service.service_name == "X-RAY" %}selected{% endif %}>X-RAY</option>
+                                    <option value="BLOOD TEST" {% if service.service_name == "COVID RT-PCR" %}selected{% endif %}>BLOOD TEST</option>
+                                    <option value="Diabetes" {% if service.service_name == "COVID RT-PCR" %}selected{% endif %}>Diabetes</option>
+                                    <option value="Cancer" {% if service.service_name == "Cancer" %}selected{% endif %}>Cancer</option>
+                                    <option value="Skin" {% if service.service_name == "COVID RT-PCR" %}selected{% endif %}>Skin</option>
+                                    <option value="Kidney" {% if service.service_name == "Kidney" %}selected{% endif %}>Kidney</option>
+                                    <option value="BETA HCG" {% if service.service_name == "BETA HCG" %}selected{% endif %}>BETA HCG</option>
+                                    <option value="COMPLETE BLOOD COUNT" {% if service.service_name == "COMPLETE BLOOD COUNT" %}selected{% endif %}>COMPLETE BLOOD COUNT</option>
+                                    <option value="THYROID" {% if service.service_name == "THYROID" %}selected{% endif %}>THYROID</option>
+                                    <option value="VITAMIN D" {% if service.service_name == "VITAMIN D" %}selected{% endif %}>VITAMIN D</option>
+                                    <option value="LIVER FUNCTION" {% if service.service_name == "LIVER FUNCTION" %}selected{% endif %}>LIVER FUNCTION</option>
+                                    <option value="Hb1c" {% if service.service_name == "Hb1c" %}selected{% endif %}>Hb1c</option>
+                                    </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="depone" class="form-label">Service Charges</label>
+                                <input type="text" class="form-control" id="service_charge" name="service_charge" value="{{service.service_charge}}">
+                            </div>
+                            <input type="hidden" value="{{service.id}}" name="id">
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
+                    {% endcomment %}
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+
+        </div>
+        </form>
+    </div>
+</div>
+</div>
+{% endfor %}
+{% endblock modal_fade %}
+
+{% block custom_js %}
+<script>
+    // project data table
+   
+        
+
+
+    //submit form for add staff
+    $(".submit_btn").click(function () {
+        var form = new FormData($("#servicedd"));
+        // form.append("long_desc",tinyMCE.activeEditor.getContent());
+
+        //Ajax code
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.status == 200) {
+                console.log(xhr.responseText);
+            }
+        }
+        xhr.open("POST", "{% url 'add_lab_services' %}", true);
+
+        xhr.send(form);
+
+        setTimeout(location.reload.bind(location), 2000);
+
+        //update staff from edit page fade
+
+
+    })
+</script>
+{% endblock custom_js %}

@@ -8,6 +8,15 @@ urlpatterns = [
     path('hospital_update',views.hospitalUpdateViews.as_view(),name="hospital_update"),
     path('hospital_profile',profileview.hospitalProfileViews.as_view(),name="hospital_profile"),
     
+    
+    # for treatment tab menu Treatment includes Diseas , Medicine(with time) , Reports , Follow ups dates , Exercise 
+ 
+
+    path('manage_relief_patient',views.manageReliefPatientViews.as_view(),name="manage_relief_patient"),
+    path('manage_treatment/<id>',views.manageTreatmentViews.as_view(),name="manage_treatment"),
+    path('delete__relief_hospital_patient/<id>',views.deleteReliefHospitalPatient,name="delete__relief_hospital_patient"),
+
+
     #Staff list ,add ,update ,delete
     path('manage_staff',views.manageStaffView.as_view(),name="manage_staff"),
     path('update_staff',views.updateStaff,name="update_staff"),
@@ -15,8 +24,12 @@ urlpatterns = [
     #patient list ,add ,update ,delete
     path('manage_patient',views.managePatientView.as_view(),name="manage_patient"),
     path('update_patient',views.updatePatientView,name="update_patient"),
-     path('delete__hospital_patient/<id>',views.deleteHospitalPatient,name="delete__hospital_patient"),
+    path('delete__hospital_patient/<id>',views.deleteHospitalPatient,name="delete__hospital_patient"),
     
+    # Appointment Update Delete treatment
+    path('manage_appointment',views.manageAppointmentView.as_view(),name="manage_appointment"),
+    # path('update_appointment',views.updateAppointment,name="update_appointment"),
+    path('delete_appointment/<id>',views.dateleAppointment,name="delete_appointment"),
     
     #deaprtment manage add update delete 
     path('manage_department',views.manageDepartmentclassView.as_view(),name="manage_department"),

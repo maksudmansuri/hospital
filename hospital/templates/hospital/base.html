@@ -66,15 +66,35 @@
 <script src="{% static '/radmin/assets/plugin/jqueryuicalandar/jquery-ui.min.js'%}"></script>
 <script src="{% static '/radmin/assets/plugin/owlcarousel/owl.carousel.js'%}"></script>
 <script src="{% static '/radmin/assets/bundles/dataTables.bundle.js'%}"></script>      
-
+<script scr="https://code/jquery.com/jquery-3.5.1.min.js"> </script>
 <!-- Jquery Page Js -->
 <script src="{% static '/radmin/js/template.js'%}"></script>
 <script src="{% static '/radmin/js/page/index.js'%}"></script>
 <script src="{% static '/radmin/js/page/virtual.js'%}"></script>
 <script src="{% static '/radmin/js/page/doctor-profile.js'%}"</script>
+<script>
+$(document).ready(function() {
+        $('#myProjectTable')
+        .addClass( 'nowrap' )
+        .dataTable( {
+            responsive: true,
+            columnDefs: [
+                { targets: [-1, -3], className: 'dt-body-right' }
+            ]
+        });
+        $('.deleterow').on('click',function(){
+        var tablename = $(this).closest('table').DataTable();  
+        tablename
+            .row( $(this)
+            .parents('tr') )
+            .remove()
+            .draw();
 
- 
- 
+        } );
+       
+
+    });
+</script>
 {% block custom_js %}{% endblock custom_js %}
 </body>
 </html> 

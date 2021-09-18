@@ -42,7 +42,7 @@
                                 {% for service in services %}
                                 <tr>
                                     <td>
-                                        <span class="fw-bold">{{service.id}}</span>
+                                        <span class="fw-bold">{{forloop.counter}}</span>
                                     </td>
                                     <td>
 
@@ -152,8 +152,8 @@
                                     name="service_name" requried>
                                     <option selected disabled>Select Service</option>
                                     <option {% if service.service_name == "OPD" %}selected{% endif %} value="OPD">OPD Charges</option>
-                                    <option {% if service.service_name == "Emergency" %}selected{% endif %}value="emergency">Emergency</option>
-                                    <option {% if service.service_name == "General Surgical Services" %}selected{% endif %}value="General Surgical Services">General Surgical Services</option>
+                                    <option {% if service.service_name == "Emergency" %}selected{% endif %} value="emergency">Emergency</option>
+                                    <option {% if service.service_name == "General Surgical Services" %}selected{% endif %} value="General Surgical Services">General Surgical Services</option>
                                     <option {% if service.service_name == "Specialty Surgical Services" %}selected{% endif %} value="Specialty Surgical Services">Specialty Surgical Services</option>
                                     <option {% if service.service_name == "X ray/Radiology Services" %}selected{% endif %} value="X ray/Radiology Services">X ray/Radiology Services</option>
                                     <option {% if service.service_name == "Laboratory Services" %}selected{% endif %} value="laboratory">Laboratory Services</option>

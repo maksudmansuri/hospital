@@ -1,0 +1,336 @@
+{% extends 'patient/base.html' %}
+{% load static %}
+{% block title %} :: I-Health:: Hospital Detail {% endblock title %}
+
+{% block custom_css %}
+<style>
+    a {
+        text-decoration: none;
+        -webkit-transition: all 0.3s ease-out;
+        -moz-transition: all 0.3s ease-out;
+        -ms-transition: all 0.3s ease-out;
+        -o-transition: all 0.3s ease-out;
+        transition: all 0.3s ease-out;
+    }
+
+    a:hover {
+        -webkit-transition: all 0.3s ease-out;
+        -moz-transition: all 0.3s ease-out;
+        -ms-transition: all 0.3s ease-out;
+        -o-transition: all 0.3s ease-out;
+        transition: all 0.3s ease-out;
+    }
+
+    .style-4 {
+        background: ;
+        color: #fff;
+        font: 13px Montserrat;
+        text-transform: uppercase;
+        padding: 11px;
+        font-weight: 600;
+        max-width: 250px;
+        display: block;
+        text-align: center;
+        margin: 10px auto;
+        position: relative;
+        -moz-transform: skewX(-6deg);
+        -webkit-transform: skewX(-6deg);
+        -o-transform: skewX(-6deg);
+        -ms-transform: skewX(-6deg);
+        transform: skewX(-6deg);
+        box-shadow: inset -150px 0 0 0 #6aab9c, inset 200px 0 0 0 #6aab9c;
+        /* set the 150 for maximum width division */
+        -webkit-transition: box-shadow 0.5s ease-out;
+        -moz-transition: box-shadow 0.5s ease-out;
+        -ms-transition: box-shadow 0.5s ease-out;
+        -o-transition: box-shadow 0.5s ease-out;
+        transition: box-shadow 0.5s ease-out;
+    }
+
+    .style-4:hover {
+        -webkit-transition: box-shadow 0.5s ease-out;
+        -moz-transition: box-shadow 0.5s ease-out;
+        -ms-transition: box-shadow 0.5s ease-out;
+        -o-transition: box-shadow 0.5s ease-out;
+        transition: box-shadow 0.5s ease-out;
+        box-shadow: inset 200px 0 0 0 #9f4d4e, inset -200px 0 0 0 #9f4d4e;
+        /* set the 150 for maximum width division */
+        color: #fff;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+<!-- Body: Body -->
+<div class="body d-flex py-3">
+    <div class="container-xxl">
+
+        <div class="row g-3">
+            <div class="col-xl-4 col-lg-12 col-md-12">
+                <div class="card teacher-card  mb-3">
+                    <div class="card-body d-flex teacher-fulldeatil">
+                        <div class="profile-teacher pe-xl-4 pe-md-2 pe-sm-4 pe-4 text-center w220">
+                            <a href="#">
+                                <img src="{{hospital.profile_pic}}" alt=""
+                                    class="avatar xl rounded-circle img-thumbnail shadow-sm">
+                            </a>
+                            <div class="about-info d-flex align-items-center mt-3 justify-content-center flex-column">
+                                <span class="text-muted small">Doctor ID : {{hospital.id}}</span>
+                            </div>
+                        </div>
+                        <div class="teacher-info border-start ps-xl-4 ps-md-4 ps-sm-4 ps-4 w-100">
+                            <h6 class="mb-0 mt-2  fw-bold d-block fs-6">{{hospital.hopital_name}}</h6>
+                            <span class="py-1 fw-bold small-11 mb-0 mt-1 text-muted">Heart Surgeon,London,
+                                England</span>
+                            <p class="mt-2">{{hospital.about}}</p>
+                            <div class="row g-2 pt-2">                                
+                                <div class="col-xl-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="icofont-birthday-cake"></i>
+                                        <span class="ms-2">{{hospitalcontact.establishment_year}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="icofont-address-book"></i>
+                                        <span
+                                            class="ms-2">{{hospitalcontact.address1}}{{hospitalcontact.address2}}{{hospitalcontact.city}}{{hospitalcontact.pin_code}}{{hospitalcontact.state}}{{hospitalcontact.country}}</span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8 col-lg-12 col-md-12">
+                <div class="card teacher-card  mb-3">
+                    <div class="card-body d-flex teacher-fulldeatil">
+                        <div class="profile-teacher pe-xl-4 pe-md-2 pe-sm-4 pe-4 text-center w220">
+                            <a href="#">
+                                <img src="{{hospitalstaffdoctor.doctor.profile_pic}}" alt=""
+                                    class="avatar xl rounded-circle img-thumbnail shadow-sm">
+                            </a>
+                            <div class="about-info d-flex align-items-center mt-3 justify-content-center flex-column">
+                                <span class="text-muted small">Doctor ID : {{hospitalstaffdoctor.ssn_id}}</span>
+                            </div>
+                        </div>
+                        <div class="teacher-info border-start ps-xl-4 ps-md-4 ps-sm-4 ps-4 w-100">
+                            <h6 class="mb-0 mt-2  fw-bold d-block fs-6">{{hospitalstaffdoctor.doctor.name_title}} {{hospitalstaffdoctor.doctor.fisrt_name}} {{hospitalstaffdoctor.doctor.last_name}}</h6>
+                            <span class="py-1 fw-bold small-11 mb-0 mt-1 text-muted">{{hospitalstaffdoctor.ssn_id}}</span>
+                            <p class="mt-2">{{hospital.specialist}}</p>
+                            <p class="mt-2">{{hospital.gender}}</p>
+                            <div class="row g-2 pt-2">                                
+                                <div class="col-xl-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="icofont-birthday-cake"></i>
+                                        <span class="ms-2">{{hospitalcontact.establishment_year}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="icofont-address-book"></i>
+                                        <span
+                                            class="ms-2">{{hospitalcontact.address1}}{{hospitalcontact.address2}}{{hospitalcontact.city}}{{hospitalcontact.pin_code}}{{hospitalcontact.state}}{{hospitalcontact.country}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 posts">
+                                <a type="button" class="btn btn-primary style-4" data-bs-toggle="modal"
+                                    data-bs-target="#book-an-appointment">Book an Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- Row End -->
+        <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-4 row-deck py-1 pb-4">
+               <div class="col-xl-12">
+                    
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <table class="table  align-middle mb-0" id="myProjectTable" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Shift</th>
+                                        <th>Time</th>
+                                        <th>Monday</th>
+                                        <th>Tuesday</th>
+                                        <th>Wednessday</th>
+                                        <th>Thursday</th>
+                                        <th>Friday</th>
+                                        <th>Saturday</th>
+                                        <th>Sunday</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for hospitalstaffdoctorschedule in hospitalstaffdoctorschedual %}
+                                    {% if hospitalstaffdoctorschedule.work == "OPD" %}
+                                    <tr>
+                                        <th>{{hospitalstaffdoctorschedule.shift}}</th>
+                                        <th>{{hospitalstaffdoctorschedule.start_time|time:'h:i'}} to
+                                            {{hospitalstaffdoctorschedule.end_time|time:'h:i'}}</th></a>
+                                        <td>{% if hospitalstaffdoctorschedule.monday == "YES" %}<a
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}
+                                        </td>
+                                        <td>{% if hospitalstaffdoctorschedule.tuesday == "YES" %}<a
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}
+                                        </td>
+                                        <td>{% if hospitalstaffdoctorschedule.wednesday == "YES" %}<a
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}
+                                        </td>
+                                        <td>{% if hospitalstaffdoctorschedule.thursday == "YES" %}<a
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}
+                                        </td>
+                                        <td>{% if hospitalstaffdoctorschedule.friday == "YES" %}<a
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}
+                                        </td>
+                                        <td>{% if hospitalstaffdoctorschedule.saturday == "YES" %}<a
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}
+                                        </td>
+                                        <td>{% if hospitalstaffdoctorschedule.sunday == "YES" %}<a
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+                
+                 
+                
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block modal_fade %}
+<!--View Schedule for doctor-->
+<!--Start Schedule-->
+<!-- Modal XL -->
+
+<!--End Schedule-->
+ <div class="modal fade" id="book-an-appointment" tabindex="-1" aria-labelledby="exampleModalCenterTitle"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-radius modal-shadow">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLiveLabel">Make appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="card mb-3">
+                       
+                        <div class="card-body">
+                            <div class="wrapper">
+                                <div id="calendar">
+                                    <div class="monthChange"></div>
+                                    <div class='timepicker'>
+                                        <div class="owl">
+                                        
+                                            <div>7:00</div>
+                                            <div>7:00</div>
+                                            <div>7:00</div>
+                                            <div>7:00</div>
+                                            <div>7:00</div>
+                                            <div>7:00</div>
+                                            <div>7:00</div>
+                                            <div>7:00</div>
+                                        </div>
+                                        <div class="fade-l"></div>
+                                        <div class="fade-r"></div>
+                                    </div>
+                                </div>
+                                <div class="inner-wrap">
+                                        <select class="form-select mb-3" aria-label="Default select example" id ="serviceid">
+                                            {% for service in hospitalservice %}
+                                            {% if service.service_name == "OPD" or service.service_name == "Emergency" %}
+                                            <option value="{{service.id}}" selected>{{service.service_name}} -> Rs  {{service.service_charge}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                        <select class="form-select mb-3" aria-label="Default select example" id ="hdocid">                                           
+                                            <option value="{{hospitalstaffdoctor.id}}" selected>{{hospitalstaffdoctor.doctor.name_title}} {{hospitalstaffdoctor.doctor.fisrt_name}} {{hospitalstaffdoctor.doctor.last_name}}</option>
+                                            
+                                        </select>
+                                        <button type="button"  data-bs-dismiss="modal" aria-label="Close" class="btn btn-primary disabled request" id="sbt_button" > Request appointment
+                                            <span name = "schdate">On</span>
+                                            <span class="day fw-bold text-dark"  id="schdate"></span>
+                                            <span  name = "schtime">At</span>
+                                            <span class="time fw-bold text-dark" id="schtime"></span>
+                                            <i class="icofont-dotted-right fs-3" ></i>
+                                        </button>
+                                   
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!--Book an  appointment.Modal-->
+
+{% endblock modal_fade %}
+
+{% block custom_js %}
+
+<script>
+ $(document).on("click", "#sbt_button", function (e){
+        e.preventDefault();
+        var scdat = document.getElementById('schdate').innerHTML
+        var schtime = document.getElementById('schtime').innerHTML
+        console.log(scdat,schtime)
+        console.log($('#hdocid').val())
+        console.log($('#serviceid').val())
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'bookanappointment' %}",
+            data: {
+                'doctorid':$('#hdocid').val(),
+                'serviceid':$('#serviceid').val(),
+                'time':scdat,
+                'date':schtime,
+                'csrfmiddlewaretoken': "{{csrf_token}}",
+                'action': 'post'
+            },
+            success: function (json) {
+                console.log(json)
+                alert('Do not Refesh page you will be redirected to the payment page')
+
+            },
+            error: function (xhr, errmsg, err) {
+
+            }
+        });
+    })
+        
+
+</script>
+<script>
+
+</script>
+
+{% endblock custom_js %}

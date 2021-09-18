@@ -1,5 +1,5 @@
 {% load static %}
- <div class="sidebar px-4 py-4 py-md-5 me-0 sidebar-mini">
+ <div class="sidebar px-4 py-4 py-md-5 me-0">
         <div class="d-flex flex-column h-100">
             <a href="{% url 'patient_home' %}" class="mb-0 brand-icon">
                 <span class="logo-icon">
@@ -23,13 +23,33 @@
                 <li><a class="m-link" href="virtual.html"><i class="icofont-ui-video-chat fs-5"></i> <span>I-Health Virtual</span></a></li>
                 {% url 'hospital_list' as hospital_list %}
                 {% url 'hospital_details' as hospital_details %}
+               
                 <li class="collapsed">
-                    <a class="m-link{% if request.path == hospital_list %} active {% endif %} {% if request.path == hospital_details %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Doctor" href="#">
+                    <a class="m-link{% if request.path == hospital_list %} active {% endif %} {% if request.path == hospital_details %} active {% endif %} {% if request.path == viewbookedanappointment %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Hospital" href="#">
                         <i class="icofont-hospital fs-5"></i>  <span>Hospitals</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                         <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse{% if request.path == patient_hospital_listhome %} show {% endif %}{% if request.path == hospital_details %} show {% endif %}" id="menu-Doctor">
-                            <li><a class="ms-link {% if request.path == hospital_list %} active {% endif %} {% if request.path == hospital_details %} active {% endif %}" href="{% url 'hospital_list' %}">All Hospital</a></li>
-                            <li><a class="ms-link" href="appointment.html">Appointment</a></li>
+                        <ul class="sub-menu collapse{% if request.path == patient_hospital_listhome %} show {% endif %}{% if request.path == hospital_details %} show {% endif %}{% if request.path == viewbookedanappointment %} show {% endif %}" id="menu-Hospital">
+                            <li><a class="ms-link {% if request.path == hospital_list %} active {% endif %} {% if request.path == hospital_details %} active {% endif %}" href="{% url 'hospital_list' %}">All Hospitals</a></li>
+                        </ul>
+                </li>
+                {% url 'laboratory_list' as laboratory_list %}
+                {% url 'laboratory_details' as laboratory_details %}
+                 <li class="collapsed">
+                    <a class="m-link{% if request.path == hospital_list %} active {% endif %} {% if request.path == hospital_details %} active {% endif %} {% if request.path == viewbookedanappointment %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Labs" href="#">
+                        <i class="icofont-blood-test fs-5"></i>  <span>Labs</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
+                        <!-- Menu: Sub menu ul -->
+                        <ul class="sub-menu collapse{% if request.path == laboratory_list %} show {% endif %}{% if request.path == laboratory_details %} show {% endif %}{% if request.path == viewbookedanappointment %} show {% endif %}" id="menu-Labs">
+                            <li><a class="ms-link  {% if request.path == laboratory_list %} active {% endif %}" href="{% url 'laboratory_list' %} ">All Laboratories</a></li>
+                            
+                        </ul>
+                </li>                 
+                {% url 'viewbookedanappointment' as viewbookedanappointment %}
+                <li class="collapsed">
+                    <a class="m-link{% if request.path == viewbookedanappointment %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Appointments" href="#">
+                        <i class="icofont-book-alt"></i>  <span>Appointments</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
+                        <!-- Menu: Sub menu ul -->
+                        <ul class="sub-menu collapse{% if request.path == patient_hospital_listhome %} show {% endif %}{% if request.path == hospital_details %} show {% endif %}{% if request.path == viewbookedanappointment %} show {% endif %}" id="menu-Appointments">
+                            <li><a class="ms-link  {% if request.path == viewbookedanappointment %} active {% endif %}" href="{% url 'viewbookedanappointment' %} ">Appointments</a></li>
                         </ul>
                 </li>
                 {% comment %} <li class="collapsed">

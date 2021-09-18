@@ -1,0 +1,81 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %} {% endblock title %} </title>
+    <link rel="icon" href="{% static '/radmin/assets/favicon.ico' %}" type="image/x-icon"> <!-- Favicon-->
+    <!-- plugin css file  -->
+    <link rel="stylesheet" href="{% static '/radmin/assets/plugin/datatables/responsive.dataTables.min.css' %}
+    ">
+       <!-- Plugin css file  -->
+    <link rel="stylesheet" href="{% static '/radmin/assets/plugin/owlcarousel/owl.carousel.min.css' %}">
+    
+    <link rel="stylesheet" href="{% static '/radmin/assets/plugin/datatables/dataTables.bootstrap5.min.css'  %}">
+    <!-- project css file  -->
+    <link rel="stylesheet" href="{% static '/radmin/assets/css/ihealth.style.min.css'  %}">
+
+    {% block custom_css %}{% endblock custom_css %}
+</head>
+<body>
+
+<div id="ihealth-layout" class="theme-tradewind">
+    
+    <!-- sidebar --> 
+    {% include 'lab/sidebar.html' %}
+    
+    <!-- main body area -->
+    <div class="main px-lg-4 px-md-4">
+        {% include 'lab/navbar.html' %}
+       
+       {% if messages %} 
+            {% for message in messages  %}
+            {% if message.tags == "error" %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong> {{message}}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>               
+                {% endif %}
+                {% if message.tags == "success" %}
+                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        <strong> {{message}}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        {% block content %}
+
+        {% endblock content %}
+        
+
+        {% include 'hospital/settings.html' %}
+        {% block modal_fade %}
+        {% endblock modal_fade %}
+    </div>
+  
+</div>
+
+<script src="{% static '/radmin/assets/bundles/libscripts.bundle.js'%}"></script>
+
+<!-- Plugin Js -->
+<script src="{% static '/radmin/assets/bundles/apexcharts.bundle.js'%}"></script>
+<script src="{% static '/radmin/assets/plugin/jqueryuicalandar/jquery-ui.min.js'%}"></script>
+<script src="{% static '/radmin/assets/plugin/owlcarousel/owl.carousel.js'%}"></script>
+<script src="{% static '/radmin/assets/bundles/dataTables.bundle.js'%}"></script>      
+<script scr="https://code/jquery.com/jquery-3.5.1.min.js"> </script>
+<!-- Jquery Page Js -->
+<script src="{% static '/radmin/js/template.js'%}"></script>
+<script src="{% static '/radmin/js/page/index.js'%}"></script>
+<script src="{% static '/radmin/js/page/virtual.js'%}"></script>
+<script src="{% static '/radmin/js/page/doctor-profile.js'%}"</script>
+<script>
+
+</script>
+{% block custom_js %}{% endblock custom_js %}
+</body>
+</html> 
+

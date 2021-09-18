@@ -12,7 +12,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
 
         user=request.user
         if user.is_authenticated:
-            if user.user_type==1:
+            if user.user_type == "1":
                 if modulename == "radmin.views" or modulename == "django.views.static":
                     pass
                 elif modulename == "accounts.logoutview":
@@ -27,7 +27,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     pass
                 else: 
                     return HttpResponseRedirect(reverse("radmin_home"))
-            elif user.user_type=="2":
+            elif user.user_type == "2":
                 if modulename == "hospital.views" or modulename == "django.views.static":
                     pass
                 elif modulename == "accounts.logoutview":
@@ -40,7 +40,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     pass
                 else:
                     return HttpResponseRedirect(reverse("hospital_dashboard"))
-            elif user.user_type=="3":
+            elif user.user_type == "3":
                 if modulename == "customers.views" or modulename == "django.views.static":
                     pass
                 elif modulename == "accounts.profilePic":
@@ -59,33 +59,42 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     pass 
                 else:
                     return HttpResponseRedirect(reverse("dashboard"))
-            elif user.user_type==4:
+            elif user.user_type == "4":
                 if modulename == "patient.views" or modulename == "django.views.static":
                     pass
                 elif modulename == "accounts.logoutview":
                     pass
-                if modulename == "front.views":
+                elif modulename == "django.contrib.auth.views":
                     pass
                 elif modulename == "media":
                     pass
                 else:
                     # return redirect("/admin")
                     return HttpResponseRedirect(reverse("patient_home"))
-            elif user.user_type=="5":
-                if modulename == "ecaadmin.views" or modulename == "django.views.static":
+            elif user.user_type == "5":
+                if modulename == "lab.views" or modulename == "django.views.static":
                     pass
-                elif modulename == "accounts.profilePic":
+                elif modulename == "accounts.logoutview":
                     pass
-                elif modulename == "front.views":
+                elif modulename == "django.contrib.auth.views":
                     pass
-                elif modulename == "media.views":
-                    pass
-                if modulename == "django.contrib.auth.views":
-                    pass
-                elif  modulename == "chat.views":
+                elif modulename == "media":
                     pass
                 else:
-                    return HttpResponseRedirect(reverse("admin_home"))
+                    # return redirect("/admin")
+                    return HttpResponseRedirect(reverse("lab_home"))
+            elif user.user_type == "6":
+                if modulename == "pharmacy.views" or modulename == "django.views.static":
+                    pass
+                elif modulename == "accounts.logoutview":
+                    pass
+                elif modulename == "django.contrib.auth.views":
+                    pass
+                elif modulename == "media":
+                    pass
+                else:
+                    # return redirect("/admin")
+                    return HttpResponseRedirect(reverse("pharmacy_home"))
             elif user.is_superuser==True:
                 # if modulename == "ecaadmin.views" or modulename == "django.views.static":
                 #     pass

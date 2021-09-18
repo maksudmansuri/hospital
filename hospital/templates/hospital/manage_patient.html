@@ -1,6 +1,6 @@
 {% extends 'hospital/base.html' %}
 {% load static %}
-{% block title %} :: I-Health:: Dashboard {% endblock title %}
+{% block title %} :: I-Health:: Hospital Patients List {% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
 
@@ -37,7 +37,7 @@
                                 <tbody>
                                 {% for hos_patient  in hos_patients %}
                                     <tr>
-                                        <td>{{hos_patient.id}}</td>
+                                        <td>{{forloop.counter}}</td>
                                         <td>
                                         {% comment %} <img src="assets/images/xs/avatar3.jpg" class="avatar  rounded-circle me-2" alt="profile-image"> {% endcomment %}
                                         <span>{{hos_patient.name_title}} {{hos_patient.first_name}} {{hos_patient.last_name}}</span></td>

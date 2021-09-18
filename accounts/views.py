@@ -94,7 +94,6 @@ def verifyOTP(request,phone):
         return HttpResponseRedirect(reverse("dologin"))
         # return HttpResponseRedirect(reverse("dologin"))
 
-
 def dologin(request):
     print(request.user)
     if request.method == "POST":
@@ -133,6 +132,20 @@ def dologin(request):
                     #     return HttpResponseRedirect(reverse('profile_picUpload'))
                     else:
                         return HttpResponseRedirect(reverse('patient_home'))
+                elif user.user_type=="5":
+                    if 'next' in request.POST:
+                        return redirect(request.POST.get('next'))
+                    # elif user.profile_pic:
+                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                    else:
+                        return HttpResponseRedirect(reverse('lab_home'))
+                elif user.user_type=="6":
+                    if 'next' in request.POST:
+                        return redirect(request.POST.get('next'))
+                    # elif user.profile_pic:
+                    #     return HttpResponseRedirect(reverse('profile_picUpload'))
+                    else:
+                        return HttpResponseRedirect(reverse('pharmacy_home'))
                 else:
                 # For Djnago default Admin Login 
                     return HttpResponseRedirect(reverse('admin'))
@@ -255,8 +268,6 @@ class AuthorizedSingup(SuccessMessageMixin,CreateView):
         user.save() # Save the data
         return HttpResponseRedirect(reverse("dologin"))
 
-
-
 class LabSingup(SuccessMessageMixin,CreateView):
     template_name="accounts/labsingup.html"
     model=CustomUser
@@ -264,14 +275,31 @@ class LabSingup(SuccessMessageMixin,CreateView):
     success_message = "Hospital User Created"  
     def form_valid(self,form):
         #Saving Custom User Object for Merchant User
-        print('i m here at dosignup')
+        print('i m here at Hospital singup')
         user=form.save(commit=False)
-        user.is_active=True
         user.user_type=5
         user.set_password(form.cleaned_data["password"])
-        print('just one step ahead save?')
-        user.save()
-        return HttpResponseRedirect(reverse("dologin"))
+        print('just one step ahead save?')   
+        user.counter += 1  # Update Counter At every Call
+        user.save() # Save the data
+        mobile= user.phone
+        keygen = generateKey()
+        key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
+        OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
+        print(OTP.at(user.counter))
+        otp=OTP.at(user.counter)
+        conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
+        res = conn.getresponse()
+        data = res.read()
+        data=data.decode("utf-8")
+        data=ast.literal_eval(data)
+        print(data)
+        if data["Status"] == 'Success':
+            user.otp_session_id = data["Details"]
+            user.save()
+            print('In validate phone :'+user.otp_session_id)
+        messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
+        return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
 
 class PharmacySingup(SuccessMessageMixin,CreateView):
     template_name="accounts/pharmacysingup.html"
@@ -280,35 +308,31 @@ class PharmacySingup(SuccessMessageMixin,CreateView):
     success_message = "Hospital User Created"  
     def form_valid(self,form):
         #Saving Custom User Object for Merchant User
-        print('i m here at dosignup')
+        print('i m here at Hospital singup')
         user=form.save(commit=False)
-        user.is_active=True
         user.user_type=6
         user.set_password(form.cleaned_data["password"])
-        print('just one step ahead save?')
-        user.save()
-        current_site=get_current_site(self.request)
-        email_subject='Active your Account',
-        message=render_to_string('accounts/activate.html',
-        {
-            'user':user,
-            'domain':current_site.domain,
-            'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-            'token':generate_token.make_token(user)
-        }
-        )
-        print(urlsafe_base64_encode(force_bytes(user.pk)),)
-        print(generate_token.make_token(user))
-        print(current_site.domain)
-        email_message=EmailMessage(
-            email_subject,
-            message,
-            settings.EMAIL_HOST_USER,
-            [user.email]
-        )
-        email_message.send()
-        msg=messages.success(self.request,"Sucessfully Singup Please Verify Your Account First")
-        return HttpResponseRedirect(reverse("dologin"))
+        print('just one step ahead save?')   
+        user.counter += 1  # Update Counter At every Call
+        user.save() # Save the data
+        mobile= user.phone
+        keygen = generateKey()
+        key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
+        OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
+        print(OTP.at(user.counter))
+        otp=OTP.at(user.counter)
+        conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
+        res = conn.getresponse()
+        data = res.read()
+        data=data.decode("utf-8")
+        data=ast.literal_eval(data)
+        print(data)
+        if data["Status"] == 'Success':
+            user.otp_session_id = data["Details"]
+            user.save()
+            print('In validate phone :'+user.otp_session_id)
+        messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
+        return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
 
 def adminSingup(request):
     if request.method=="POST":
@@ -391,7 +415,7 @@ def activate(request,uidb64,token):
         user.is_Email_Verified=True
         user.save()
         messages.add_message(request,messages.SUCCESS,'account  is Activated Successfully')
-        return redirect('/accounts/dologin')
+        return HttpResponseRedirect(reverse('dologin'))
     return render(request,'accounts/activate_failed.html',status=401)
 
 # def VerifyOTP(request,phone):

@@ -302,9 +302,6 @@
         e.preventDefault();
         var scdat = document.getElementById('schdate').innerHTML
         var schtime = document.getElementById('schtime').innerHTML
-        console.log(scdat,schtime)
-        console.log($('#hdocid').val())
-        console.log($('#serviceid').val())
         $.ajax({
             type: 'POST',
             url: "{% url 'bookanappointment' %}",
@@ -316,10 +313,9 @@
                 'csrfmiddlewaretoken': "{{csrf_token}}",
                 'action': 'Hospital'
             },
-            success: function (json) {
-                console.log(json)
-                alert('Do not Refesh page you will be redirected to the payment page')
-
+            success: function (id) {
+                console.log(id)
+                window.location.replace("{% url 'checkout' %}");
             },
             error: function (xhr, errmsg, err) {
 

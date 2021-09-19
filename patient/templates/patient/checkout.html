@@ -1,0 +1,270 @@
+{% extends 'patient/base.html' %}
+{% load static %}
+{% block title %} :: I-Health:: Hospital Detail {% endblock title %}
+
+{% block custom_css %}
+<style>
+    a {
+        text-decoration: none;
+        -webkit-transition: all 0.3s ease-out;
+        -moz-transition: all 0.3s ease-out;
+        -ms-transition: all 0.3s ease-out;
+        -o-transition: all 0.3s ease-out;
+        transition: all 0.3s ease-out;
+    }
+
+    a:hover {
+        -webkit-transition: all 0.3s ease-out;
+        -moz-transition: all 0.3s ease-out;
+        -ms-transition: all 0.3s ease-out;
+        -o-transition: all 0.3s ease-out;
+        transition: all 0.3s ease-out;
+    }
+
+    .style-4 {
+        background: ;
+        color: #fff;
+        font: 13px Montserrat;
+        text-transform: uppercase;
+        padding: 11px;
+        font-weight: 600;
+        max-width: 250px;
+        display: block;
+        text-align: center;
+        margin: 10px auto;
+        position: relative;
+        -moz-transform: skewX(-6deg);
+        -webkit-transform: skewX(-6deg);
+        -o-transform: skewX(-6deg);
+        -ms-transform: skewX(-6deg);
+        transform: skewX(-6deg);
+        box-shadow: inset -150px 0 0 0 #6aab9c, inset 200px 0 0 0 #6aab9c;
+        /* set the 150 for maximum width division */
+        -webkit-transition: box-shadow 0.5s ease-out;
+        -moz-transition: box-shadow 0.5s ease-out;
+        -ms-transition: box-shadow 0.5s ease-out;
+        -o-transition: box-shadow 0.5s ease-out;
+        transition: box-shadow 0.5s ease-out;
+    }
+
+    .style-4:hover {
+        -webkit-transition: box-shadow 0.5s ease-out;
+        -moz-transition: box-shadow 0.5s ease-out;
+        -ms-transition: box-shadow 0.5s ease-out;
+        -o-transition: box-shadow 0.5s ease-out;
+        transition: box-shadow 0.5s ease-out;
+        box-shadow: inset 200px 0 0 0 #9f4d4e, inset -200px 0 0 0 #9f4d4e;
+        /* set the 150 for maximum width division */
+        color: #fff;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-12">
+            <div class="d-flex justify-content-center">
+            {% if order.booking_for == "1" %}
+                <table class="card p-5">
+                    <tbody><tr>
+                        <td></td>
+                        <td class="text-center">
+                            <table>
+                                <tbody><tr>
+                                    <td class="text-center">
+                                        <h2>&#8377; {{booking.amount}}</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center py-2">
+                                        <h4 class="mb-0">Thanks for using I-Health.</h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="pt-2 pb-4">
+                                        <table>
+                                            <tbody><tr>
+                                                <td>
+                                                    Attn: <strong>{{booking.hospitalstaffdoctor.hospital}}</strong> {{booking.hospitalstaffdoctor}}<br>
+                                                    Adress: {{booking.hospitalstaffdoctor.hospital.address1}} {{booking.hospitalstaffdoctor.hospital.address2}} {{booking.hospitalstaffdoctor.hospital.city}}{{booking.hospitalstaffdoctor.hospital.state}}{{booking.hospitalstaffdoctor.hospital.pin_code}}<br>
+                                                    Phone: +88 123 456 789<br>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="pt-2">
+                                                    <table class="table table-bordered">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="text-start">{{booking.service}}</td>
+                                                            <td class="text-end">&#8377; {{booking.service.service_charge}}</td>
+                                                        </tr>                                                        
+                                                        <tr>
+                                                            <td class="text-start w-80"><strong>Total</strong></td>
+                                                            <td class="text-end fw-bold">&#8377; {{booking.service.service_charge}}</td>
+                                                        </tr>
+                                                    </tbody></table>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
+                                    </td>
+                                </tr>
+                            </tbody></table>
+                            <table class="mt-3 text-center w-100">
+                                <tbody>
+                                <tr>
+                                <div class="col-xl-12 posts">
+                                    <a class="btn btn-primary style-4" href="{% url 'paytmprocess' %}"> Proccessed to PAY</a>
+                                </div>
+                                </tr>
+                            </tbody></table>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody></table>
+            {% endif %}
+            {% if order.booking_for == "2" %}
+                <table class="card p-5">
+                    <tbody><tr>
+                        <td></td>
+                        <td class="text-center">
+                            <table>
+                                <tbody><tr>
+                                    <td class="text-center">
+                                        <h2>&#8377; {{booking.amount}}</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center py-2">
+                                        <h4 class="mb-0">Thanks for using I-Health.</h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="pt-2 pb-4">
+                                        <table>
+                                            <tbody><tr>
+                                                <td>
+                                                    Attn: <strong>{{booking.lab}}</strong> <br>
+                                                    Address: {{booking.lab.address}},{{booking.lab.city}}, {{booking.lab.state}}-{{booking.lab.pin_code}},{{booking.lab.country}}<br>
+                                                    Phone: +88 123 456 789<br>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="pt-2">
+                                                    <table class="table table-bordered">
+                                                        <tbody>
+                                                        {% for service in services %}
+                                                        <tr>
+                                                            <td class="text-start">{{service.service_name}}</td>
+                                                            <td class="text-end">&#8377; {{service.service_charge}}</td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                        <tr>
+                                                            <td class="text-start w-80"><strong>Total</strong></td>
+                                                            <td class="text-end fw-bold">&#8377; {{booking.amount}}</td>
+                                                        </tr>
+                                                    </tbody></table>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
+                                    </td>
+                                </tr>
+                              
+                            </tbody></table>
+                            <table class="mt-3 text-center w-100">
+                                <tbody>
+                                <tr> 
+                                <div class="col-xl-12 posts">
+                                    <a class="btn btn-primary style-4" href="{% url 'paytmprocess' %}"> Proccessed to PAY</a>
+                                </div>
+                                </tr>
+                            </tbody></table>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody></table>
+            {% endif %}
+            </div>
+        </div>
+        {% comment %} <div class="col-lg-8 col-md-12">
+            <div class="d-flex justify-content-center">
+                <table class="card p-5">
+                    <tbody><tr>
+                        <td></td>
+                        <td class="text-center">
+                            <table>
+                                <tbody><tr>
+                                    <td class="text-center">
+                                        <h2>$48.98 Paid</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center py-2">
+                                        <h4 class="mb-0">Thanks for using I-Health.</h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="pt-2 pb-4">
+                                        <table>
+                                            <tbody><tr>
+                                                <td>
+                                                    Attn: <strong>Zydus Hospital</strong> Winston Salem FL 27107<br>
+                                                    Email: info@zydus.com<br>
+                                                    Phone: +88 123 456 789<br>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="pt-2">
+                                                    <table class="table table-bordered">
+                                                        <tbody><tr>
+                                                            <td class="text-start">Extended Production License</td>
+                                                            <td class="text-end">$ 20.99</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-start">1 year Production License</td>
+                                                            <td class="text-end">$ 19.99</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-start">Production and Distribution n</td>
+                                                            <td class="text-end">$ 8.00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-start w-80"><strong>Total</strong></td>
+                                                            <td class="text-end fw-bold">$ 48.98</td>
+                                                        </tr>
+                                                    </tbody></table>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="pt-2 pb-2 text-center">
+                                        <a href="#">View in browser</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-0 text-center">
+                                        PXL Inc. 47 Aurora St. South West, CT 06074
+                                    </td>
+                                </tr>
+                            </tbody></table>
+                            <table class="mt-3 text-center w-100">
+                                <tbody><tr>
+                                    <td class="aligncenter content-block">Questions? Email <a href="mailto:">info@pixelwibes.com</a></td>
+                                </tr>
+                            </tbody></table>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody></table>
+            </div>
+        </div> {% endcomment %}
+    </div>
+{% endblock content %}
+
+
+{% block modal_fade %}
+{% endblock modal_fade %}
+
+{% block custom_js %}
+{% endblock custom_js %}

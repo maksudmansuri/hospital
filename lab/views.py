@@ -216,13 +216,13 @@ def deleteMainGallery(request):
 class ViewAppointmentViews(SuccessMessageMixin,View):
     def get(self, request, *args, **kwargs):
         try:
-            bookings = slot.objects.filter(lab=request.user.labs,is_active=True,is_taken=False)
+            bookings = slot.objects.filter(lab=request.user.labs,is_active=True,is_cancelled = False)
             booking_labtest_list =[]
             for booking in bookings:
                 labtest = LabTest.objects.filter(slot=booking)
                 booking_labtest_list.append({'booking':booking,'labtest':labtest})
         except Exception as e:
-            messages.add_message(request,messages.ERROR,"user not available")
+            messages.add_message(request,messages.ERROR,e)
             return HttpResponseRedirect(reverse("view_lab_appointment"))        
         param={'booking_labtest_list':booking_labtest_list}
         return render(request,"lab/manage_appointment.html",param)        
@@ -258,12 +258,12 @@ class ViewAppointmentViews(SuccessMessageMixin,View):
             booking.status=status        
             booking.is_applied=is_applied
             booking.save()
+            return HttpResponse("ok")
         except Exception as e:
-            print(e)
-            # return HttpResponse(e)
+            return HttpResponse(e)
        
-        print("Appoinment update saved")      
-        return HttpResponseRedirect(reverse("view_lab_appointment"))
+
+
 
 
 def dateleLabAppointment(request, id):
@@ -278,5 +278,24 @@ def dateleLabAppointment(request, id):
     return HttpResponseRedirect(reverse("view_lab_appointment"))
 
 
-class UploadReportViews(SuccessMessageMixin,CreateView):
-    pass
+def UploadReportViews(request,id):
+    report = request.FILES.get('report')        
+    desc = request.POST.get('desc')
+    try:
+        booking = get_object_or_404(slot,id=id)
+        if report:
+            print()
+            fs=FileSystemStorage()
+            filename1=fs.save(report.name,report)
+            report_url=fs.url(filename1)
+            booking.report=report_url
+            booking.desc = desc
+            booking.save()
+        messages.add_message(request,messages.SUCCESS,"Appointment Successfully Deleted")
+        return HttpResponseRedirect(reverse("view_lab_appointment"))
+    except Exception as e:
+        messages.add_message(request,messages.SUCCESS,e)
+        return HttpResponseRedirect(reverse("view_lab_appointment"))
+
+    
+    

@@ -975,7 +975,7 @@ class manageAppointmentView(SuccessMessageMixin,View):
     def get(self, request, *args, **kwargs):
         try:
             hospital=Hospitals.objects.get(admin=request.user)
-            booking = Booking.objects.filter(service__user=hospital.admin,is_active=True,is_taken=False)
+            booking = Booking.objects.filter(service__user=hospital.admin,is_active=True,is_cancelled = False)
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("manage_appoinment"))        

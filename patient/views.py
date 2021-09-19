@@ -1,15 +1,14 @@
 from lab.models import Medias
-import requests
 from django.views.generic.base import View
 from requests.models import Response
 from hospital.models import HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, ServiceAndCharges
-from patient.models import Booking, Orders, LabTest, slot
+from patient.models import Booking, Orders, LabTest, Temp, slot
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from accounts.models import HospitalPhones, Hospitals, Labs, Patients
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.list import ListView
 from django.contrib import messages
 from django.urls.base import resolve, reverse
@@ -17,7 +16,13 @@ from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
 import json
 from patient import PaytmChecksum
+from .basket import Basket
+from patient import basket
 # Create your views here.
+
+"""
+Personal Details of Patients
+"""
 class patientdDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try: 
@@ -82,6 +87,9 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
         except Exception as e:
             HttpResponse(e)
 
+""""
+Hospital list and profile
+"""
 class HospitalListViews(ListView):
     def get(self, request, *args, **kwargs):
         hospitals = Hospitals.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True)
@@ -134,22 +142,48 @@ class DoctorsBookAppoinmentViews(SuccessMessageMixin,View):
         param = {'hospital':hospital,'hospitalservice':hospitalservice,'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual,'opd_time':opd_time}  
         return render(request,"patient/bookappoinment.html",param)
 
+""""
+History for Hospital Booking
+"""
+class ViewBookedAnAppointmentViews(SuccessMessageMixin,View):
+    def get(self,request):
+        booked = Booking.objects.filter(patient = request.user)
+        labbooks   =   slot.objects.filter(patient = request.user)
+        booking_labtest_list =[]
+        for labbook in labbooks:            
+                labtests = LabTest.objects.filter(slot=labbook)
+                booking_labtest_list.append({'labbook':labbook,'labtests':labtests})
+        print(booked)
+        param = {'booked':booked,"booking_labtest_list":booking_labtest_list}
+        return render(request,"patient/appointmentlist.html",param)
+
 class BookAnAppointmentViews(SuccessMessageMixin,View):
     def post(self,request, *args, **kwargs):
-        if request.method == "POST":
-            doctorid = request.POST.get('doctorid')
-            hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
-            serviceid = request.POST.get('serviceid')
-            service = ServiceAndCharges.objects.get(id=serviceid)
-            date = request.POST.get('date')
-            time = request.POST.get('time') 
-            print(doctorid,hospitalstaffdoctor,serviceid,service,date,time)
-            booking = Booking(patient = request.user,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge)
-            print("booking saved")
-            order = Orders(patient=request.user,service=service,amount=service.service_charge,status=1)
-            order.save()
-            print("order saved")
-            booking.save()
+        try:
+            if request.method == "POST":
+                doctorid = request.POST.get('doctorid')
+                hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
+                serviceid = request.POST.get('serviceid')
+                service = ServiceAndCharges.objects.get(id=serviceid)
+                date = request.POST.get('date')
+                time = request.POST.get('time') 
+                print(doctorid,hospitalstaffdoctor,serviceid,service,date,time)
+                booking = Booking(patient = request.user,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge)
+                booking.save()
+                print("booking saved")
+                order = Orders(patient=request.user,service=service,amount=service.service_charge,booking_for=1,bookingandlabtest=booking.id,status=1)
+                order.save()
+                print("order saved")
+                if Temp.objects.get(user=request.user):
+                    temp = Temp.objects.get(user=request.user)
+                    temp.delete()
+                temp =  Temp(user=request.user,order_id=order.id)
+                temp.save()     
+                return HttpResponse("ok")
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"Network Issue try after some time")
+            return HttpResponse(e)
+
             
             # import checksum generation utility
             # You can get this utility from https://developer.paytm.com/docs/checksum/
@@ -207,43 +241,57 @@ class BookAnAppointmentViews(SuccessMessageMixin,View):
             # response = requests.post(url, data = post_data, headers = {"Content-type": "application/json"}).json()
             # print(response)        
 
-class ViewBookedAnAppointmentViews(SuccessMessageMixin,View):
-    def get(self,request):
-        booked = Booking.objects.filter(patient = request.user)
-        print(booked)
-        param = {'booked':booked}
-        return render(request,"patient/appointmentlist.html",param)
 
 def CancelBookedAnAppointmentViews(request,id):
     booked = Booking.objects.get(id=id)
     booked.is_cancelled = True
     booked.save()
     return HttpResponseRedirect(reverse('viewbookedanappointment'))
- 
+
+
+""""
+History for Lab Booking
+"""
+
 class BookAnAppointmentForLABViews(SuccessMessageMixin,View):
     def post(self,request, *args, **kwargs):
-        if request.method == "POST":
-            serviceid_list = request.POST.getlist('serviceid[]')
-            print(serviceid_list)
-            date = request.POST.get('date')
-            time = request.POST.get('time') 
-            labbooking = slot(patient = request.user,applied_date=date,applied_time=time,is_applied=True,is_active=True) 
-            labbooking.save()
-            total = 0
-            for serviceid in serviceid_list:          
-                service = ServiceAndCharges.objects.get(id=serviceid)
-                labservices = LabTest(service=service,slot=labbooking,is_active=True)
-                labservices.save()
-                total =total + service.service_charge 
-            print("booking saved")
-            order = Orders(patient=request.user,service=service,amount=total,status=1)
-            order.save()
-            print("order saved")
-            return HttpResponse("ok")
-            
-           
+        try:
+            if request.method == "POST":
+                serviceid_list = request.POST.getlist('serviceid[]')
+                date = request.POST.get('date')
+                labid = request.POST.get('labid')
+                lab = get_object_or_404(Labs,id=labid)
+                time = request.POST.get('time') 
+                labbooking = slot(patient = request.user,lab=lab,applied_date=date,applied_time=time,is_applied=True,is_active=True) 
+                labbooking.save()
+                total = 0
+                for serviceid in serviceid_list:          
+                    service = ServiceAndCharges.objects.get(id=serviceid)
+                    labservices = LabTest(service=service,lab=lab,slot=labbooking,is_active=True)
+                    labservices.save()
+                    total =total + service.service_charge 
+                print("booking saved")
+                order = Orders(patient=request.user,service=service,booking_for=2,bookingandlabtest=labbooking.id,amount=total,status=2)
+                order.save()
+                if Temp.objects.get(user=request.user):
+                    temp = Temp.objects.get(user=request.user)
+                    temp.delete()
+                temp =  Temp(user=request.user,order_id=order.id)
+                temp.save()     
+                return HttpResponse("ok")
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"Network Issue try after some time")
+            return HttpResponse(e)
 
-
+def CancelLabBookedAnAppointmentViews(request,id):
+    booked = slot.objects.get(id=id)
+    booked.is_cancelled = True
+    booked.save()
+    return HttpResponseRedirect(reverse('viewbookedanappointment'))
+       
+"""
+Lab View and Profile 
+"""
 class LabListViews(ListView):
     def get(self, request, *args, **kwargs):
         labs = Labs.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True)
@@ -263,12 +311,29 @@ class labDetailsViews(DetailView):
         param = {'lab':lab,'services':services}  
         return render(request,"patient/lab_details.html",param)
 
+"""
+Checkout page
+"""
+def CheckoutViews(request):
+    temp= Temp.objects.get(user=request.user)
+    order = get_object_or_404(Orders,id=temp.order_id)
+    order.status=1
+    order.save()
+    book_for=order.booking_for
+    if book_for == "1":
+        booking = get_object_or_404(Booking,id=order.bookingandlabtest)
+        param ={'order':order,'booking':booking}
+    if book_for == "2":
+        booking = get_object_or_404(slot,id=order.bookingandlabtest)
+        services = ServiceAndCharges.objects.filter(slot=booking)
+        param ={'order':order,'booking':booking,'services':services}
+    return render(request,"patient/checkout.html",param)
 
-
-
-
-
-
+def PaytmProcessViews(request):
+    return HttpResponse("onpayment page")
+"""
+Paytm handler
+"""
 @csrf_exempt
 def handlerequest(request):
     #paytm will send you post request here

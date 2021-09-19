@@ -750,10 +750,12 @@
         var schtime = document.getElementById('schtime').innerHTML
         var  val1= $("select[name=\'serviceid[]\']").map(function() {return $(this).val();}).toArray();
         console.log(val1)
+        
         $.ajax({
             type: 'POST',
             url: "{% url 'labbookanappointment' %}",
             data: {
+                'labid':"{{lab.id}}",
                 'doctorid':'blank',
                 'serviceid[]':val1,
                 'time':schtime,
@@ -763,6 +765,7 @@
             },
             success: function (json) {
                 console.log(json)
+                window.location.replace("{% url 'checkout' %}");
             },
             error: function (xhr, errmsg, err) {
 

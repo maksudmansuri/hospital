@@ -38,6 +38,7 @@ class slot(models.Model):
     id                      =           models.AutoField(primary_key=True)
     patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     lab                     =           models.ForeignKey(Labs, on_delete=models.CASCADE)
+    amount                  =           models.FloatField()
     applied_date            =           models.CharField(default="",blank=True,null=True,max_length=64)
     applied_time            =           models.CharField(default="",blank=True,null=True,max_length=64)
     is_applied              =           models.BooleanField(default=True,blank=True,null=True)
@@ -52,11 +53,12 @@ class slot(models.Model):
     modified_time           =           models.TimeField(blank=True,null=True)
     modified_date           =           models.DateField(blank=True,null=True)
     add_note                =           models.CharField(max_length=5000,blank=True,null=True,default="")
+    report                  =           models.FileField(max_length=100,blank=True,null=True,default="")
+    desc                    =           models.CharField(max_length=50,blank=True,null=True,default="")
     is_active               =           models.BooleanField(default=False)
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
-
 
 class TreatmentReliefPetient(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -115,6 +117,13 @@ class PatientBottelAndInjections(models.Model):
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
 
+class Temp(models.Model):
+    id                      =          models.AutoField(primary_key=True)
+    user                    =          models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    order_id                =          models.IntegerField()
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
 
 class LabTest(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -130,6 +139,9 @@ class Orders(models.Model):
     id                      =           models.AutoField(primary_key=True)
     patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     service                 =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE)
+    bookingandlabtest       =           models.CharField(max_length=50,default="",blank=True,null=True)
+    BOOKING_FOR_CHOICE      =           ((1,"Hospital"),(2,"Laboratory"),(3,"Pharmacy"))
+    booking_for             =           models.CharField(max_length=256,default="",blank=True,null=True,choices=BOOKING_FOR_CHOICE)
     amount                  =           models.FloatField()
     STATUS_TYPE_CHOICE      =           ((1,"Processed"),(2,"Successed"),(3,"Failed"),(4,"Cancelled"),(5,"Refunded"))
     status                  =           models.CharField(default="",blank=True,null=True,max_length=64,choices=STATUS_TYPE_CHOICE)    

@@ -18,7 +18,7 @@ urlpatterns = [
     path('manage_main_gallery',views.ManageMainGalleryView.as_view(),name="manage_main_gallery"),
     path('delete_main_gallery',views.deleteMainGallery,name="delete_main_gallery"),
 
-    path('updload_lab_report',views.UploadReportViews.as_view(),name="updload_lab_report"),
+    path('updload_lab_report/<id>',views.UploadReportViews,name="updload_lab_report"),
     
 
  

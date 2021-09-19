@@ -44,6 +44,8 @@
                         </ul>
                 </li>                 
                 {% url 'viewbookedanappointment' as viewbookedanappointment %}
+                
+
                 <li class="collapsed">
                     <a class="m-link{% if request.path == viewbookedanappointment %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Appointments" href="#">
                         <i class="icofont-book-alt"></i>  <span>Appointments</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>

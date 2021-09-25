@@ -1,7 +1,7 @@
 from django.db.models.query_utils import Q
 from lab.models import Medias
 from django.views.generic.base import View
-from requests.models import Response
+# from requests.models import Response
 from hospital.models import HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, ServiceAndCharges
 from patient import models
 from patient.models import Booking, Orders, LabTest, PicturesForMedicine, Temp, slot

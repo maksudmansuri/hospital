@@ -217,7 +217,7 @@ class ViewAppointmentViews(SuccessMessageMixin,View):
     def get(self, request, *args, **kwargs):
         try:
             bookings = slot.objects.filter(lab=request.user.labs,is_active=True,is_cancelled = False)
-            booking_labtest_list =[]
+            booking_labtest_list =[] 
             for booking in bookings:
                 labtest = LabTest.objects.filter(slot=booking)
                 booking_labtest_list.append({'booking':booking,'labtest':labtest})
@@ -291,7 +291,7 @@ def UploadReportViews(request,id):
             booking.report=report_url
             booking.desc = desc
             booking.save()
-        messages.add_message(request,messages.SUCCESS,"Appointment Successfully Deleted")
+        messages.add_message(request,messages.SUCCESS,"Report Successfully Uploaded")
         return HttpResponseRedirect(reverse("view_lab_appointment"))
     except Exception as e:
         messages.add_message(request,messages.SUCCESS,e)

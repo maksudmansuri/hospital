@@ -56,12 +56,12 @@
                 {% url 'manage_asppointment' as manage_appointment %}
                 <li class="collapsed">
                     <a class="m-link{% if request.path == manage_patient %} active {% endif %}{% if request.path == manage_appointment %} active {% endif %}{% if request.path == manage_relief_patient %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Patient" href="#">
-                        <i class="icofont-doctor-alt fs-5"></i>  <span>Patient</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
+                        <i class="icofont-doctor-alt fs-5"></i>  <span>Patient</span><span class="badge bg-secondary">{{badgehosappointment}}</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                         <!-- Menu: Sub menu ul -->
                         <ul class="sub-menu collapse {% if request.path == manage_patient %} show {% endif %}{% if request.path == manage_appointment %} show {% endif %}{% if request.path == manage_relief_patient %} show {% endif %}" id="menu-Patient">
                             <li><a class="ms-link {% if request.path == manage_patient %} active {% endif %}" href="{% url 'manage_patient' %}">Hospital Patients</a></li>
                             <li><a class="ms-link {% if request.path == manage_relief_patient %} active {% endif %}" href="{% url 'manage_relief_patient' %}">Relief Patients</a></li>
-                            <li><a class="ms-link {% if request.path == manage_appointment %} active {% endif %}" href="{% url 'manage_appointment' %}">All Appointment</a></li>
+                            <li><a class="ms-link {% if request.path == manage_appointment %} active {% endif %}" href="{% url 'manage_appointment' %}">All Appointment<span class="badge bg-secondary">{{badgehosappointment}}</span></a></li>
                             {% comment %} <li><a class="ms-link" href="doctor-add.html">Add Doctor</a></li>
                             <li><a class="ms-link" href="appointment.html">Appointment</a></li>
                             <li><a class="ms-link" href="doctor-profile.html">Doctors Profile</a></li>

@@ -1,4 +1,4 @@
-{% extends 'hospital/base.html' %}
+{% extends 'lab/base.html' %}
 {% load static %}
 {% block title %} :: I-Health::  Laboratory Appointment{% endblock title %}
 
@@ -66,18 +66,18 @@
                                         {{book.booking.applied_time}} , {{book.booking.applied_date}}
                                     </td>
                                     <td>
-                                    <select class="form-select status" aria-label="Default select example" data-index="{{book.booking.id}}" id="status" name="status"{% if book.booking.status == "rejected" or book.booking.report %} disabled {%endif%} >
-                                                    <option selected disabled >Status</option>
-                                                    <option value="accepted" {% if book.booking.status == "accepted" %}selected{% endif %} >Accepted</option>
-                                                    <option value="rejected" {% if book.booking.status == "rejected" %}selected{% endif %}>Rejected</option>
-                                                    <option value="taken" {% if book.booking.status == "taken" %}selected{% endif %}>Taken</option>
-                                                </select>
+                                        <select class="form-select status" aria-label="Default select example" data-index="{{book.booking.id}}" id="status" name="status"{% if book.booking.status == "rejected" or book.booking.report %} disabled {%endif%} >
+                                            <option selected disabled >Status</option>
+                                            <option value="accepted" {% if book.booking.status == "accepted" %}selected{% endif %} >Accepted</option>
+                                            <option value="rejected" {% if book.booking.status == "rejected" %}selected{% endif %}>Rejected</option>
+                                            <option value="taken" {% if book.booking.status == "taken" %}selected{% endif %}>Taken</option>
+                                        </select>
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic outlined example">
                                             {% comment %}<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{room.id}}"><i class="icofont-edit text-success"></i></button>{% endcomment %}
                                             {% if book.booking.status == "taken" and book.booking.report == ""%}
-                                           <a type="button" class="btn btn-outline-secondary" id="uploadreport"data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{book.booking.id}}"  ><i class="icofont-upload-alt text-danger"></i><a> {% endif %} 
+                                           <a type="button" class="btn btn-outline-secondary" id="uploadreport" data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{book.booking.id}}"  ><i class="icofont-upload-alt text-danger"></i><a> {% endif %} 
                                            <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom"  {% if book.booking.report %} href="{% url 'delete_lab_appointment' book.booking.id %}" disabled {% endif %}><i class="icofont-ui-delete text-danger"></i><a>
                                            {% if book.booking.report %} 
                                            <a type="button" class="btn btn-outline-secondary deleterow" href="{{book.booking.report}}" download><i class="icofont-download text-primary"></i></a>{% endif %}
@@ -211,7 +211,8 @@
 <script>
 
     $(document).ready(function() {
-    $('select.status').change(function(){      
+    $('select.status').change(function(){   
+        console.log("inside lab")   
         $.ajax({
             type: 'POST',
             url: "{% url 'view_lab_appointment' %}",

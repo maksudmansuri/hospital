@@ -1,8 +1,9 @@
+import pharmacy
 from django.db.models.base import Model
 import patient
 from django.contrib.auth.models import User
 from hospital.models import HospitalServices, HospitalStaffDoctors, ServiceAndCharges
-from accounts.models import CustomUser, Hospitals, Labs, Patients
+from accounts.models import CustomUser, Hospitals, Labs, Patients, Pharmacy
 from django.db import models
 
 # Create your models here.
@@ -38,7 +39,7 @@ class slot(models.Model):
     id                      =           models.AutoField(primary_key=True)
     patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     lab                     =           models.ForeignKey(Labs, on_delete=models.CASCADE)
-    amount                  =           models.FloatField()
+    amount                  =           models.FloatField(default=0)
     applied_date            =           models.CharField(default="",blank=True,null=True,max_length=64)
     applied_time            =           models.CharField(default="",blank=True,null=True,max_length=64)
     is_applied              =           models.BooleanField(default=True,blank=True,null=True)
@@ -59,6 +60,34 @@ class slot(models.Model):
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
+
+class PicturesForMedicine(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    prescription            =           models.FileField(upload_to=None, max_length=256,default="",blank=True,null=True)
+    store_invoice           =           models.FileField(upload_to=None, max_length=256,default="",blank=True,null=True)
+    pharmacy                =           models.ForeignKey(Pharmacy, on_delete=models.CASCADE)
+    amount                  =           models.FloatField(default=0,blank=True,null=True)
+    applied_date            =           models.DateField(auto_now=False, auto_now_add=False,blank=True,null=True,max_length=64)
+    applied_time            =           models.TimeField(auto_now=False, auto_now_add=False,blank=True,null=True,max_length=64)
+    is_applied              =           models.BooleanField(default=True,blank=True,null=True)
+    status                  =           models.CharField(default="",blank=True,null=True,max_length=64)
+    accepted_date           =           models.DateTimeField(blank=True,null=True)
+    taken_date              =           models.DateTimeField(blank=True,null=True)
+    rejected_date           =           models.DateTimeField(blank=True,null=True)
+    is_rejected             =           models.BooleanField(default=False)
+    is_taken                =           models.BooleanField(default=False)
+    is_accepted             =           models.BooleanField(default=False)
+    is_cancelled            =           models.BooleanField(default=False)
+    modified_time           =           models.TimeField(blank=True,null=True)
+    modified_date           =           models.DateField(blank=True,null=True)
+    add_note                =           models.CharField(max_length=5000,blank=True,null=True,default="")
+    desc                    =           models.CharField(max_length=50,blank=True,null=True,default="")
+    is_active               =           models.BooleanField(default=False)
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+
 
 class TreatmentReliefPetient(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -142,7 +171,7 @@ class Orders(models.Model):
     bookingandlabtest       =           models.CharField(max_length=50,default="",blank=True,null=True)
     BOOKING_FOR_CHOICE      =           ((1,"Hospital"),(2,"Laboratory"),(3,"Pharmacy"))
     booking_for             =           models.CharField(max_length=256,default="",blank=True,null=True,choices=BOOKING_FOR_CHOICE)
-    amount                  =           models.FloatField()
+    amount                  =           models.FloatField(default=0,blank=True,null=True)
     STATUS_TYPE_CHOICE      =           ((1,"Processed"),(2,"Successed"),(3,"Failed"),(4,"Cancelled"),(5,"Refunded"))
     status                  =           models.CharField(default="",blank=True,null=True,max_length=64,choices=STATUS_TYPE_CHOICE)    
     created_at              =           models.DateTimeField(auto_now_add=True)

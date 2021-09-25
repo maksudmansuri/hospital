@@ -1,0 +1,279 @@
+{% extends 'patient/base.html' %}
+{% load static %}
+{% block title %} :: I-Health::  Pharmacy List {% endblock title %}
+
+{% block custom_css %}
+<style>
+
+/* for demo purposes */
+body {
+  
+}
+.container_foto article {
+	padding: 10%;
+	position: absolute;
+	bottom: 0;
+	z-index: 1;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	-ms-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
+.card-block .btn-outline-primary {
+  width: 100%;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+}
+
+.card {
+  margin: 20px 0;
+}
+
+/* Flip Cards CSS */
+.card-container {
+  perspective: 700px;
+}
+.card-flip {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  height: auto;
+  transition: all 0.5s ease-out;
+  background: white;
+  border: none;
+}
+
+.card-flip div {
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  height: 100%;
+  width: 100%;
+  border: none;
+}
+
+.card-flip .front {
+  position: relative;
+  z-index: 1;
+}
+
+.card-flip .back {
+  position: relative;
+  z-index: 0;
+  transform: rotateY(-180deg);
+}
+
+.card-container:hover .card-flip {
+  transform: rotateY(180deg);
+}
+
+.ver_mas {
+	background-color: #FEB66C;
+	position: absolute;
+	width: 100%;
+	height: 70px;
+	bottom: 0;
+	z-index: 1;
+	opacity: 0;
+	transform: translate(0px, 70px);
+	-webkit-transform: translate(0px, 70px);
+	-moz-transform: translate(0px, 70px);
+	-o-transform: translate(0px, 70px);
+	-ms-transform: translate(0px, 70px);
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+
+.ver_mas span {
+	font-size: 40px;
+	color: #fff;
+	position: relative;
+	margin: 0 auto;
+	width: 100%;
+	top: 13px;
+}
+
+.container_foto:hover article {
+	transform: translate(2px, -69px);
+	-webkit-transform: translate(2px, -69px);
+	-moz-transform: translate(2px, -69px);
+	-o-transform: translate(2px, -69px);
+	-ms-transform: translate(2px, -69px);
+}
+.container_foto:hover .ver_mas {
+	transform: translate(0px, 0px);
+	-webkit-transform: translate(0px, 0px);
+	-moz-transform: translate(0px, 0px);
+	-o-transform: translate(0px, 0px);
+	-ms-transform: translate(0px, 0px);
+	opacity: 1;
+}
+.container_foto:hover img {
+	opacity: 0.1;
+	transform: scale(1.5);
+}
+</style>
+
+
+{% endblock custom_css %}
+
+{% block content %}
+    <!-- Visit https://codepen.io/nicolaskadis/full/brQEOd/ for the latest, no js version! -->
+<div class="container">
+  <div class="row text-center">
+  {% for pharamcy in pharamcys %}
+    <div class="col-md-4 card-container">
+      <div class="card card-flip">
+        <div class="front card-block container_foto">
+        
+          <!-- To add FontAwesome Icons use Unicode characters and to set size use font-size instead of fa-*x because when calculating the height (see js), the size of the icon is not calculated if using classes -->
+          {% comment %} <span class="card-img-top fa" style="font-size: 4em">&#xf118;</span> {% endcomment %}
+            <article class="text-left">
+            <h2>TÍTULO DE <br>LA IMAGEN</h2>
+            <h4>Descripción corta de la imagen en cuestión</h4>
+            </article>
+          <a href="#" ><img src="{{pharamcy.profile_pic}}" alt=""></a>
+          <h4 class="card-title">{{pharamcy.hopital_name}}</h4>
+          <h6 class="card-subtitle text-muted">{{pharamcy.landline}}</h6>
+          <p class="card-text">{{pharamcy.specialist}}</p>
+        </div>
+        <div class="back card-block">
+            
+          <p>
+          
+            {{pharamcy.lab_name}}<br> to
+            <br> {{pharamcy.about|slice:15}}<a href="#" ><span class="badge rounded-pill bg-primary"> read more</span></a>
+            <br> {{pharamcy.address}} 
+            <br> {{pharamcy.city}}-{{pharamcy.pin_code}}
+            <br> {{pharamcy.state}}{{pharamcy.country}}
+            <br> {{pharamcy.state}}
+            <br> {{pharamcy.website}}
+            
+          </p>
+          <a href="{% url 'pharmacy_details' pharamcy.id %}" class="btn btn-outline-primary">Book An Appointment</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% endblock content %}
+
+{% block modal_fade %}
+ {% for lab in lab_media_list  %}
+        <!--====== Add to Cart Modal ======-->
+        <div class="modal fade" id="book-an-appointment{{lab.lab.id}}" tabindex="-1" aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content modal-radius modal-shadow">
+
+                    <button class="btn dismiss-button fas fa-times" type="button"  data-bs-dismiss="modal"></button>
+                    <div class="modal-body">
+                        
+                        <div class="card mb-3">
+                            <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                <h6 class="mb-0 fw-bold ">Make appointment</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="wrapper">
+                                    <div id="calendar"> 
+                                    <div class="monthChange"></div>
+                                    <div class='timepicker'>
+                                        <div class="owl">
+                                          <div>06:00</div>
+                                          <div>07:00</div>
+                                          <div>08:00</div>
+                                          <div>09:00</div>
+                                          <div>10:00</div>
+                                          <div>11:00</div>
+                                          <div>12:00</div>
+                                          <div>13:00</div>
+                                          <div>14:00</div>
+                                          <div>15:00</div>
+                                          <div>16:00</div>
+                                          <div>17:00</div>
+                                          <div>18:00</div>
+                                          <div>19:00</div>
+                                          <div>20:00</div>
+                                        </div>
+                                        <div class="fade-l"></div>
+                                        <div class="fade-r"></div>
+                                      </div>
+                                  </div>
+                                  <div class="inner-wrap">
+                                    <form>
+                                        <div class="mb-3">
+                                          <input type="text" class="form-control" id="ps-name" placeholder="Enter Name">
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type="email" class="form-control" id="ps-email" placeholder="Enter Email">
+                                        </div>
+                                        <select class="form-select mb-3" aria-label="Default select example">
+                                            <option selected>Select Doctor</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-primary disabled request"> Request appointment <span>On</span>
+                                            <span class="day fw-bold text-dark"></span>
+                                            <span>At</span>
+                                            <span class="time fw-bold text-dark"></span>
+                                            <i class="icofont-dotted-right fs-3"></i>
+                                            </button>
+                                      </form>
+                                  </div>
+                                  
+                                  
+                                    
+                              </div>
+                            </div>                 
+                       
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+{% endblock modal_fade %}
+
+
+
+{% block custom_js %}
+<!-- NO JS VERSION: https://codepen.io/nicolaskadis/full/brQEOd/ -->
+<script>
+
+$(document).ready(function() {
+  var front = document.getElementsByClassName("front");
+  var back = document.getElementsByClassName("back");
+
+  var highest = 0;
+  var absoluteSide = "";
+
+  for (var i = 0; i < front.length; i++) {
+    if (front[i].offsetHeight > back[i].offsetHeight) {
+      if (front[i].offsetHeight > highest) {
+        highest = front[i].offsetHeight;
+        absoluteSide = ".front";
+      }
+    } else if (back[i].offsetHeight > highest) {
+      highest = back[i].offsetHeight;
+      absoluteSide = ".back";
+    }
+  }
+  $(".front").css("height", highest);
+  $(".back").css("height", highest);
+  $(absoluteSide).css("position", "absolute");
+});
+</script>
+
+
+
+{% endblock custom_js %}

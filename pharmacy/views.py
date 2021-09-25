@@ -1,14 +1,19 @@
+from patient.models import PicturesForMedicine
 from django.core.files.storage import FileSystemStorage
 import pharmacy
 from django.http.response import HttpResponse, HttpResponseRedirect
 from accounts.models import Pharmacy
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.views.generic.base import View
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse
 from django.contrib import messages
+from datetime import datetime
+import datetime
+import pytz
+IST = pytz.timezone('Asia/Kolkata')
 # Create your views here.
 
 
@@ -124,8 +129,83 @@ class PharmacyUpdateViews(SuccessMessageMixin,UpdateView):
             
         return HttpResponseRedirect(reverse("pharmacy_update"))
     
-class ViewAppointmentViews(SuccessMessageMixin,View):
+class ViewPharmacyAppointmentViews(SuccessMessageMixin,View):
+    def get(self, request, *args, **kwargs):
+        try:
+            picturesformedicine = PicturesForMedicine.objects.filter(pharmacy=request.user.pharmacy,is_active=True,is_cancelled = False)
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)
+            return HttpResponseRedirect(reverse("view_pharmacy_appointment"))        
+        param={'picturesformedicine':picturesformedicine}
+        return render(request,"pharmacy/manage_appointment.html",param)        
+
+    def post(self, request, *args, **kwargs):
+        id = request.POST.get('a_id')        
+        status = request.POST.get('status')
+        print(id,status)
+        is_accepted = False
+        is_taken = False
+        is_rejected =False
+        is_applied = False        
+        try:
+            booking = PicturesForMedicine.objects.get(id=id)
+            showtime = datetime.datetime.now(tz=IST)
+            print(status)
+        
+            if status == 'accepted':
+                is_accepted = True
+                booking.accepted_date= showtime
+            elif status == 'taken':
+                is_taken= True
+                booking.taken_date= showtime
+                # treatmentreliefpetient = TreatmentReliefPetient(patient=booking.patient.patients,booking=booking,status="CHECKUPED",amount_paid=booking.service.service_charge,is_active=True)
+                # treatmentreliefpetient.save()
+            elif status == 'rejected':
+                is_rejected = True
+                booking.rejected_date= showtime
+            else:
+                is_applied =True
+            booking.is_accepted=is_accepted
+            booking.is_rejected=is_rejected
+            booking.is_taken=is_taken
+            booking.status=status        
+            booking.is_applied=is_applied
+            booking.save()
+            return HttpResponse("ok")
+        except Exception as e:
+            return HttpResponse(e)
+
+    
+def UpdloadInvoicePharmacy(request,id):
+    store_invoice = request.FILES.get('store_invoice') 
+    amount = request.POST.get('amount')   
+    desc = request.POST.get('desc')
+    try:
+        booking = get_object_or_404(PicturesForMedicine,id=id)
+        if store_invoice:
+            print()
+            fs=FileSystemStorage()
+            filename1=fs.save(store_invoice.name,store_invoice)
+            report_url=fs.url(filename1)
+            booking.store_invoice=report_url
+            booking.amount=amount
+            booking.desc = desc
+            booking.save()
+        messages.add_message(request,messages.SUCCESS,"invoice Successfully Uploaded")
+        return HttpResponseRedirect(reverse("view_pharmacy_appointment"))
+    except Exception as e:
+        messages.add_message(request,messages.SUCCESS,e)
+        return HttpResponseRedirect(reverse("view_pharmacy_appointment"))
+
+    
     pass
 
-def deleteServicesViews(request):
+class ViewImageViews(ListView):
     pass
+
+def deleteServicesViews(request,id):
+    booking = get_object_or_404(PicturesForMedicine,id=id)
+    booking.is_active =False
+    booking.save()
+    messages.add_message(request,messages.SUCCESS,"Appointment Successfully Deleted")
+    return HttpResponseRedirect(reverse("view_pharmacy_appointment"))

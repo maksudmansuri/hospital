@@ -1,12 +1,14 @@
+from django.db.models.query_utils import Q
 from lab.models import Medias
 from django.views.generic.base import View
 from requests.models import Response
 from hospital.models import HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, ServiceAndCharges
-from patient.models import Booking, Orders, LabTest, Temp, slot
+from patient import models
+from patient.models import Booking, Orders, LabTest, PicturesForMedicine, Temp, slot
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
-from accounts.models import HospitalPhones, Hospitals, Labs, Patients
+from accounts.models import HospitalPhones, Hospitals, Labs, Patients, Pharmacy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.list import ListView
@@ -16,8 +18,6 @@ from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
 import json
 from patient import PaytmChecksum
-from .basket import Basket
-from patient import basket
 # Create your views here.
 
 """
@@ -142,19 +142,21 @@ class DoctorsBookAppoinmentViews(SuccessMessageMixin,View):
         param = {'hospital':hospital,'hospitalservice':hospitalservice,'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual,'opd_time':opd_time}  
         return render(request,"patient/bookappoinment.html",param)
 
-""""
+"""" 
 History for Hospital Booking
 """
-class ViewBookedAnAppointmentViews(SuccessMessageMixin,View):
+class ViewBookedAnAppointmentViews(SuccessMessageMixin,ListView):    
     def get(self,request):
         booked = Booking.objects.filter(patient = request.user)
-        labbooks   =   slot.objects.filter(patient = request.user)
+        labbooks = slot.objects.filter(patient = request.user)
         booking_labtest_list =[]
         for labbook in labbooks:            
                 labtests = LabTest.objects.filter(slot=labbook)
                 booking_labtest_list.append({'labbook':labbook,'labtests':labtests})
+        phamacybooking = PicturesForMedicine.objects.filter(patient = request.user)
         print(booked)
-        param = {'booked':booked,"booking_labtest_list":booking_labtest_list}
+        param = {'booked':booked,"booking_labtest_list":booking_labtest_list,'phamacybooking':phamacybooking}
+         
         return render(request,"patient/appointmentlist.html",param)
 
 class BookAnAppointmentViews(SuccessMessageMixin,View):
@@ -255,33 +257,39 @@ History for Lab Booking
 
 class BookAnAppointmentForLABViews(SuccessMessageMixin,View):
     def post(self,request, *args, **kwargs):
-        try:
-            if request.method == "POST":
-                serviceid_list = request.POST.getlist('serviceid[]')
-                date = request.POST.get('date')
-                labid = request.POST.get('labid')
-                lab = get_object_or_404(Labs,id=labid)
-                time = request.POST.get('time') 
-                labbooking = slot(patient = request.user,lab=lab,applied_date=date,applied_time=time,is_applied=True,is_active=True) 
-                labbooking.save()
-                total = 0
-                for serviceid in serviceid_list:          
-                    service = ServiceAndCharges.objects.get(id=serviceid)
-                    labservices = LabTest(service=service,lab=lab,slot=labbooking,is_active=True)
-                    labservices.save()
-                    total =total + service.service_charge 
-                print("booking saved")
-                order = Orders(patient=request.user,service=service,booking_for=2,bookingandlabtest=labbooking.id,amount=total,status=2)
-                order.save()
-                if Temp.objects.get(user=request.user):
-                    temp = Temp.objects.get(user=request.user)
-                    temp.delete()
-                temp =  Temp(user=request.user,order_id=order.id)
-                temp.save()     
-                return HttpResponse("ok")
-        except Exception as e:
-            messages.add_message(request,messages.ERROR,"Network Issue try after some time")
-            return HttpResponse(e)
+        
+        if request.method == "POST":
+            serviceid_list = request.POST.getlist('serviceid[]')
+            date = request.POST.get('date')
+            labid = request.POST.get('labid')
+            lab = get_object_or_404(Labs,id=labid)
+            time = request.POST.get('time') 
+            print(serviceid_list,date,labid,lab,time)
+            labbooking = slot(patient = request.user,lab=lab,applied_date=date,applied_time=time,is_applied=True,is_active=True) 
+            labbooking.save()
+            total = 0
+            
+            for serviceid in serviceid_list:          
+                service = ServiceAndCharges.objects.get(id=serviceid)
+                labservices = LabTest(service=service,lab=lab,slot=labbooking,is_active=True)
+                labservices.save()
+                total =total + service.service_charge 
+            labbooking.amount=total
+            labbooking.save()
+            print("booking saved")
+            order = Orders(patient=request.user,service=service,booking_for=2,bookingandlabtest=labbooking.id,amount=total,status=1)
+            order.save()
+            print("order")
+            if Temp.objects.get(user=request.user):
+                temp = Temp.objects.get(user=request.user)
+                temp.delete()
+            temp =  Temp(user=request.user,order_id=order.id)
+            temp.save() 
+            print("temp")    
+            return HttpResponse("ok")
+        # except Exception as e:
+        #     messages.add_message(request,messages.ERROR,"Network Issue try after some time")
+        #     return HttpResponse(e)
 
 def CancelLabBookedAnAppointmentViews(request,id):
     booked = slot.objects.get(id=id)
@@ -312,6 +320,58 @@ class labDetailsViews(DetailView):
         return render(request,"patient/lab_details.html",param)
 
 """
+Pharmacy view and profile
+"""
+
+class PharmacyListViews(ListView):
+    def get(self, request, *args, **kwargs):
+        pharamcy = Pharmacy.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True)
+        param = {'pharamcys':pharamcy} 
+        print(pharamcy)
+        return render(request,"patient/pharmacy_list.html",param)
+
+class PharmacyDetailsViews(DetailView):
+    def get(self, request, *args, **kwargs):
+        pharmacy_id=kwargs['id']
+        pharmacy = get_object_or_404(Pharmacy,id=pharmacy_id)
+        param = {'pharmacy':pharmacy} 
+        return render(request,"patient/pharmacy_details.html",param)
+
+class UploadPresPhotoViews(SuccessMessageMixin,View):
+    def post(self,request, *args, **kwargs):
+        
+        if request.method == "POST":
+            prescription = request.FILES.get('prescription')
+            if prescription:
+                fs=FileSystemStorage()
+                filename1=fs.save(prescription.name,prescription)
+                profile_pic_url=fs.url(filename1)
+            print(prescription)
+            date = request.POST.get('date')
+            pharmacyid = request.POST.get('pharmacyid')
+            add_note = request.POST.get('add_note')
+            pharmacy = get_object_or_404(Pharmacy,id=pharmacyid)
+            time = request.POST.get('time') 
+            print(time,date,pharmacy,pharmacyid,prescription)
+            picturesformedicine = PicturesForMedicine(patient = request.user,pharmacy=pharmacy,prescription=profile_pic_url,applied_date=date,applied_time=time,is_applied=True,is_active=True,add_note=add_note) 
+            picturesformedicine.save()
+            service = get_object_or_404(ServiceAndCharges,id=13)
+            print("booking saved")
+            order = Orders(patient=request.user,service=service,booking_for=3,bookingandlabtest=picturesformedicine.id,status=1)
+            order.save()
+            print("order")
+            if Temp.objects.get(user=request.user):
+                temp = Temp.objects.get(user=request.user)
+                temp.delete()
+            temp =  Temp(user=request.user,order_id=order.id)
+            temp.save() 
+            print("temp")
+            return render(request,"patient/confirmation.html")
+            return HttpResponseRedirect(reverse("pharmacy_details" , kwargs={'id':pharmacyid}))
+
+
+
+"""
 Checkout page
 """
 def CheckoutViews(request):
@@ -325,8 +385,11 @@ def CheckoutViews(request):
         param ={'order':order,'booking':booking}
     if book_for == "2":
         booking = get_object_or_404(slot,id=order.bookingandlabtest)
-        services = ServiceAndCharges.objects.filter(slot=booking)
+        services = LabTest.objects.filter(slot=booking)
         param ={'order':order,'booking':booking,'services':services}
+    if book_for == "3":
+        booking = get_object_or_404(PicturesForMedicine,id=order.bookingandlabtest)
+        param ={'order':order,'booking':booking}
     return render(request,"patient/checkout.html",param)
 
 def PaytmProcessViews(request):

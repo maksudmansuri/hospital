@@ -64,6 +64,7 @@ urlpatterns = [
     path('active_room/<id>',views.activeRoom,name="active_room"),
     path('deactive_room/<id>',views.deactiveRoom,name="deactive_room"),
     path('delete_room/<id>',views.deleteHospitalRoom,name="delete_room"),
+    path('occupied_room',views.OccupiedRoom,name="occupied_room"),
     #active deactive delete Doctor 
     path('active_doctor/<id>',views.activeDoctor,name="active_doctor"),
     path('deactive_doctor/<id>',views.deactiveDoctor,name="deactive_doctor"),

@@ -35,11 +35,22 @@
                 {% url 'laboratory_list' as laboratory_list %}
                 {% url 'laboratory_details' as laboratory_details %}
                  <li class="collapsed">
-                    <a class="m-link{% if request.path == hospital_list %} active {% endif %} {% if request.path == hospital_details %} active {% endif %} {% if request.path == viewbookedanappointment %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Labs" href="#">
+                    <a class="m-link{% if request.path == laboratory_list %} active {% endif %} {% if request.path == laboratory_details %} active {% endif %} {% if request.path == viewbookedanappointment %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Labs" href="#">
                         <i class="icofont-blood-test fs-5"></i>  <span>Labs</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                         <!-- Menu: Sub menu ul -->
                         <ul class="sub-menu collapse{% if request.path == laboratory_list %} show {% endif %}{% if request.path == laboratory_details %} show {% endif %}{% if request.path == viewbookedanappointment %} show {% endif %}" id="menu-Labs">
                             <li><a class="ms-link  {% if request.path == laboratory_list %} active {% endif %}" href="{% url 'laboratory_list' %} ">All Laboratories</a></li>
+                            
+                        </ul>
+                </li>        
+                 {% url 'pharmacy_list' as pharmacy_list %}
+                {% url 'laboratory_details' as laboratory_details %}
+                 <li class="collapsed">
+                    <a class="m-link{% if request.path == pharmacy_list %} active {% endif %} {% if request.path == laboratory_details %} active {% endif %} {% if request.path == viewbookedanappointment %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-pharmacys" href="#">
+                        <i class="icofont-blood-test fs-5"></i>  <span>Pharmacy</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
+                        <!-- Menu: Sub menu ul -->
+                        <ul class="sub-menu collapse{% if request.path == pharmacy_list %} show {% endif %}{% if request.path == laboratory_details %} show {% endif %}{% if request.path == viewbookedanappointment %} show {% endif %}" id="menu-pharmacys">
+                            <li><a class="ms-link{% if request.path == pharmacy_list %} active {% endif %}" href="{% url 'pharmacy_list' %} ">All Pharmacy</a></li>
                             
                         </ul>
                 </li>                 

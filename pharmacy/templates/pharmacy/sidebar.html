@@ -1,7 +1,7 @@
 {% load static %}
  <div class="sidebar px-4 py-4 py-md-5 me-0 ">
         <div class="d-flex flex-column h-100">
-            <a href="{% url 'hospital_dashboard' %}" class="mb-0 brand-icon">
+            <a href="{% url 'pharmacy_home' %}" class="mb-0 brand-icon">
                 <span class="logo-icon">
                     <i class="icofont-heart-beat fs-2"></i>
                 </span>
@@ -10,111 +10,35 @@
             <!-- Menu: main ul -->
 
             <ul class="menu-list flex-grow-1 mt-3">
-             {% url 'hospital_dashboard' as hospital_dashboard %}
+             {% url 'pharmacy_home' as pharmacy_home %}
                 <li class="collapsed">
-                <a class="m-link {% if request.path == hospital_dashboard %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#dashboard" href="#">
+                <a class="m-link {% if request.path == pharmacy_home %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#dashboard" href="#">
                 <i class="icofont-ui-home fs-5"></i> <span>Dashboard</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                 <!-- Menu: Sub menu ul -->               
-                    <ul class="sub-menu collapse {% if request.path == hospital_dashboard %} show {% endif %}" id="dashboard">
-                        <li><a class="ms-link {% if request.path == hospital_dashboard %} active {% endif %}" href="{% url 'hospital_dashboard' %}">Hospital Dashboard</a></li>
+                    <ul class="sub-menu collapse {% if request.path == pharmacy_home %} show {% endif %}" id="dashboard">
+                        <li><a class="ms-link {% if request.path == pharmacy_home %} active {% endif %}" href="{% url 'pharmacy_home' %}">Hospital Dashboard</a></li>
                         <li><a class="ms-link" href="coviddashboard.html"> Covid-19 Dashboard</a></li>
                     </ul>
                 </li> 
-                <li><a class="m-link" href="virtual.html"><i class="icofont-ui-video-chat fs-5"></i> <span>I-Health Virtual</span></a></li>
-                {% url 'manage_staff' as manage_staff %}
-                {% url 'manage_department' as manage_department %}
+               
+                {% url 'view_pharmacy_appointment' as view_pharmacy_appointment %}
+                {% url 'delete_pharmacy_appointment' as delete_pharmacy_appointment %}
                 {% url 'manage_room' as manage_room %}
-                {% url 'manage_gallery' as manage_gallery %}
+                {% url 'pharmacy_manage_gallery' as pharmacy_manage_gallery %}
                 {% url 'manage_price' as manage_price %}
                 <li class="collapsed">
-                    <a class="m-link {% if request.path == manage_staff %} active {% endif %}{% if request.path == manage_department %} active {% endif %}{% if request.path == manage_room %} active {% endif %}{% if request.path == manage_gallery %} active {% endif %}{% if request.path == manage_price %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Department" href="#">
+                    <a class="m-link {% if request.path == view_pharmacy_appointment %} active {% endif %}{% if request.path == delete_pharmacy_appointment %} active {% endif %}{% if request.path == manage_room %} active {% endif %}{% if request.path == pharmacy_manage_gallery %} active {% endif %}{% if request.path == manage_price %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Department" href="#">
                         <i class="icofont-nurse-alt fs-5"></i> <span>Department</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                         <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse {% if request.path == manage_staff %} show {% endif %} {% if request.path == manage_department %} show {% endif %}{% if request.path == manage_room %} show {% endif %}{% if request.path == manage_gallery %} show {% endif %}{% if request.path == manage_price %} show {% endif %}" id="menu-Department">
-                            <li><a class="ms-link{% if request.path == manage_staff %} active {% endif %}" href="{% url 'manage_staff' %}">Manage Staff</a></li>
-                            <li><a class="ms-link{% if request.path == manage_department %} active {% endif %}" href="{% url 'manage_department' %}">Manage Department</a></li>
-                            <li><a class="ms-link{% if request.path == manage_room %} active {% endif %}" href="{% url 'manage_room' %}">Manage Rooms</a></li>
-                            <li><a class="ms-link{% if request.path == manage_gallery %} active {% endif %}" href="{% url 'manage_gallery' %}">Manage Gallery</a></li>
-                            <li><a class="ms-link{% if request.path == manage_price %} active {% endif %}" href="{% url 'manage_price' %}">Manage Services and Prices</a></li>
-                        </ul>
-                </li>
-                {% url 'manage_doctor' as manage_doctor %}
-                <li class="collapsed">
-                    <a class="m-link{% if request.path == manage_doctor %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Doctor" href="#">
-                        <i class="icofont-doctor-alt fs-5"></i>  <span>Doctor</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
-                        <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse {% if request.path == manage_doctor %} show {% endif %}" id="menu-Doctor">
-                            <li><a class="ms-link {% if request.path == manage_doctor %} active {% endif %}" href="{% url 'manage_doctor' %}">All Doctors</a></li>
-                            {% comment %} <li><a class="ms-link" href="doctor-add.html">Add Doctor</a></li>
-                            <li><a class="ms-link" href="appointment.html">Appointment</a></li>
-                            <li><a class="ms-link" href="doctor-profile.html">Doctors Profile</a></li>
-                            <li><a class="ms-link" href="doctor-schedule.html">Doctor Schedule</a></li> {% endcomment %}
-                        </ul>
-                </li>
-                {% url 'manage_patient' as manage_patient %}
-                {% url 'manage_relief_patient' as manage_relief_patient %}
-                {% url 'manage_asppointment' as manage_appointment %}
-                <li class="collapsed">
-                    <a class="m-link{% if request.path == manage_patient %} active {% endif %}{% if request.path == manage_appointment %} active {% endif %}{% if request.path == manage_relief_patient %} active {% endif %}" data-bs-toggle="collapse" data-bs-target="#menu-Patient" href="#">
-                        <i class="icofont-doctor-alt fs-5"></i>  <span>Patient</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
-                        <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse {% if request.path == manage_patient %} show {% endif %}{% if request.path == manage_appointment %} show {% endif %}{% if request.path == manage_relief_patient %} show {% endif %}" id="menu-Patient">
-                            <li><a class="ms-link {% if request.path == manage_patient %} active {% endif %}" href="{% url 'manage_patient' %}">Hospital Patients</a></li>
-                            <li><a class="ms-link {% if request.path == manage_relief_patient %} active {% endif %}" href="{% url 'manage_relief_patient' %}">Relief Patients</a></li>
-                            <li><a class="ms-link {% if request.path == manage_appointment %} active {% endif %}" href="{% url 'manage_appointment' %}">All Appointment</a></li>
-                            {% comment %} <li><a class="ms-link" href="doctor-add.html">Add Doctor</a></li>
-                            <li><a class="ms-link" href="appointment.html">Appointment</a></li>
-                            <li><a class="ms-link" href="doctor-profile.html">Doctors Profile</a></li>
-                            <li><a class="ms-link" href="doctor-schedule.html">Doctor Schedule</a></li> {% endcomment %}
+                        <ul class="sub-menu collapse {% if request.path == view_pharmacy_appointment %} show {% endif %} {% if request.path == delete_pharmacy_appointment %} show {% endif %}{% if request.path == manage_room %} show {% endif %}{% if request.path == pharmacy_manage_gallery %} show {% endif %}{% if request.path == manage_price %} show {% endif %}" id="menu-Department">
+                            <li><a class="ms-link{% if request.path == view_pharmacy_appointment %} active {% endif %}" href="{% url 'view_pharmacy_appointment' %}">Manage Appointment</a></li>
+                            <li><a class="ms-link{% if request.path == manage_department %} active {% endif %}" href="{% url 'manage_department' %}">Manage Invoices</a></li>
+                            <li><a class="ms-link{% if request.path == pharmacy_manage_gallery %} active {% endif %}" href="{% url 'pharmacy_manage_gallery' %}">Manage Gallery</a></li>
+                            
                         </ul>
                 </li>
 
-                {% comment %} <li class="collapsed">
-                    <a class="m-link" data-bs-toggle="collapse" data-bs-target="#menu-Patient" href="#">
-                    <i class="icofont-blind fs-5"></i> <span>Patient</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
-                    <!-- Menu: Sub menu ul -->
-                    <ul class="sub-menu collapse" id="menu-Patient">
-                        <li><a class="ms-link" href="patient-list.html">Patient List</a></li>
-                        <li><a class="ms-link" href="patient-add.html">Add Patient</a></li>
-                        <li><a class="ms-link" href="patient-profile.html">Patient Profile</a></li>
-                        <li><a class="ms-link" href="patient-invoices.html">Patient Invoices</a></li>
-                    </ul>
-                </li>
-                <li><a class="m-link" href="accidents.html"><i class="icofont-stretcher fs-5"></i> <span>Accidents</span></a></li>
-                <li><a class="m-link" href="labs.html"><i class="icofont-blood-test fs-5"></i> <span>Labs</span></a></li>
-                <li><a class="m-link" href="department.html"><i class="icofont-hospital fs-5"></i> <span>Department</span></a></li>
-                <li class="collapsed">
-                    <a class="m-link" data-bs-toggle="collapse" data-bs-target="#menu-Componentsone" href="#"><i
-                            class="icofont-ui-calculator"></i> <span>Accounts</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
-                    <!-- Menu: Sub menu ul -->
-                    <ul class="sub-menu collapse" id="menu-Componentsone">
-                        <li><a class="ms-link" href="invoices.html"><span>Invoices</span> </a></li>
-                        <li><a class="ms-link" href="payments.html"><span>Payments</span> </a></li>
-                        <li><a class="ms-link" href="expenses.html"><span>Expenses</span> </a></li>
-                    </ul>
-                </li>
-                <li class="collapsed">
-                    <a class="m-link" data-bs-toggle="collapse" data-bs-target="#app" href="#">
-                    <i class="icofont-code-alt fs-5"></i> <span>App</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
-                    <!-- Menu: Sub menu ul -->
-                    <ul class="sub-menu collapse" id="app">
-                        <li><a class="ms-link" href="calendar.html">Calandar</a></li>
-                        <li><a class="ms-link" href="chat.html"> Communication</a></li>
-                    </ul>
-                </li>
-                <li><a class="m-link" href="ui-elements/ui-alerts.html"><i class="icofont-paint fs-5"></i> <span>UI Components</span></a></li>
-               
-                <li class="collapsed">
-                    <a class="m-link" data-bs-toggle="collapse" data-bs-target="#page" href="#">
-                    <i class="icofont-page fs-5"></i> <span>Pages Example</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
-                    <!-- Menu: Sub menu ul -->
-                    <ul class="sub-menu collapse" id="page">
-                        <li><a class="ms-link" href="table.html">Table Example</a></li>
-                        <li><a class="ms-link" href="forms.html"> Forms Example</a></li>
-                        <li><a class="ms-link" href="icon.html"> Icons Example</a></li>
-                        <li><a class="ms-link" href="contact.html"> Contact Example</a></li>
-                    </ul>
-                </li> {% endcomment %}
+                
                 
             </ul>
             

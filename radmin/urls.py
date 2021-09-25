@@ -3,31 +3,39 @@ from .import views
   
 urlpatterns = [  
     path('',views.indexView,name="radmin_home"),
-    path('admin_hospital_all',views.hospitalallViews.as_view(),name="manage_hospital"),
-    path('hospital_delete/<id>',views.hospitalDelete,name="hospital_delete"),
+    path('admin_hospital_all',views.HospitalallViews.as_view(),name="manage_hospital_admin"),
+    path('hospital_delete_admin/<id>',views.HospitalDelete,name="hospital_delete_admin"),
+    path('manage_patient_admin',views.PatientAllViews.as_view(),name="manage_patient_admin"),
+    path('patient_delete_admin/<id>',views.PatientDelete,name="patient_delete_admin"),
+    path('manage_labs_admin',views.LabsAllViews.as_view(),name="manage_labs_admin"),
+    path('labs_delete_admin/<id>',views.LabsDelete,name="labs_delete_admin"),
+    path('manage_pharmacy_admin',views.PharmacyAllViews.as_view(),name="manage_pharmacy_admin"),
+    path('pharmacy_delete_admin/<id>',views.PharmacyDelete,name="pharmacy_delete_admin"),
+    path('manage_accident_admin',views.AccidentAllViews.as_view(),name="manage_accident_admin"),
+    path('accident_delete_admin/<id>',views.AccidentDelete,name="accident_delete_admin"),
+    # Appointment Hospital Labs Pharmcy  Accident
+    path('hospital_appointment_admin',views.HosAppointmentAllViews.as_view(),name="hospital_appointment_admin"),
+    path('labs_appointment_admin',views.LabsAppointmentAllViews.as_view(),name="labs_appointment_admin"),
 
-    path('virtual',views.virtualView,name="virtual"),
-    path('doctor_all',views.doctorallView,name="doctor_all"),
-    path('doctor_add',views.doctor_addView,name="doctor_add"),
-    path('appoinment',views.appoinmentView,name="appoinment"),
-    path('doctor_profile',views.doctorprofileView,name="doctor_profile"),
-    path('doctor_schedule',views.doctorscheduleView,name="doctor_schedule"),
-    path('patient_list',views.patientlistView,name="patient_list"),
-    path('patient_add',views.patientaddtView,name="patient_add"),
+    #Profiel for Hospital, Labs , Pharmcy, Patient 
+    path('hospital_profile_admin/<id>',views.HospitalDetailsViews.as_view(),name="hospital_profile_admin"),
+    path('doctor_profile_admin/<id>/<did>',views.DoctorsBookAppoinmentViews.as_view(),name="doctor_profile_admin"),
+    path('labs_profile_admin/<id>',views.LabDetailsViews.as_view(),name="labs_profile_admin"),
+    path('pharmacy_profile_admin/<id>',views.PharmacyDetailsViews.as_view(),name="pharmacy_profile_admin"),
+    path('patient_profile_admin/<id>',views.PatientDetailsViews.as_view(),name="patient_profile_admin"),
+   
  
-    path('patient_profile',views.patientprofileView,name="patient_profile"),
-    path('patient_invoice',views.patientinvoiceView,name="patient_invoice"),
- 
-    path('patient_profile',views.patientprofileView,name="patient_profile"),
-    path('patient_invoice',views.patientinvoiceView,name="patient_invoice"),
-    path('accidents',views.accidentsView,name="accidents"),
-    path('labs',views.labsviews,name="labs"),
-    path('department',views.departmentviews,name="department"),
-    path('invoices',views.invicesviews,name="invoices"),
-    path('payments',views.paymentsviews,name="payments"),
-    path('expences',views.expencesviews,name="expences"),
- 
-    # ACTIVATE DEACTIVATE HOSPITAL, DOCTOR, PATIENT, LABS, PHARMACY
-    path('hospitalactivate/<id>',views.hospitalActivate,name="hospitalactivate"),
-    path('hospitaldeactivate/<id>',views.hospitalDeactivate,name="hospitaldeactivate"),
+    # ACTIVATE DEACTIVATE HOSPITAL, DOCTOR, PATIENT, LABS, PHARMACY ,ACCIDENT
+    path('hospitalactivate/<id>',views.HospitalActivate,name="hospitalactivate"),
+    path('hospitaldeactivate/<id>',views.HospitalDeactivate,name="hospitaldeactivate"),
+    path('patientactivate/<id>',views.PatientActivate,name="patientactivate"),
+    path('patinetdeactivate/<id>',views.PatientDeactivate,name="patinetdeactivate"),
+    path('pharmacyactivate/<id>',views.PharmacyActivate,name="pharmacyactivate"),
+    path('pharmacydeactivate/<id>',views.PharmacyDeactivate,name="pharmacydeactivate"),
+    path('labsactivate/<id>',views.LabsActivate,name="labsactivate"),
+    path('labsdeactivate/<id>',views.LabsDeactivate,name="labsdeactivate"),
+    path('accidentactivate/<id>',views.AccidentActivate,name="accidentactivate"),
+    path('accidentdeactivate/<id>',views.AccidentDeactivate,name="accidentdeactivate"),
+
+
 ]

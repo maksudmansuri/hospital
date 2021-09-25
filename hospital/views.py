@@ -19,6 +19,16 @@ import pytz
 IST = pytz.timezone('Asia/Kolkata')
 
 # Create your views here. 
+def OccupiedRoom(request):
+    id= request.POST.get('a_id')
+    room = get_object_or_404(HospitalRooms,id=id)
+    if room.occupied:
+        room.occupied = False
+    else:
+        room.occupied = True
+    room.save()
+    return HttpResponse("Ok")
+
 class hospitaldDashboardViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):
         try: 
@@ -27,8 +37,9 @@ class hospitaldDashboardViews(SuccessMessageMixin,ListView):
             # insurances = Insurances.objects.filter(hospital=hospital)
 
             # if hospital.hopital_name and hospital.about and hospital.address1 and hospital.city and hospital.pin_code and hospital.state and hospital.country and hospital.landline and hospital.registration_proof and hospital.profile_pic and hospital.establishment_year and hospital.registration_number and hospital.alternate_mobile and contacts:
-                return render(request,"hospital/index.html")
-            
+            rooms = HospitalRooms.objects.filter(is_active=True,hospital=request.user.hospitals)
+            param = {'rooms':rooms}
+            return render(request,"hospital/index.html",param)
             
             # messages.add_message(request,messages.ERROR,"Some detail still Missing !")
             # param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
@@ -1013,12 +1024,10 @@ class manageAppointmentView(SuccessMessageMixin,View):
             booking.status=status        
             booking.is_applied=is_applied
             booking.save()
+            return HttpResponse("ok")
         except Exception as e:
-            print(e)
-            # return HttpResponse(e)
-       
-        print("Appoinment update saved")      
-        return HttpResponseRedirect(reverse("manage_appointment"))
+            return HttpResponse(e)
+      
 """
 Update appointment yet not implemented will think more that
 """

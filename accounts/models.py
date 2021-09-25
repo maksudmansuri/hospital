@@ -52,7 +52,7 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-class CustomUser(AbstractBaseUser):
+class CustomUser(AbstractBaseUser): 
     email = models.EmailField(verbose_name="email", max_length=254, unique=True,error_messages={'unique':"This email has already been registered."})
     username = models.CharField(max_length=254,unique=True)
     date_joined = models.DateTimeField(verbose_name="date joined", auto_now_add=True,null=True,blank=True)
@@ -175,6 +175,7 @@ class Patients(models.Model):
     bloodgroup          =models.CharField(max_length=255,null=True,default="")
     is_appiled          =models.BooleanField(blank=True,null=True,default=False)
     is_verified         =models.BooleanField(blank=True,null=True,default=False)
+    is_active           =models.BooleanField(blank=True,null=True,default=False)
     created_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
     updated_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
     objects             =models.Manager()

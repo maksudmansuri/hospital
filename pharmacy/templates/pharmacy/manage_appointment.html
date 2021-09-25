@@ -1,6 +1,6 @@
-{% extends 'hospital/base.html' %}
+{% extends 'pharmacy/base.html' %}
 {% load static %}
-{% block title %} :: I-Health::  Hospitals Appointment{% endblock title %}
+{% block title %} :: I-Health::  Laboratory Appointment{% endblock title %}
 
 {% block custom_css %}
 <style>
@@ -39,48 +39,52 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Full Name</th> 
-                                    <th>Appointment</th>   
-                                    <th>Doctor</th> 
+                                    <th>Photo</th>    
                                     <th>Updated Date</th>   
                                     <th>Status</th>   
-                                    <th>Actions</th>  
+                                    <th>Actions</th>
+                                   
                                 </tr>
                             </thead> 
-                            <tbody>
-                            {% for book in booking %}
+                            <tbody id="tablecontent">
+                            {% for book in picturesformedicine %}
                                 <tr>
                                     <td>
-                                        <span class="fw-bold">{{forloop.counter}}</span>
+                                        <span class="fw-bold">PH-{{book.id}}</span>
                                     </td>
                                     <td>
                                         
-                                        <span class="fw-bold ms-1"  >{{book.patient.admin.name_title}} {{book.patient.fisrt_name}} {{book.patient.last_name}}</span>
+                                        <span class="fw-bold ms-1"  >{{book.patient.admin.name_title}} {{book.patient.first_name}} {{book.patient.last_name}}</span>
                                     </td>
-                                    <td>
-                                        {{book.service.service_name}}
-                                    </td>
-                                    <td>
-                                         {{book.hospitalstaffdoctor.doctor.name_title}} {{book.hospitalstaffdoctor.doctor.fisrt_name}}  {{book.hospitalstaffdoctor.doctor.last_name}}
-                                    </td>
+                                    <td>  {% if book.prescription %}
+                                          <a type="button" href="{{book.prescription}}" download><img src="{{book.prescription}}" style="width:100%;height:70%;" class="hover-shadow cursor"></a>{% endif %}
+                                           
+                                                                                                                    
+                                    </td>                                   
                                     <td>
                                         {{book.applied_time}} , {{book.applied_date}}
                                     </td>
                                     <td>
-                                    <select class="form-select status" aria-label="Default select example" data-index="{{book.id}}" id="status" name="status"{% if book.status == "rejected"%} disabled {%endif%} >
-                                                     <option selected disabled >Status</option>
-                                                    <option value="accepted" {% if book.status == "accepted" %}selected{% endif %} >Accepted</option>
-                                                    <option value="rejected" {% if book.status == "rejected" %}selected{% endif %}>Rejected</option>
-                                                    <option value="taken" {% if book.status == "taken" %}selected{% endif %}>Taken</option>
-                                                </select>
+                                        <select class="form-select status" aria-label="Default select example" data-index="{{book.id}}" id="status" name="status"{% if book.status == "rejected" or book.status == "taken" or book.store_invoice %} disabled {%endif%} >
+                                            <option selected disabled >Status</option>
+                                            <option value="accepted" {% if book.status == "accepted" %}selected{% endif %} >Accepted</option>
+                                            <option value="rejected" {% if book.status == "rejected" %}selected{% endif %}>Rejected</option>
+                                            <option value="taken" {% if book.status == "taken" %}selected{% endif %}>Taken</option>
+                                        </select>
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic outlined example">
                                             {% comment %}<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{room.id}}"><i class="icofont-edit text-success"></i></button>{% endcomment %}
-                                            
-                                           <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom"  {% if book.status == "rejected" or book.status == "taken" %} href="{% url 'delete_appointment' book.id %}" disabled {% endif %}><i class="icofont-ui-delete text-danger"></i><a> 
+                                            {% if book.status == "accepted" or book.status == "taken" or book.store_invoice %}
+                                           <a type="button" class="btn btn-outline-secondary" id="uploadreport"data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{book.id}}"  ><i class="icofont-upload-alt text-danger"></i> Invoice<a> {% endif %}
+                          
+                                           <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom"  {% if book.store_invoice or book.status == "rejected" %} href="{% url 'delete_pharmacy_appointment' book.id %}" disabled {% endif %}><i class="icofont-ui-delete text-danger"></i><a>
+                                           {% if book.store_invoice %} 
+                                           <a type="button" class="btn btn-outline-secondary deleterow" href="{{book.store_invoice}}" download><i class="icofont-download text-primary"></i></a>{% endif %}
                                            
                                         </div>
                                     </td>
+                                  
                                     
                                    
                                     
@@ -97,69 +101,48 @@
  
 {% endblock content %}
 {% block modal_fade %}
-    {% for room in rooms %}
-        <div class="modal fade" id="depedit{{room.id}}" tabindex="-1"  aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
-                <div class="modal-content">
-                <form id="roomupdate" method="post" action="{% url 'update_room' %}">
-                {% csrf_token %}
-                    <div class="modal-header">
-                        <h5 class="modal-title  fw-bold" id="depaddLabel">Edit Appointment</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    
-                    <div class="modal-body">               
-                        <div class="deadline-form">                        
-                            <div class="row g-3 mb-3">
-                                <div class="col-sm-6">
-                                    <label for="room_no" class="form-label">Room No *</label>
-                                    <input type="text" class="form-control" id="room_no" name="room_no" value="{{room.room_no}}">
-                                </div> 
-                                <div class="col-sm-6">
-                                <label for="depone" class="form-label">Floor</label>
-                                <input type="text" class="form-control" id="floor" name="floor" value="{{room.floor}}">
-                                </div>                       
-                                <div class="col-sm-6">
-                                    <label  class="form-label">Room Type *</label>
-                                    <select class="form-select" aria-label="Default select example" name="room" value="{{room.room}}">
-                                    {% for price in prices %}
-                                        <option value="{{price.id}}">{{price}} -INR{{price.rooms_price}}</option>
-                                    {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label  class="form-label">Department *</label>
-                                    <select class="form-select" aria-label="Default select example" name="department">
-                                    {% for department in departments %}
-                                        <option {% if room.department == department %}selected{% endif %} value="{{department.id}}">{{department}}</option>
-                                    {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="col-sm-6"></div>
-                            <div class="col-sm-6">
-                                <label class="custom-switch mt-2">
-                                    <input type="checkbox" name="is_active" id ="is_active" class="custom-switch-input" {% if room.is_active %}checked{% endif %}>
-                                    <span class="custom-switch-indicator" ></span>
-                                    <span class="custom-switch-description">Room is active ?</span>
-                                </label>
-                                </div>
-                            
-                            </div>                        
-                        </div>
-                        
-                    
-                    </div>
-                
-                    <div class="modal-footer">
-                        {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button> {% endcomment %}
-                        <button type="submit" class="btn btn-primary">Add</button>
-                    </div>
+   
 
-                </div>
-                </form>
-                </div>
+    {% for booking in picturesformedicine %}
+    <!-- Modal Modal Center-->
+    <div class="modal fade" id="exampleModalCenter{{booking.id}}" tabindex="-1" aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+         <form method="post" action="{% url 'updload_invoice_pharmacy' booking.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Upload Report </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        </div> 
+            <div class="modal-body">
+             <div class="deadline-form">                        
+                <div class="row g-3 mb-3">
+                    <div class="col-md-12">
+                        <label for="formFileMultiple" class="form-label"> File Upload *</label>
+                        <input class="form-control" type="file" id="store_invoice" name="store_invoice" onchange="Filevalidation()"  required accept="application/pdf,application/msword,
+                        application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                    </div>
+                    <div class="col-md-12">
+                        <label for="formFileMultiple" class="form-label"> Totla Amount * </label>
+                        <input class="form-control" type="number" id="amount" name="amount"  required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="formFileMultiple" class="form-label"> File description * </label>
+                        <input class="form-control" type="text" id="desc" name="desc"  required>
+                    </div>
+                    <p id="size"></p>
+                </div>
+             </div>   
+            </div>
+            
+            <div class="modal-footer">                
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
+         </form>
+        </div>
+    </div>
+</div>
+
     {% endfor %}
 
 {% endblock modal_fade %}
@@ -169,10 +152,11 @@
 <script>
 
     $(document).ready(function() {
-    $('select.status').change(function(){      
+    $('select.status').change(function(){   
+        console.log("inside lab")   
         $.ajax({
             type: 'POST',
-            url: "{% url 'manage_appointment' %}",
+            url: "{% url 'view_pharmacy_appointment' %}",
             data:{
                 'a_id':$(this).data('index'),
                 //'status':$('#status').val(),
@@ -181,8 +165,8 @@
                 'action': 'post'
 
             },
-            success: function (json) {
-                console.log(json)
+            success: function () {
+               location.reload();
             },
             error: function (xhr, errmsg, err) {
 
@@ -192,6 +176,7 @@
       
         });
     });
+
 
    /** $(document).on('change','#status',function(e){
         console.log("i m here at change status")
@@ -216,4 +201,30 @@
             });
     }) **/
 </script>
+<script>
+    Filevalidation = () => {
+        const fi = document.getElementById('report');
+        // Check if any file is selected.
+        if (fi.files.length > 0) {
+            console.log("fi.files.item.size")
+            for (const i = 0; i <= fi.files.length - 1; i++) {
+  
+                const fsize = fi.files.item(i).size;
+                const file = Math.round((fsize / 1024));
+                // The size of the file.
+                if (file >= 10240) {
+                    alert(
+                      "File too Big, please select a file less than 10mb");
+                      document.getElementById('report').value = "" 
+                }else {
+                    document.getElementById('size').innerHTML = '<b>'
+                    + file + '</b> KB';
+                }
+            }
+        }
+    }
+</script>
+
+// Open the Modal
+
 {% endblock custom_js %}

@@ -38,7 +38,7 @@
                             {% for hospital in hospitals_list %}
                                 <tr>
                                     <td>
-                                        <span class="fw-bold">{{hospital.id}}</span>
+                                        <span class="fw-bold">{{forloop.counter}}</span>
                                     </td>
                                     <td>
                                         <img class="avatar rounded-circle" src="{{hospital.profile_pic}}" alt="">
@@ -83,10 +83,10 @@
                                             <button type="button" class="btn btn-primary">Action</button>
                                             <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <span class="visually-hidden">Toggle Dropdown</span>
-                                            </button>
+                                            </button> 
                                             <ul class="dropdown-menu border-0 shadow py-3 px-2">
-                                                <li><a class="dropdown-item py-2 rounded" href="#">View Profile</a></li
-                                                <li><a class="dropdown-item py-2 rounded" href="{% url 'hospital_delete' hospital.id %}">Delete</a></li>
+                                                <li><a class="dropdown-item py-2 rounded" href="{% url 'hospital_profile_admin' hospital.id %}">View Profile</a></li
+                                                <li><a class="dropdown-item py-2 rounded" href="{% url 'hospital_delete_admin' hospital.id %}">Delete</a></li>
                                                 <li><hr class="dropdown-divider"></li>
                                                 <li><a class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#depedit{{hospital.id}}">Contact Person</a></li>
                                             </ul>

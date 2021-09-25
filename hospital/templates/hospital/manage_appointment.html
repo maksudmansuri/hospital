@@ -66,12 +66,12 @@
                                         {{book.applied_time}} , {{book.applied_date}}
                                     </td>
                                     <td>
-                                    <select class="form-select status" aria-label="Default select example" data-index="{{book.id}}" id="status" name="status"{% if book.status == "rejected"%} disabled {%endif%} >
-                                                     <option selected disabled >Status</option>
-                                                    <option value="accepted" {% if book.status == "accepted" %}selected{% endif %} >Accepted</option>
-                                                    <option value="rejected" {% if book.status == "rejected" %}selected{% endif %}>Rejected</option>
-                                                    <option value="taken" {% if book.status == "taken" %}selected{% endif %}>Taken</option>
-                                                </select>
+                                       <select class="form-select status" aria-label="Default select example" data-index="{{book.id}}" id="status" name="status"{% if book.status == "rejected" %} disabled {%endif%} >
+                                            <option selected disabled >Status</option>
+                                            <option value="accepted" {% if book.status == "accepted" %}selected{% endif %} >Accepted</option>
+                                            <option value="rejected" {% if book.status == "rejected" %}selected{% endif %}>Rejected</option>
+                                            <option value="taken" {% if book.status == "taken" %}selected{% endif %}>Taken</option>
+                                        </select>
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic outlined example">
@@ -169,7 +169,8 @@
 <script>
 
     $(document).ready(function() {
-    $('select.status').change(function(){      
+    $('select.status').change(function(){   
+        console.log("inside hospital")   
         $.ajax({
             type: 'POST',
             url: "{% url 'manage_appointment' %}",
@@ -181,8 +182,8 @@
                 'action': 'post'
 
             },
-            success: function (json) {
-                console.log(json)
+            success: function () {
+               location.reload();
             },
             error: function (xhr, errmsg, err) {
 
@@ -192,28 +193,5 @@
       
         });
     });
-
-   /** $(document).on('change','#status',function(e){
-        console.log("i m here at change status")
-        console.log($(this).data('index'))
-        e.preventDefault();
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'manage_appointment' %}" 
-            data:{
-                'a_id':$(this).data('index'),
-                'status':$('#status').val(),
-                'csrfmiddlewaretoken': "{{csrf_token}}",
-                'action': 'post'
-
-            }
-        });
-          $.ajax({
-                type: 'POST',
-                url: 'Change-status.php',
-                data: {selectFieldValue: $('select.changeStatus').val(), projectId: $('input[name$="projectId"]').val()},
-                dataType: 'html'
-            });
-    }) **/
 </script>
 {% endblock custom_js %}

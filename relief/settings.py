@@ -79,6 +79,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'patient.context_processors.basket',
+                'radmin.context_processors.Badgeson',
+                'radmin.context_processors.BadgeNewAppointment',
             ],
         },
     },

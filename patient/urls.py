@@ -1,7 +1,7 @@
 from django.urls import path
 from patient import views
 
-urlpatterns = [  
+urlpatterns = [   
     path('', views.patientdDashboardViews.as_view(), name="patient_home"),
     path('patient_update', views.patientdUpdateViews.as_view(), name="patient_update"),
     path('hospital_list', views.HospitalListViews.as_view(), name="hospital_list"),
@@ -16,7 +16,11 @@ urlpatterns = [
     # Laboratory urls
     path('laboratory_list', views.LabListViews.as_view(), name="laboratory_list"),
     path('laboratory_details/<id>', views.labDetailsViews.as_view(), name="laboratory_details"),
-    
+    #Pharmacy urls
+    path('pharmacy_list', views.PharmacyListViews.as_view(), name="pharmacy_list"),
+    path('pharmacy_details/<id>', views.PharmacyDetailsViews.as_view(), name="pharmacy_details"),
+    path('updload_prescription_photo', views.UploadPresPhotoViews.as_view(), name="updload_prescription_photo"),
+
     #checkout for lab and hospital combin 
     path('checkout', views.CheckoutViews, name="checkout"),
     path('paytmprocess', views.PaytmProcessViews, name="paytmprocess"),

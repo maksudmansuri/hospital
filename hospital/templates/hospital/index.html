@@ -171,11 +171,13 @@
                             <div class="card-body">
                                 <div class="room_book">
                                     <div class="row row-cols-2 row-cols-sm-4 row-cols-md-6 row-cols-lg-6 g-3">
+                                    {% for room in rooms %}
                                         <div class="room col">
-                                        <input type="checkbox" id="1A" checked/>
-                                        <label for="1A"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room A-101</span></label>
+                                        <input type="checkbox" id="{{room.id}}A" class="room" checked/>
+                                        <label for="{{room.id}}A"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room-{{room.room}}<br>{{room.room_no}}</span></label>
                                         </div>
-                                        <div class="room col">
+                                    {% endfor %}
+                                        {% comment %} <div class="room col">
                                         <input type="checkbox" id="1B" />
                                         <label for="1B"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room B-102</span></label>
                                         </div>
@@ -186,63 +188,8 @@
                                         <div class="room col">
                                         <input type="checkbox" disabled id="1D" />
                                         <label for="1D"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Occupied</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="1E" />
-                                        <label for="1E"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room D-104</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="1F" checked/>
-                                        <label for="1F"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room E-105</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="2A" />
-                                        <label for="2A"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room F-106</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="2B" />
-                                        <label for="2B"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room G-107</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="2C" checked/>
-                                        <label for="2C"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room H-108</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="2D" />
-                                        <label for="2D"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room I-109</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="2E" checked/>
-                                        <label for="2E"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room J-110</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="2F" />
-                                        <label for="2F"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room K-111</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="3A" checked/>
-                                        <label for="3A"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room L-112</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="3B" />
-                                        <label for="3B"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room M-113</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="3C" />
-                                        <label for="3C"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room N-114</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="3D" />
-                                        <label for="3D"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room O-115</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="3E" checked/>
-                                        <label for="3E"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room P-116</span></label>
-                                        </div>
-                                        <div class="room col">
-                                        <input type="checkbox" id="3F" />
-                                        <label for="3F"><i class="icofont-patient-bed fs-2"></i><span class="text-muted">Room Q-117</span></label>
-                                        </div>
+                                        </div> {% endcomment %}
+                                       
                                     </div>
                                 </div>
                             </div>  
@@ -250,7 +197,7 @@
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
-                    <div class="col-xl-8 col-lg-12 flex-column">
+                    <div class="col-xl-12 col-lg-12 flex-column">
                         <div class="card mb-3">
                             <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
                                 <h6 class="mb-0 fw-bold ">Addmission by Division</h6>
@@ -401,7 +348,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-12 flex-column">
+                    {% comment %} <div class="col-xl-4 col-lg-12 flex-column">
                         <div class="card mb-3">
                             <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
                                 <h6 class="mb-0 fw-bold ">Make appointment</h6>
@@ -497,7 +444,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                 </div><!-- .row end -->
             </div>
         </div>      
@@ -792,4 +739,32 @@
 
 {% endblock modal_fade %}
 
-{% block custom_js %}{% endblock custom_js %}
+{% block custom_js %}
+<script>
+    {% comment %} $(document).ready(function() {
+      $('.room').change(function(){      
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'occupied_room' %}",
+            data:{
+                'a_id':$(this).data('index'),
+                //'status':$('#status').val(),
+                'csrfmiddlewaretoken': "{{csrf_token}}",
+                'action': 'post'
+
+            },
+            success: function (json) {
+                console.log(json)
+            },
+            error: function (xhr, errmsg, err) {
+
+            }
+           
+        });
+      
+        });
+    }); {% endcomment %}
+</script>
+
+
+{% endblock custom_js %}

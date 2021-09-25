@@ -38,16 +38,16 @@
                                                 <a href="javascript:void(0);" class="d-flex">
                                                     <img class="avatar rounded-circle" src="{{book.hospitalstaffdoctor.hospital.profile_pic}}" alt="">
                                                     <div class="flex-fill ms-3 text-truncate">
-                                                        <h6 class="d-flex justify-content-between mb-0"><span>Dr.{{book.hospitalstaffdoctor}}</span></h6>
-                                                        <span class="text-muted">{{book.hospitalstaffdoctor.hospital}}</span>
+                                                        <h6 class="d-flex justify-content-between mb-0"><span class="hospitaldoctor">Dr.{{book.hospitalstaffdoctor}}</span></h6>
+                                                        <span class="text-muted hospital">{{book.hospitalstaffdoctor.hospital}}</span>
                                                     </div>
                                                 </a>
                                                 
                                                 <div class="text-end d-none d-md-block">
-                                                    <p class="mb-1"><i class="icofont-location-pin ps-1"></i> {{book.hospitalstaffdoctor.hospital.address1}}{{book.hospitalstaffdoctor.hospital.address2}}{{book.hospitalstaffdoctor.hospital.city}}{{book.hospitalstaffdoctor.hospital.pin_code}}{{book.hospitalstaffdoctor.hospital.state}}</p>
+                                                    <p class="mb-1"><i class="icofont-location-pin ps-1"></i><span class="hospitaladdress"> {{book.hospitalstaffdoctor.hospital.address1}}{{book.hospitalstaffdoctor.hospital.address2}}{{book.hospitalstaffdoctor.hospital.city}}{{book.hospitalstaffdoctor.hospital.pin_code}}{{book.hospitalstaffdoctor.hospital.state}}</span></p>
                                                    
-                                                    <i class="icofont-ui-calendar ps-1"></i> <span class="badge rounded-pill bg-info">{{book.applied_date}} {{book.applied_time}}</span><br>
-                                                    <span class="text-muted"><i class="icofont-money ps-1"></i>&#x20B9;{{book.service.service_charge}}</span>
+                                                    <i class="icofont-ui-calendar ps-1"></i> <span class="badge rounded-pill bg-info applieddatetime">{{book.applied_date}} {{book.applied_time}}</span><br>
+                                                    <span class="text-muted"><i class="icofont-money ps-1"></i>&#x20B9;<span class="hospitalamount">{{book.service.service_charge}}</span></span>
                                                 </div>
                                             </div>
                                             <div class="card-footer justify-content-between d-flex align-items-center">
@@ -74,7 +74,7 @@
                                                 </div>
                                                 <div class="card-hover-show">
                                                 {% if book.is_cancelled == False%}
-                                                    <a class="btn btn-sm btn-white border lift" href="#">Download</a>
+                                                    <a class="btn btn-sm btn-white border lift" href="#" download><i class="icofont-download text-primary"></i> Invoice</a>
                                                     <a class="btn btn-sm btn-white border lift" href="#">Send</a>
                                                     
                                                     {% if book.status == "accepted" or  book.status == "" %}
@@ -86,13 +86,22 @@
                                         </div>
                                     {% endfor %}  
                                         <nav aria-label="Page navigation">
-                                            <ul class="pagination mt-4">
+                                            <ul class="pagination"></ul>
+                                            {% comment %} <ul class="pagination mt-4">
+                                             {% if page_obj.has_previous %}
+                                                <li class="page-item"><a class="page-link" href="{% url 'appointmentlist' %}?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                                                {% else %}
                                                 <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                                {% endif %}
+                                                {% for i in  paginator.page_range %}
+                                                <li class="page-item"><a class="page-link" href="{% url 'appointmentlist' %}?page={{ i }}">{{i}}</a></li>
+                                                {% endfor %}
+                                                 {% if page_obj.has_next %}
+                                                <li class="page-item"><a class="page-link" href="{% url 'appointmentlist' %}?page={{ page_obj.next_page_number }}">Next</a></li>
+                                                 {% else %}
                                                 <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                            </ul>
+                                                {% endif %}
+                                            </ul> {% endcomment %}
                                         </nav>
                                     </div>
                                 </div>  <!-- Row end  -->
@@ -171,22 +180,23 @@
                             <div class="tab-pane fade" id="Invoice-Pharmacy">
                                 <div class="row justify-content-center">
                                     <div class="col-lg-8 col-md-12">
-                                    {% for book in booked %}
+                                    {% for book in phamacybooking %}
                                         <div class="card mb-3">
                                             <div class="card-body d-sm-flex justify-content-between">
                                                 <a href="javascript:void(0);" class="d-flex">
-                                                    <img class="avatar rounded-circle" src="{{book.hospitalstaffdoctor.hospital.profile_pic}}" alt="">
+                                                    <img class="avatar rounded-circle" src="{{book.pharmacy.profile_pic}}" alt="">
                                                     <div class="flex-fill ms-3 text-truncate">
-                                                        <h6 class="d-flex justify-content-between mb-0"><span>Dr.{{book.hospitalstaffdoctor}}</span></h6>
-                                                        <span class="text-muted">{{book.hospitalstaffdoctor.hospital}}</span>
+                                                        <h6 class="d-flex justify-content-between mb-0"><span>{{book.pharmacy}}</span></h6>
+                                                        <span class="text-muted">{{book.pharmacy.about}}</span><br>
+                                                        <h6 class="text-muted">PH-{{book.id}}</h6>
                                                     </div>
                                                 </a>
                                                 
                                                 <div class="text-end d-none d-md-block">
-                                                    <p class="mb-1"><i class="icofont-location-pin ps-1"></i> {{book.hospitalstaffdoctor.hospital.address1}}{{book.hospitalstaffdoctor.hospital.address2}}{{book.hospitalstaffdoctor.hospital.city}}{{book.hospitalstaffdoctor.hospital.pin_code}}{{book.hospitalstaffdoctor.hospital.state}}</p>
+                                                    <p class="mb-1"><i class="icofont-location-pin ps-1"></i> {{book.pharmacy.address}}{{book.pharmacy.city}}{{book.pharmacy.pin_code}}{{book.pharmacy.state}}</p>
                                                    
                                                     <i class="icofont-ui-calendar ps-1"></i> <span class="badge rounded-pill bg-info">{{book.applied_date}} {{book.applied_time}}</span><br>
-                                                    <span class="text-muted"><i class="icofont-money ps-1"></i>&#x20B9;{{book.service.service_charge}}</span>
+                                                    <span class="text-muted"><i class="icofont-money ps-1"></i>&#x20B9;{{book.amount}}</span>
                                                 </div>
                                             </div>
                                             <div class="card-footer justify-content-between d-flex align-items-center">
@@ -213,7 +223,7 @@
                                                 </div>
                                                 <div class="card-hover-show">
                                                 {% if book.is_cancelled == False%}
-                                                    <a class="btn btn-sm btn-white border lift" href="#">Download</a>
+                                                    <a class="btn btn-sm btn-white border lift" href="#" download><i class="icofont-download text-primary"></i> Invoice</a>
                                                     <a class="btn btn-sm btn-white border lift" href="#">Send</a>
                                                     
                                                     {% if book.status == "accepted" or  book.status == "" %}
@@ -250,4 +260,6 @@
 {% endblock modal_fade %}
 
 {% block custom_js %}
+
+
 {% endblock custom_js %}

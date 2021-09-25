@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'patient',
     'rest_framework',
     'rest_framework.authtoken',
-    'paytmchecksum',
 ]
 
 MIDDLEWARE = [

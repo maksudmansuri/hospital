@@ -126,9 +126,9 @@ body {
 
 {% block content %}
     <!-- Visit https://codepen.io/nicolaskadis/full/brQEOd/ for the latest, no js version! -->
-<div class="container">
+<div class="infinite-container">
   <div class="row text-center">
-  {% for hospital in hospital_media_list %}
+  {% for hospital in object_list %}
     <div class="col-md-4 card-container">
       <div class="card card-flip">
         <div class="front card-block container_foto">
@@ -162,86 +162,50 @@ body {
       </div>
     </div>
     {% endfor %}
+
+    {% comment %} <div class="loading" style="display: none;">
+    Loading...
+    </div>
+
+    {% if page_obj.has_next %}
+    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">More</a>
+    {% endif %} {% endcomment %}
+    
+           <nav aria-label="Page navigation">
+              
+              <ul class="pagination justify-content-center">
+                  {% if page_obj.has_previous %}
+                  <li class="page-item">
+                      <a class="page-link" href="{% url 'hospital_list' %}?filter={{ filter }}&orderby={{ orderby }}&page={{ page_obj.previous_page_number }}" tabindex="-1" >Previous</a>
+                  </li>
+                  {% else %}
+                  <li class="page-item"><a class="page-link" aria-disabled="true" href="#">Previous</a></li>
+                  {% endif %}
+
+                  {% for i in  paginator.page_range %}
+                  <li class="page-item"><a class="page-link" href="{% url 'hospital_list' %}?filter={{ filter }}&orderby={{ orderby }}&page={{ i }}">{{ i }}</a></li>
+                  {% endfor %}
+
+                  {% if page_obj.has_next %}
+                  <li class="page-item"><a class="page-link" href="{% url 'hospital_list' %}?filter={{ filter }}&orderby={{ orderby }}&page={{ page_obj.next_page_number }}">Next</a></li>
+                  {% else %}
+                  <li class="page-item">
+                      <a class="page-link" aria-disabled="true"  href="#">Next</a>
+                  </li>
+                  {% endif %}
+                
+              </ul>
+            </nav> 
+         
   </div>
+ 
 </div>
 
 
 {% endblock content %}
 
 {% block modal_fade %}
- {% for hospital in hospital_media_list  %}
-        <!--====== Add to Cart Modal ======-->
-        <div class="modal fade" id="book-an-appointment{{hospital.hospital.id}}" tabindex="-1" aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content modal-radius modal-shadow">
-
-                    <button class="btn dismiss-button fas fa-times" type="button"  data-bs-dismiss="modal"></button>
-                    <div class="modal-body">
-                        
-                        <div class="card mb-3">
-                            <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
-                                <h6 class="mb-0 fw-bold ">Make appointment</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="wrapper">
-                                    <div id="calendar"> 
-                                    <div class="monthChange"></div>
-                                    <div class='timepicker'>
-                                        <div class="owl">
-                                          <div>06:00</div>
-                                          <div>07:00</div>
-                                          <div>08:00</div>
-                                          <div>09:00</div>
-                                          <div>10:00</div>
-                                          <div>11:00</div>
-                                          <div>12:00</div>
-                                          <div>13:00</div>
-                                          <div>14:00</div>
-                                          <div>15:00</div>
-                                          <div>16:00</div>
-                                          <div>17:00</div>
-                                          <div>18:00</div>
-                                          <div>19:00</div>
-                                          <div>20:00</div>
-                                        </div>
-                                        <div class="fade-l"></div>
-                                        <div class="fade-r"></div>
-                                      </div>
-                                  </div>
-                                  <div class="inner-wrap">
-                                    <form>
-                                        <div class="mb-3">
-                                          <input type="text" class="form-control" id="ps-name" placeholder="Enter Name">
-                                        </div>
-                                        <div class="mb-3">
-                                            <input type="email" class="form-control" id="ps-email" placeholder="Enter Email">
-                                        </div>
-                                        <select class="form-select mb-3" aria-label="Default select example">
-                                            <option selected>Select Doctor</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
-                                        <button type="submit" class="btn btn-primary disabled request"> Request appointment <span>On</span>
-                                            <span class="day fw-bold text-dark"></span>
-                                            <span>At</span>
-                                            <span class="time fw-bold text-dark"></span>
-                                            <i class="icofont-dotted-right fs-3"></i>
-                                            </button>
-                                      </form>
-                                  </div>
-                                  
-                                  
-                                    
-                              </div>
-                            </div>                 
-                       
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+ 
 {% endblock modal_fade %}
 
 
@@ -273,6 +237,18 @@ $(document).ready(function() {
   $(absoluteSide).css("position", "absolute");
 });
 </script>
+<!--For infinite scrolling or paginaion-->
+<script>
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script>
    
 
 {% endblock custom_js %}

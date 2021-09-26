@@ -217,15 +217,22 @@ function todayEqualActive(){
 // call the above function on document ready
 todayEqualActive();
 
+var dateToday = new Date();
+dateToday.setDate(dateToday.getDate());
 $('#calendar').datepicker({
+  minDate: 0,
+  defaultDate: "+1w",
   inline: true,
   firstDay: 1,
   showOtherMonths: true,
+  startDate: dateToday,
+  format:'yyyy-mm-dd',
   onChangeMonthYear: function(){
     todayEqualActive();
   },
   onSelect: function(dateText, inst){
     var date = $(this).datepicker('getDate'),
+    dayi = date.getDay(),
     day  = date.getDate(),
     month = date.getMonth() + 1,
     year =  date.getFullYear();
@@ -233,6 +240,10 @@ $('#calendar').datepicker({
     // display day and month on submit button
     var monthName = months[month - 1];
     $(".request .day").text(monthName + " " + day);
+    $("#Adate").val(dayi);
+    $("#Adate").val(month + "/" + day + "/" + year);
+    $("#Adate").val(month + "/" + day + "/" + year);
+    
     
     todayEqualActive();    
 

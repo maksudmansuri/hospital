@@ -1,3 +1,4 @@
+from datetime import datetime, date
 from django.db.models.query_utils import Q
 from lab.models import Medias
 from django.views.generic.base import View
@@ -8,7 +9,7 @@ from patient.models import Booking, Orders, LabTest, PicturesForMedicine, Temp, 
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
-from accounts.models import HospitalPhones, Hospitals, Labs, Patients, Pharmacy
+from accounts.models import HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.list import ListView
@@ -91,15 +92,41 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
 Hospital list and profile
 """
 class HospitalListViews(ListView):
-    def get(self, request, *args, **kwargs):
-        hospitals = Hospitals.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True)
+    # context_object_name = "hospital"
+    paginate_by = 10
+    model = Hospitals
+    template_name = "patient/hospital_list.html"
+    # paginate_by=3
+
+    def get_queryset(self):
+        filter_val=self.request.GET.get("filter","")
+        order_by=self.request.GET.get("orderby","id")
+        if filter_val!="":
+            hospitals=Hospitals.objects.filter( Q(is_verified=True,is_deactive=False,admin__is_active=True) and (Q(hopital_name__contains=filter_val) | Q(about__contains=filter_val) | Q(city__contains=filter_val) | Q(specialist__contains=filter_val))).order_by(order_by)
+        else:
+            hospitals=Hospitals.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True).order_by(order_by)
         hospital_media_list = []
         for hospital in hospitals:
             medias = HospitalMedias.objects.filter(is_active=True,hospital=hospital)           
             hospital_media_list.append({'hospital':hospital,'medias':medias})
-        print(hospital_media_list)
-        param = {'hospital_media_list':hospital_media_list}  
-        return render(request,"patient/hospital_list.html",param)
+        print(hospital_media_list)        
+        return hospital_media_list
+   
+    def get_context_data(self,**kwargs):
+        context=super(HospitalListViews,self).get_context_data(**kwargs)
+        context["filter"]=self.request.GET.get("filter","")
+        context["orderby"]=self.request.GET.get("orderby","id")
+        context["all_table_fields"]=Hospitals._meta.get_fields()
+        return context
+
+    # def get(self, request, *args, **kwargs):        
+    #     hospitals = Hospitals.objects.filter(is_verified=True,is_deactive=False,admin__is_active=True)
+    #     hospital_media_list = []
+    #     for hospital in hospitals:
+    #         medias = HospitalMedias.objects.filter(is_active=True,hospital=hospital)           
+    #         hospital_media_list.append({'hospital':hospital,'medias':medias})
+    #     param = {'hospital_media_list':hospital_media_list}  
+    #     return render(request,"patient/hospital_list.html",param)
     
 class HospitalDetailsViews(DetailView):
     def get(self, request, *args, **kwargs):
@@ -120,7 +147,7 @@ class HospitalDetailsViews(DetailView):
             hospitalstaffdoctor_list.append({'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual,'opd_time':opd_time})
         param = {'hospital':hospital,'hospitalstaffdoctor_list':hospitalstaffdoctor_list,'hospitalservice':hospitalservice}  
         return render(request,"patient/hospital_details.html",param)
-
+ 
 class DoctorsBookAppoinmentViews(SuccessMessageMixin,View):
     def get(self, request, *args, **kwargs):
         hosital_id=kwargs['id']
@@ -128,24 +155,36 @@ class DoctorsBookAppoinmentViews(SuccessMessageMixin,View):
         hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
         hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,is_active=True,id=hositaldcotorid_id)
         hospitalservice = ServiceAndCharges.objects.filter(user=hospital.admin)
-      
-        
+        opdtime = OPDTime.objects.get(user=hospital.admin)
+
+        time_elapsed=datetime.combine(date.today(), opdtime.close_time) - datetime.combine(date.today(), opdtime.opening_time)
+
+        print(time_elapsed)
+        # for time in time_elapsed.()
+        # opdhours = opdminutes/60
+        # time_list= [] 
+        # for time in opdhours:
+        #     t = datetime.strptime(opdtime.opening_time,"%H").time()
+        #     h=t+1
+        #     print(t)            
+        #     time_list.append(h)
         hospitalstaffdoctorschedual =HospitalStaffDoctorSchedual.objects.filter(hospitalstaffdoctor=hospitalstaffdoctor)
-        opd_time = []
-        for dcsh in hospitalstaffdoctorschedual:
-            if dcsh.work == "OPD":
-                shift = dcsh.shift
-                start_time = dcsh.start_time
-                end_time = dcsh.end_time
-            opd_time.append({'shift':shift,'start_time':start_time,'end_time':end_time})
+        # opd_time = []
+        # for dcsh in hospitalstaffdoctorschedual:
+        #     if dcsh.work == "OPD":
+        #         shift = dcsh.shift
+        #         start_time = dcsh.start_time
+        #         end_time = dcsh.end_time
+        #     opd_time.append({'shift':shift,'start_time':start_time,'end_time':end_time})
         
-        param = {'hospital':hospital,'hospitalservice':hospitalservice,'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual,'opd_time':opd_time}  
+        param = {'hospital':hospital,'hospitalservice':hospitalservice,'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual,'opdtime':opdtime}  
         return render(request,"patient/bookappoinment.html",param)
 
 """" 
 History for Hospital Booking
 """
-class ViewBookedAnAppointmentViews(SuccessMessageMixin,ListView):    
+class ViewBookedAnAppointmentViews(SuccessMessageMixin,ListView):
+    paginate_by = 1
     def get(self,request):
         booked = Booking.objects.filter(patient = request.user)
         labbooks = slot.objects.filter(patient = request.user)

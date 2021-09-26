@@ -32,8 +32,8 @@
                     <div class="col-sm-12">
                         <ul class="nav nav-pills mb-3" role="tablist">
                             <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#hospitalDetails" role="tab">Pharmacy Details</a></li>
-                            {% comment %} <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#images" role="tab">Images</a></li> 
-                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contact" role="tab">Contact Details</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#timing" role="tab">Timing</a></li> 
+                            {% comment %}<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contact" role="tab">Contact Details</a></li>
                             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#insurance" role="tab">Insurance</a></li>{% endcomment %}
                             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#personal" role="tab">Personal Details</a></li>
                         </ul>
@@ -135,7 +135,72 @@
                                     </div>
                                 </div>
                             </div>
-                                                                     
+                            
+                            <div class="tab-pane fade" id="timing" role="tabpanel">
+                                <div class="card mb-3">
+                                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                        <h6 class="mb-0 fw-bold ">Pharmacy Basic Inforamtion</h6>
+                                    </div>
+                                    <div class="card-body">                                    
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">Days</label>
+                                                    <br>
+                                                    <label class="fancy-checkbox" style="margin-left:19px;">
+                                                    <!--For reference -->
+                                                        {% comment %} <input type="checkbox" name="checkbox" value="Monday" required="" data-parsley-errors-container="#error-checkbox"> {% endcomment %}
+                                                        <input type="checkbox" name="Monday" value="YES" {% if opdtime.monday == "YES" %}checked{% endif %}>
+                                                        <span>Monday</span>
+                                                    </label>
+                                                    <label class="fancy-checkbox mb-3" style="margin-left:19px;" >
+                                                        <input type="checkbox" name="Tuesday" value="YES" {% if opdtime.tuesday == "YES" %}checked{% endif %}>
+                                                        <span>Tuesday</span>
+                                                    </label>
+                                                    <label class="fancy-checkbox mb-3" style="margin-left:19px;">
+                                                        <input type="checkbox" name="Wednesday" value="YES" {% if opdtime.wednesday == "YES" %}checked{% endif %}>
+                                                        <span>Wednesday</span>
+                                                    </label>
+                                                    <label class="fancy-checkbox" style="margin-left:19px;">
+                                                        <input type="checkbox" name="Thursday" value="YES" {% if opdtime.thursday == "YES" %}checked{% endif %}>
+                                                        <span>Thursday</span>
+                                                    </label>
+                                                    <label class="fancy-checkbox" style="margin-left:19px;">
+                                                        <input type="checkbox" name="Friday" value="YES" {% if opdtime.friday == "YES" %}checked{% endif %}>
+                                                        <span>Friday</span>
+                                                    </label>
+                                                    <label class="fancy-checkbox" style="margin-left:19px;">
+                                                        <input type="checkbox" name="Saturday" value="YES" {% if opdtime.saturday == "YES" %}checked{% endif %}>
+                                                        <span>Saturday</span>
+                                                    </label>
+                                                    <label class="fancy-checkbox" style="margin-left:19px;">
+                                                        <input type="checkbox" name="Sunday" value="YES" {% if opdtime.sunday == "YES" %}checked{% endif %}>
+                                                        <span>Sunday</span>
+                                                    </label>
+                                                    <p id="error-checkbox"></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label for="shift" class="form-label">Open</label>
+                                                <input type="time" class="form-control" id="opening_time" name="opening_time" value="{{opdtime.opening_time|time:"H:i"}}">
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label for="work" class="form-label">Close</label>
+                                                <input type="time" class="form-control" id="close_time" name="close_time" value="{{opdtime.close_time|time:"H:i"}}">
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label for="start_time" class="form-label">Break Start Time</label>
+                                                <input type="time" class="form-control" id="break_start_time" name="break_start_time" value="{{opdtime.break_start_time|time:"H:i"}}">
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label for="end_time" class="form-label">Break End Time</label>
+                                                <input type="time" class="form-control" id="break_end_time" name="break_end_time" value="{{opdtime.break_end_time|time:"H:i"}}">
+                                            </div>                                        
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>                                       
                                                        
                             <div class="tab-pane fade" id="personal" role="tabpanel">
                                 <div class="card mb-3">

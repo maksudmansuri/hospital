@@ -299,6 +299,27 @@ class DoctorForHospital(models.Model):
     def __str__(self):
         return self.hospital.hospital_name
 
+
+class OPDTime(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    user                    =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    opening_time            =           models.TimeField(max_length=500,blank=True,null=True)
+    close_time              =           models.TimeField(max_length=500,blank=True,null=True)
+    break_start_time        =           models.TimeField(max_length=500,blank=True,null=True)
+    break_end_time          =           models.TimeField(max_length=500,blank=True,null=True)
+    monday                              =models.CharField(max_length=500,default="",blank=True,null=True) 
+    tuesday                             =models.CharField(max_length=500,default="",blank=True,null=True) 
+    wednesday                           =models.CharField(max_length=500,default="",blank=True,null=True) 
+    thursday                            =models.CharField(max_length=500,default="",blank=True,null=True) 
+    friday                              =models.CharField(max_length=500,default="",blank=True,null=True) 
+    saturday                            =models.CharField(max_length=500,default="",blank=True,null=True) 
+    sunday                              =models.CharField(max_length=500,default="",blank=True,null=True)
+    is_active               =           models.BooleanField(blank=True,null=True,default=False)
+    created_at              =           models.DateTimeField(auto_now=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+    
+
 @receiver(post_save,sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender,instance=None,created=False,**kwargs):
     if created:
@@ -311,14 +332,18 @@ def create_user_profile(sender,instance,created,**kwargs):
             AdminHOD.objects.create(admin=instance)
         if instance.user_type==2:
             Hospitals.objects.create(admin=instance)
+            OPDTime.objects.create(user=instance)
         if instance.user_type==3:
             HospitalDoctors.objects.create(admin=instance)
+            OPDTime.objects.create(user=instance)
         if instance.user_type==4:
-            Patients.objects.create(admin=instance)
+            Patients.objects.create(admin=instance)            
         if instance.user_type==5:
             Labs.objects.create(admin=instance)
+            OPDTime.objects.create(user=instance)
         if instance.user_type==6:
             Pharmacy.objects.create(admin=instance)
+            OPDTime.objects.create(user=instance)
 
 @receiver(post_save,sender=CustomUser)
 def save_user_profile(sender,instance,**kwargs):
@@ -329,9 +354,8 @@ def save_user_profile(sender,instance,**kwargs):
     if instance.user_type==3:
         instance.hospitaldoctors.save()
     if instance.user_type==4:
-        instance.patients.save()
+        instance.patients.save()        
     if instance.user_type==5:
         instance.labs.save()
-        print(" inside the labs signal")
     if instance.user_type==6:
         instance.pharmacy.save()

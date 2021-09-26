@@ -11,10 +11,9 @@ from django.views.generic import View,CreateView,DetailView,DeleteView,ListView,
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.files.storage import FileSystemStorage
 from hospital.models import ContactPerson, DepartmentPhones, Departments, HospitalMedias, HospitalRooms, HospitalServices, HospitalStaffDoctorSchedual, HospitalStaffDoctors, HospitalStaffs, HospitalsPatients, Insurances, RoomOrBadTypeandRates, ServiceAndCharges
-from accounts.models import CustomUser, DoctorForHospital, HospitalDoctors, HospitalPhones, Hospitals, Patients
+from accounts.models import CustomUser, DoctorForHospital, HospitalDoctors, HospitalPhones, Hospitals, OPDTime, Patients
 from django.urls import reverse
 from datetime import datetime
-import datetime
 import pytz
 IST = pytz.timezone('Asia/Kolkata')
 
@@ -57,9 +56,10 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
             hospital = Hospitals.objects.get(admin=request.user.id)
             contacts = HospitalPhones.objects.filter(hospital=hospital)
             insurances = Insurances.objects.filter(hospital=hospital)
+            opdtime=OPDTime.objects.get(user=request.user)
         except Exception as e:
             return None
-        param={'hospital':hospital,'insurances':insurances,'contacts':contacts}
+        param={'hospital':hospital,'insurances':insurances,'contacts':contacts,'opdtime':opdtime}
         return render(request,"hospital/hospital_update.html",param) 
     
     def post(self, request, *args, **kwargs):
@@ -100,8 +100,36 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         # email = request.POST.get("email")
         name_title = request.POST.get("name_title")
 
+        Sunday = request.POST.get("Sunday")
+        Monday = request.POST.get("Monday")
+        Tuesday = request.POST.get("Tuesday")
+        Wednesday = request.POST.get("Wednesday")
+        Thursday = request.POST.get("Thursday")
+        Friday = request.POST.get("Friday")
+        Saturday = request.POST.get("Saturday")
+        Sunday = request.POST.get("Sunday")
+        opening_time1 = request.POST.get("opening_time")
+        opening_time = datetime.strptime(opening_time1,"%H:%M").time()
+        close_time1 = request.POST.get("close_time")
+        close_time = datetime.strptime(close_time1,"%H:%M").time()
+        break_start_time1 = request.POST.get("break_start_time")
+        break_start_time = datetime.strptime(break_start_time1,"%H:%M").time()
+        break_end_time1 = request.POST.get("break_end_time")
+        break_end_time = datetime.strptime(break_end_time1,"%H:%M").time()
+        if Sunday is None and Monday is None and Tuesday is None and Wednesday is None and Thursday is None and Friday is None and Saturday is None:
+            messages.add_message(request,messages.ERROR,"At least select one day")
+            return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id}))
+        if opening_time >= close_time or break_start_time >= close_time or break_end_time >= close_time or opening_time >= break_start_time  or opening_time >= break_end_time or break_start_time >= break_end_time:
+            messages.add_message(request,messages.ERROR,"Time does not match kindly set Proper time ")
+            print(messages.error)
+            return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id})) 
+
         print("we are indside a add hspitals")
         try:
+            opd = OPDTime.objects.get(user=request.user)
+            opd.delete()
+            opdtime= OPDTime(user=request.user,opening_time=opening_time,close_time=close_time,break_start_time=break_start_time,break_end_time=break_end_time,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,is_active=True)
+            opdtime.save()
             hospital = Hospitals.objects.get(admin=request.user.id)
             hospital.hopital_name=hopital_name
             hospital.about=about
@@ -624,6 +652,7 @@ class manageDoctorSchedualView(SuccessMessageMixin,View):
             hospital=Hospitals.objects.get(admin=request.user)
             doctors = HospitalStaffDoctors.objects.filter(hospital=hospital)
             hospitalstaffdoctor = HospitalStaffDoctors.objects.get(id=id)
+            
             hospitalstaffdoctorschedual = HospitalStaffDoctorSchedual.objects.filter(hospitalstaffdoctor=hospitalstaffdoctor)
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")

@@ -3,7 +3,7 @@ from patient.models import LabTest, slot
 from lab.models import Medias
 from hospital.models import ServiceAndCharges
 from django.core.files.storage import FileSystemStorage
-from accounts.models import CustomUser, Labs
+from accounts.models import CustomUser, Labs, OPDTime
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -13,7 +13,6 @@ from django.views.generic.list import ListView
 from django.urls import reverse
 from django.contrib import messages
 from datetime import datetime
-import datetime
 import pytz
 IST = pytz.timezone('Asia/Kolkata')
 
@@ -45,9 +44,10 @@ class LabUpdateViews(SuccessMessageMixin,UpdateView):
         # # insurances = None
         try:
             lab = Labs.objects.get(admin=request.user)
+            opdtime=OPDTime.objects.get(user=request.user)
         except Exception as e:
             return HttpResponse(e)
-        param={'lab':lab}
+        param={'lab':lab,'opdtime':opdtime}
         return render(request,"lab/lab_update.html",param) 
     
     def post(self, request, *args, **kwargs):
@@ -78,8 +78,38 @@ class LabUpdateViews(SuccessMessageMixin,UpdateView):
         # email = request.POST.get("email")
         name_title = request.POST.get("name_title")
 
+        #Schedule for Labs OPD and Appointment
+        
+        Sunday = request.POST.get("Sunday")
+        Monday = request.POST.get("Monday")
+        Tuesday = request.POST.get("Tuesday")
+        Wednesday = request.POST.get("Wednesday")
+        Thursday = request.POST.get("Thursday")
+        Friday = request.POST.get("Friday")
+        Saturday = request.POST.get("Saturday")
+        Sunday = request.POST.get("Sunday")
+        opening_time1 = request.POST.get("opening_time")
+        opening_time = datetime.strptime(opening_time1,"%H:%M").time()
+        close_time1 = request.POST.get("close_time")
+        close_time = datetime.strptime(close_time1,"%H:%M").time()
+        break_start_time1 = request.POST.get("break_start_time")
+        break_start_time = datetime.strptime(break_start_time1,"%H:%M").time()
+        break_end_time1 = request.POST.get("break_end_time")
+        break_end_time = datetime.strptime(break_end_time1,"%H:%M").time()
+        if Sunday is None and Monday is None and Tuesday is None and Wednesday is None and Thursday is None and Friday is None and Saturday is None:
+            messages.add_message(request,messages.ERROR,"At least select one day")
+            return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id}))
+        if opening_time >= close_time and break_start_time >= close_time and break_end_time >= close_time and opening_time >= break_start_time  and opening_time >= break_end_time and break_start_time >= break_end_time:
+            messages.add_message(request,messages.ERROR,"Time does not match kindly set Proper time ")
+            print(messages.error)
+            return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id})) 
+
         print("we are indside a add hspitals")
         try:
+            opd = OPDTime.objects.get(user=request.user)
+            opd.delete()
+            opdtime= OPDTime(user=request.user,opening_time=opening_time,close_time=close_time,break_start_time=break_start_time,break_end_time=break_end_time,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,is_active=True)
+            opdtime.save()
             lab = Labs.objects.get(admin=request.user.id)
             lab.lab_name=lab_name
             lab.about=about
@@ -211,8 +241,6 @@ def deleteMainGallery(request):
         messages.add_message(request,messages.SUCCESS,"Successfully gellery Deleted")
         return HttpResponseRedirect(reverse("manage_main_gallery"))
 
-
-
 class ViewAppointmentViews(SuccessMessageMixin,View):
     def get(self, request, *args, **kwargs):
         try:
@@ -261,10 +289,6 @@ class ViewAppointmentViews(SuccessMessageMixin,View):
             return HttpResponse("ok")
         except Exception as e:
             return HttpResponse(e)
-       
-
-
-
 
 def dateleLabAppointment(request, id):
     booking = get_object_or_404(slot,id=id)
@@ -276,7 +300,6 @@ def dateleLabAppointment(request, id):
     booking.save()
     messages.add_message(request,messages.SUCCESS,"Appointment Successfully Deleted")
     return HttpResponseRedirect(reverse("view_lab_appointment"))
-
 
 def UploadReportViews(request,id):
     report = request.FILES.get('report')        

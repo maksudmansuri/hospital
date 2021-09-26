@@ -1,8 +1,9 @@
+from django.contrib.auth.models import User
 from patient.models import PicturesForMedicine
 from django.core.files.storage import FileSystemStorage
 import pharmacy
 from django.http.response import HttpResponse, HttpResponseRedirect
-from accounts.models import Pharmacy
+from accounts.models import OPDTime, Pharmacy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404, render
 from django.views.generic.base import View
@@ -11,7 +12,6 @@ from django.views.generic.list import ListView
 from django.urls import reverse
 from django.contrib import messages
 from datetime import datetime
-import datetime
 import pytz
 IST = pytz.timezone('Asia/Kolkata')
 # Create your views here.
@@ -41,13 +41,13 @@ class PharmacyUpdateViews(SuccessMessageMixin,UpdateView):
         # hospital = None
         # # contacts = None
         # # insurances = None
-        try:
-            pharmacy = Pharmacy.objects.get(admin=request.user.id)
-            # contacts = HospitalPhones.objects.filter(hospital=hospital)
+        # try:
+        pharmacy = Pharmacy.objects.get(admin=request.user.id)
+        opdtime=OPDTime.objects.get(user=request.user)
             # insurances = Insurances.objects.filter(hospital=hospital)
-        except Exception as e:
-            return HttpResponse(e)
-        param={'pharmacy':pharmacy}
+        # except Exception as e:
+        #     return HttpResponse(e)
+        param={'pharmacy':pharmacy,'opdtime':opdtime}
         return render(request,"pharmacy/pharmacy_update.html",param) 
     
     def post(self, request, *args, **kwargs):
@@ -78,8 +78,39 @@ class PharmacyUpdateViews(SuccessMessageMixin,UpdateView):
         # email = request.POST.get("email")
         name_title = request.POST.get("name_title")
 
+        #Schedule for hospital OPD and Appointment
+        
+        Sunday = request.POST.get("Sunday")
+        Monday = request.POST.get("Monday")
+        Tuesday = request.POST.get("Tuesday")
+        Wednesday = request.POST.get("Wednesday")
+        Thursday = request.POST.get("Thursday")
+        Friday = request.POST.get("Friday")
+        Saturday = request.POST.get("Saturday")
+        Sunday = request.POST.get("Sunday")
+        opening_time1 = request.POST.get("opening_time")
+        opening_time = datetime.strptime(opening_time1,"%H:%M").time()
+        close_time1 = request.POST.get("close_time")
+        close_time = datetime.strptime(close_time1,"%H:%M").time()
+        break_start_time1 = request.POST.get("break_start_time")
+        break_start_time = datetime.strptime(break_start_time1,"%H:%M").time()
+        break_end_time1 = request.POST.get("break_end_time")
+        break_end_time = datetime.strptime(break_end_time1,"%H:%M").time()
+        if Sunday is None and Monday is None and Tuesday is None and Wednesday is None and Thursday is None and Friday is None and Saturday is None:
+            messages.add_message(request,messages.ERROR,"At least select one day")
+            return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id}))
+        if opening_time >= close_time and break_start_time >= close_time and break_end_time >= close_time and opening_time >= break_start_time  and opening_time >= break_end_time and break_start_time >= break_end_time:
+            messages.add_message(request,messages.ERROR,"Time does not match kindly set Proper time ")
+            print(messages.error)
+            return HttpResponseRedirect(reverse("pharmacy_update", kwargs={'id':request.user.id})) 
+
         print("we are indside a add hspitals")
         try:
+            
+            opd = OPDTime.objects.get(user=request.user)
+            opd.delete()
+            opdtime= OPDTime(user=request.user,opening_time=opening_time,close_time=close_time,break_start_time=break_start_time,break_end_time=break_end_time,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,is_active=True)
+            opdtime.save()
             pharmacy = Pharmacy.objects.get(admin=request.user.id)
             pharmacy.pharmacy_name=pharmacy_name
             pharmacy.about=about

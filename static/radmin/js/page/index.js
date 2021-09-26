@@ -232,7 +232,7 @@ $('#calendar').datepicker({
   },
   onSelect: function(dateText, inst){
     var date = $(this).datepicker('getDate'),
-    dayi = date.getDay(),
+    dayOfWeek = date.getUTCDay();
     day  = date.getDate(),
     month = date.getMonth() + 1,
     year =  date.getFullYear();
@@ -240,9 +240,9 @@ $('#calendar').datepicker({
     // display day and month on submit button
     var monthName = months[month - 1];
     $(".request .day").text(monthName + " " + day);
-    $("#Adate").val(dayi);
+    $("#Aweekday").val(day);
     $("#Adate").val(month + "/" + day + "/" + year);
-    $("#Adate").val(month + "/" + day + "/" + year);
+    
     
     
     todayEqualActive();    

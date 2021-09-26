@@ -6,7 +6,7 @@ from accounts.models import Hospitals, Labs, Pharmacy
 
 def Badgeson(request):
     hospital_pending = Hospitals.objects.filter(admin__is_active=True,is_appiled=True,is_deactive=False).count()
-    # lab_pending = Labs.objects.filter(admin__is_active=True,is_appiled=True,is_deactive=False).count()
+    lab_pending = Labs.objects.filter(admin__is_active=True,is_appiled=True,is_deactive=False).count()
     pharmacy_pending =Pharmacy.objects.filter(admin__is_active=True,is_appiled=True,is_deactive=False).count()
     badgetotal = hospital_pending+lab_pending+pharmacy_pending
     return {'chospital':hospital_pending,'clab':lab_pending,'cpharmacy':pharmacy_pending,'badgetotal':badgetotal}

@@ -155,19 +155,7 @@ class DoctorsBookAppoinmentViews(SuccessMessageMixin,View):
         hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
         hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,is_active=True,id=hositaldcotorid_id)
         hospitalservice = ServiceAndCharges.objects.filter(user=hospital.admin)
-        opdtime = OPDTime.objects.get(user=hospital.admin)
-
-        time_elapsed=datetime.combine(date.today(), opdtime.close_time) - datetime.combine(date.today(), opdtime.opening_time)
-
-        print(time_elapsed)
-        # for time in time_elapsed.()
-        # opdhours = opdminutes/60
-        # time_list= [] 
-        # for time in opdhours:
-        #     t = datetime.strptime(opdtime.opening_time,"%H").time()
-        #     h=t+1
-        #     print(t)            
-        #     time_list.append(h)
+        opdtime = OPDTime.objects.get(user=hospital.admin)       
         hospitalstaffdoctorschedual =HospitalStaffDoctorSchedual.objects.filter(hospitalstaffdoctor=hospitalstaffdoctor)
         # opd_time = []
         # for dcsh in hospitalstaffdoctorschedual:
@@ -295,8 +283,7 @@ History for Lab Booking
 """
 
 class BookAnAppointmentForLABViews(SuccessMessageMixin,View):
-    def post(self,request, *args, **kwargs):
-        
+    def post(self,request, *args, **kwargs):        
         if request.method == "POST":
             serviceid_list = request.POST.getlist('serviceid[]')
             date = request.POST.get('date')
@@ -354,8 +341,9 @@ class labDetailsViews(DetailView):
     def get(self, request, *args, **kwargs):
         lab_id=kwargs['id']
         lab = get_object_or_404(Labs,is_verified=True,is_deactive=False,id=lab_id)
-        services = ServiceAndCharges.objects.filter(user=lab.admin)        
-        param = {'lab':lab,'services':services}  
+        services = ServiceAndCharges.objects.filter(user=lab.admin)
+        opdtime = OPDTime.objects.get(user=lab.admin)            
+        param = {'lab':lab,'services':services,'opdtime':opdtime}  
         return render(request,"patient/lab_details.html",param)
 
 """

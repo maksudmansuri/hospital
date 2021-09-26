@@ -586,11 +586,45 @@
                        
                         <div class="card-body">
                             <div class="wrapper">
-                              
-                               
+                                <div id="calendar">
+                                    <div class="monthChange"></div>
+                                    <div class='timepicker'>
+                                         <div class="owl">
+                                            <div>08:00</div>
+                                            <div>09:00</div>
+                                            <div>10:00</div>
+                                            <div>11:00</div>
+                                            <div>12:00</div>
+                                            <div>13:00</div>
+                                            <div>14:00</div>
+                                            <div>15:00</div>
+                                            <div>16:00</div>
+                                            <div>17:00</div>
+                                            <div>18:00</div>
+                                            <div>19:00</div>
+                                            <div>20:00</div>
+                                            <div>21:00</div>
+                                            <div>22:00</div>
+                                            <div>23:00</div>
+                                            <div>24:00</div>
+                                            <div>01:00</div>
+                                            <div>02:00</div>
+                                            <div>03:00</div>
+                                            <div>04:00</div>
+                                            <div>05:00</div>                                       
+                                            <div>06:00</div>
+                                            <div>07:00</div>
+                                            
+                                        </div>
+                                        <div class="fade-l"></div>
+                                        <div class="fade-r"></div>
+                                    </div>
+                                </div>                                                           
                                 <form enctype="multipart/form-data" id="image-file" method="post" action="{% url 'updload_prescription_photo' %}"> {% csrf_token %}
                                 <div class="inner-wrap ">
                                     <div class="row g-3 mb-3">
+                                        <h6 id="staticBackdropLiveLabel">OPD TIME: <b> Form {{opdtime.opening_time}} To {{opdtime.close_time}} <b></h6>
+                                    <h6 id="staticBackdropLiveLabel1">BREAK TIME: <b> Form {{opdtime.break_start_time}} To {{opdtime.break_end_time}}<b></h6>
                                          <div class="col-md-12">
                                             <label for="formFileMultiple" class="form-label"> Files Upload *</label>
                                             <input class="form-control" type="file" id="prescription" name="prescription" multiple onchange="Filevalidation()"  required accept="application/pdf,application/msword,

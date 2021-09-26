@@ -220,8 +220,11 @@ todayEqualActive();
 var dateToday = new Date();
 dateToday.setDate(dateToday.getDate());
 $('#calendar').datepicker({
+  beforeShowDay: function(date) {
+    var sday = date.getDay();
+    return [sday != 0,''];
+    },
   minDate: 0,
-  defaultDate: "+1w",
   inline: true,
   firstDay: 1,
   showOtherMonths: true,
@@ -240,7 +243,7 @@ $('#calendar').datepicker({
     // display day and month on submit button
     var monthName = months[month - 1];
     $(".request .day").text(monthName + " " + day);
-    $("#Aweekday").val(day);
+    $("#Aweekday").val(dayOfWeek);
     $("#Adate").val(month + "/" + day + "/" + year);
     
     

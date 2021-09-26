@@ -231,7 +231,6 @@
 
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLiveLabel">Appointment</h5>
-                    <h6 class="modal-title" id="staticBackdropLiveLabel">OPD TIME: <b> Form {{opdtime.opening_time}} To {{opdtime.close_time}} <b></h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -275,6 +274,9 @@
                                     </div>
                                 </div>
                                 <div class="inner-wrap">
+                                        <h6 id="staticBackdropLiveLabel">OPD TIME: <b> Form {{opdtime.opening_time}} To {{opdtime.close_time}} <b></h6>
+                                        <h6 id="staticBackdropLiveLabel1">BREAK TIME: <b> Form {{opdtime.break_start_time}} To {{opdtime.break_end_time}}<b></h6>
+                                        <div>
                                         <select class="form-select mb-3" aria-label="Default select example" id ="serviceid">
                                             {% for service in hospitalservice %}
                                             {% if service.service_name == "OPD" or service.service_name == "Emergency" %}
@@ -282,6 +284,7 @@
                                             {% endif %}
                                             {% endfor %}
                                         </select>
+                                        </div>
                                         <select class="form-select mb-3" aria-label="Default select example" id ="hdocid">                                           
                                             <option value="{{hospitalstaffdoctor.id}}" selected>{{hospitalstaffdoctor.doctor.name_title}} {{hospitalstaffdoctor.doctor.fisrt_name}} {{hospitalstaffdoctor.doctor.last_name}}</option>
                                             
@@ -289,9 +292,6 @@
                                         <button type="button"  data-bs-dismiss="modal" aria-label="Close" class="btn btn-primary disabled request" id="sbt_button" > Request appointment
                                             <span name = "schdate">On</span>
                                             <span class="day fw-bold text-dark"  id="schdate"></span>
-                                            {% comment %} <span class="dayi fw-bold text-dark" id="dayi" disabled></span> {% endcomment %}
-                                            <input class="dayi fw-bold text-dark" type="hidden" id="Adate">
-                                            <span class="Aweekday fw-bold text-dark" id="Aweekday"></span>
                                             <span  name = "schtime">At</span>
                                             <span class="time fw-bold text-dark" id="schtime"></span>
                                             <i class="icofont-dotted-right fs-3" ></i>
@@ -322,25 +322,9 @@
  $(document).on("click", "#sbt_button", function (e){
         e.preventDefault();
         var scdat = document.getElementById('schdate').innerHTML
-        var Adate = document.getElementById('Adate').innerHTML
-        console.log(Adate)
-        var Adate = document.getElementById('Adate').val()
-        console.log(Adate)
-        //var d = convertDateconvertDate(scdat);
-        //console.log(d)
-        var weekday = new Array(7);
-            weekday[0] = "Sunday";
-            weekday[1] = "Monday";
-            weekday[2] = "Tuesday";
-            weekday[3] = "Wednesday";
-            weekday[4] = "Thursday";
-            weekday[5] = "Friday";
-            weekday[6] = "Saturday";
-
-
+        var schtime = document.getElementById('schtime').innerHTML
         var starttime = moment("{{opdtime.opening_time}}", ["h:mm A"]).format("HH:mm");
         var closettime = moment("{{opdtime.close_time}}", ["h:mm A"]).format("HH:mm");
-        var schtime = document.getElementById('schtime').innerHTML
         console.log(parseInt(schtime))
         console.log(parseInt(closettime))
         console.log(parseInt(starttime))
@@ -348,6 +332,12 @@
                 alert("Please select within OPD time");
                 window.location.reload();
             }
+        var startbreaktime = moment("{{opdtime.break_start_time}}", ["h:mm A"]).format("HH:mm");
+        var closebreakttime = moment("{{opdtime.break_end_time}}", ["h:mm A"]).format("HH:mm");
+        if(schtime > startbreaktime && schtime < closebreakttime){
+                alert("you have selected Break time kinldy choose working time")
+                window.location.reload();
+        }
         $.ajax({
             type: 'POST',
             url: "{% url 'bookanappointment' %}",
@@ -369,11 +359,11 @@
         });
     })
         
-function convertDate(inputFormat) {
-  function pad(s) { return (s < 10) ? '0' + s : s; }
-  var d = new Date(inputFormat)
-  return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')
-}
+    function convertDate(inputFormat) {
+    function pad(s) { return (s < 10) ? '0' + s : s; }
+    var d = new Date(inputFormat)
+    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')
+    }
 </script>
 <script>
 

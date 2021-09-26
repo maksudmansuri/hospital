@@ -664,7 +664,7 @@
             <div class="modal-content modal-radius modal-shadow">
 
                 <div class="modal-header">
-                     <h6 class="mb-0 fw-bold ">Make appointment</h6>
+                    <h6 class="mb-0 fw-bold ">Make appointment</h6>                    
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -676,9 +676,7 @@
                                 <div id="calendar">
                                     <div class="monthChange"></div>
                                     <div class='timepicker'>
-                                        <div class="owl">
-                                            <div>06:00</div>
-                                            <div>07:00</div>
+                                         <div class="owl">
                                             <div>08:00</div>
                                             <div>09:00</div>
                                             <div>10:00</div>
@@ -692,6 +690,18 @@
                                             <div>18:00</div>
                                             <div>19:00</div>
                                             <div>20:00</div>
+                                            <div>21:00</div>
+                                            <div>22:00</div>
+                                            <div>23:00</div>
+                                            <div>24:00</div>
+                                            <div>01:00</div>
+                                            <div>02:00</div>
+                                            <div>03:00</div>
+                                            <div>04:00</div>
+                                            <div>05:00</div>                                       
+                                            <div>06:00</div>
+                                            <div>07:00</div>
+                                            
                                         </div>
                                         <div class="fade-l"></div>
                                         <div class="fade-r"></div>
@@ -699,6 +709,8 @@
                                 </div>
                                
                                 <div class="inner-wrap ">
+                                    <h6 id="staticBackdropLiveLabel">OPD TIME: <b> Form {{opdtime.opening_time}} To {{opdtime.close_time}} <b></h6>
+                                    <h6 id="staticBackdropLiveLabel1">BREAK TIME: <b> Form {{opdtime.break_start_time}} To {{opdtime.break_end_time}}<b></h6>
                                     <div class="about_div">
                                      <div class="about_div_row first_about">
                                         <select class="form-select mb-3" aria-label="Default select example" id ="serviceid" name="serviceid[]">
@@ -706,7 +718,7 @@
                                             <option value="{{service.id}}">{{service.service_name}} -> Rs  {{service.service_charge}}</option>
                                             {% endfor %}
                                         </select>
-                                    </div>  
+                                    </div>
                                     </div>
                                         <div class="row">
                                         <div class="col-lg-6">
@@ -742,7 +754,7 @@
 {% endblock modal_fade %}
 
 {% block custom_js %}
-
+<script src="{% static '/radmin/js/moment.min.js'%}"></script>
 <script>
  $(document).on("click", "#sbt_button", function (e){
         e.preventDefault();
@@ -750,6 +762,18 @@
         var schtime = document.getElementById('schtime').innerHTML
         var  val1= $("select[name=\'serviceid[]\']").map(function() {return $(this).val();}).toArray();
         console.log(val1)
+        var starttime = moment("{{opdtime.opening_time}}", ["h:mm A"]).format("HH:mm");
+        var closettime = moment("{{opdtime.close_time}}", ["h:mm A"]).format("HH:mm");
+        var startbreaktime = moment("{{opdtime.break_start_time}}", ["h:mm A"]).format("HH:mm");
+        var closebreakttime = moment("{{opdtime.break_end_time}}", ["h:mm A"]).format("HH:mm");
+        if (schtime < starttime || schtime > closettime){
+                alert("Please select within OPD time");
+                window.location.reload();
+            }
+        if(schtime > startbreaktime && schtime < closebreakttime){
+                alert("you have selected Break time kinldy choose working time")
+                window.location.reload();
+        }
         
         $.ajax({
             type: 'POST',

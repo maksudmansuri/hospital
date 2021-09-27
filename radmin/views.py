@@ -1,4 +1,4 @@
-from patient.models import Booking, LabTest, Orders, slot
+from patient.models import Booking, LabTest, Orders, Slot
 from django.core.files.storage import FileSystemStorage
 from django.http.response import HttpResponseRedirect
 from hospital.models import ContactPerson, HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, Insurances, ServiceAndCharges
@@ -199,7 +199,7 @@ class HosAppointmentAllViews(ListView):
 
 class LabsAppointmentAllViews(ListView):
     def get(self, request, *args, **kwargs):
-        allslot = slot.objects.filter(is_active=True)
+        allslot = Slot.objects.filter(is_active=True)
         allslot_list = []
         for slots in allslot:
             labtest = LabTest.objects.filter(slot=slots)
@@ -271,7 +271,7 @@ class PatientDetailsViews(DetailView):
     def get(self, request, *args, **kwargs):
         patient_id=kwargs['id']
         patient = get_object_or_404(Patients,admin__is_active=True,id=patient_id)
-        slotbook = slot.objects.filter(patient=patient.admin)
+        slotbook = Slot.objects.filter(patient=patient.admin)
         allslot_list = []
         for slots in slotbook:
             labtests = LabTest.objects.filter(slot=slots)

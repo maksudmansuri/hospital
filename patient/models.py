@@ -1,3 +1,4 @@
+from django.db.models.fields import IntegerField
 import pharmacy
 from django.db.models.base import Model
 import patient
@@ -35,7 +36,7 @@ class Booking(models.Model):
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
 
-class slot(models.Model):
+class Slot(models.Model):
     id                      =           models.AutoField(primary_key=True)
     patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     lab                     =           models.ForeignKey(Labs, on_delete=models.CASCADE)
@@ -87,7 +88,6 @@ class PicturesForMedicine(models.Model):
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
-
 
 class TreatmentReliefPetient(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -158,7 +158,7 @@ class LabTest(models.Model):
     id                      =           models.AutoField(primary_key=True)
     lab                     =           models.ForeignKey(Labs, on_delete=models.CASCADE)
     service                 =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE)
-    slot                    =           models.ForeignKey(slot, on_delete=models.CASCADE)
+    slot                    =           models.ForeignKey(Slot, on_delete=models.CASCADE)
     is_active               =           models.BooleanField(default=False)
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
@@ -174,6 +174,21 @@ class Orders(models.Model):
     amount                  =           models.FloatField(default=0,blank=True,null=True)
     STATUS_TYPE_CHOICE      =           ((1,"Processed"),(2,"Successed"),(3,"Failed"),(4,"Cancelled"),(5,"Refunded"))
     status                  =           models.CharField(default="",blank=True,null=True,max_length=64,choices=STATUS_TYPE_CHOICE)    
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+
+class Notification(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    # 1= appointment,  2 = comment, 3 = feedback, 4 = others , 5= report , 6 = message
+    Notification_type           =           models.IntegerField()
+    to_user                 =           models.ForeignKey(CustomUser,related_name="notification_to", on_delete=models.CASCADE,null=True)
+    from_user               =           models.ForeignKey(CustomUser,related_name="notification_from", on_delete=models.CASCADE,null=True)
+    booking                 =           models.ForeignKey(Booking,related_name="hospital", on_delete=models.CASCADE,null=True,blank=True)
+    slot                    =           models.ForeignKey(Slot,related_name="labs", on_delete=models.CASCADE,null=True,blank=True)
+    picturesmedicine        =           models.ForeignKey(PicturesForMedicine,related_name="picturesmedicine", on_delete=models.CASCADE,null=True,blank=True)
+    # report                  =           models.FileField(_(""), upload_to=None, max_length=100)
+    user_has_seen           =           models.BooleanField(default=False)
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()

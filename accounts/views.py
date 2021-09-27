@@ -230,6 +230,7 @@ class PatientSingup(SuccessMessageMixin,CreateView):
         user.set_password(form.cleaned_data["password"])
         print('just one step ahead save?')   
         user.counter += 1  # Update Counter At every Call
+        user.is_active= True
         user.save() # Save the data
         print('user saved!')  
         mobile= user.phone

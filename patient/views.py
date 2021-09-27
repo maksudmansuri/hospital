@@ -5,7 +5,7 @@ from django.views.generic.base import View
 # from requests.models import Response
 from hospital.models import HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, ServiceAndCharges
 from patient import models
-from patient.models import Booking, Orders, LabTest, PicturesForMedicine, Temp, slot
+from patient.models import Booking, Orders, LabTest, PicturesForMedicine, Temp, Slot
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
@@ -175,7 +175,7 @@ class ViewBookedAnAppointmentViews(SuccessMessageMixin,ListView):
     paginate_by = 1
     def get(self,request):
         booked = Booking.objects.filter(patient = request.user)
-        labbooks = slot.objects.filter(patient = request.user)
+        labbooks = Slot.objects.filter(patient = request.user)
         booking_labtest_list =[]
         for labbook in labbooks:            
                 labtests = LabTest.objects.filter(slot=labbook)
@@ -291,7 +291,7 @@ class BookAnAppointmentForLABViews(SuccessMessageMixin,View):
             lab = get_object_or_404(Labs,id=labid)
             time = request.POST.get('time') 
             print(serviceid_list,date,labid,lab,time)
-            labbooking = slot(patient = request.user,lab=lab,applied_date=date,applied_time=time,is_applied=True,is_active=True) 
+            labbooking = Slot(patient = request.user,lab=lab,applied_date=date,applied_time=time,is_applied=True,is_active=True) 
             labbooking.save()
             total = 0
             
@@ -318,7 +318,7 @@ class BookAnAppointmentForLABViews(SuccessMessageMixin,View):
         #     return HttpResponse(e)
 
 def CancelLabBookedAnAppointmentViews(request,id):
-    booked = slot.objects.get(id=id)
+    booked = Slot.objects.get(id=id)
     booked.is_cancelled = True
     booked.save()
     return HttpResponseRedirect(reverse('viewbookedanappointment'))
@@ -411,7 +411,7 @@ def CheckoutViews(request):
         booking = get_object_or_404(Booking,id=order.bookingandlabtest)
         param ={'order':order,'booking':booking}
     if book_for == "2":
-        booking = get_object_or_404(slot,id=order.bookingandlabtest)
+        booking = get_object_or_404(Slot,id=order.bookingandlabtest)
         services = LabTest.objects.filter(slot=booking)
         param ={'order':order,'booking':booking,'services':services}
     if book_for == "3":

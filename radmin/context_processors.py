@@ -1,6 +1,6 @@
 
 
-from patient.models import Booking, slot
+from patient.models import Booking, Slot
 from accounts.models import Hospitals, Labs, Pharmacy
 
 
@@ -18,7 +18,7 @@ def BadgeNewAppointment(request):
         if request.user.user_type == "2":
             badgehosappointment = Booking.objects.filter(hospitalstaffdoctor__hospital =request.user.hospitals ,is_active=True,is_cancelled=False,status="",is_applied=True).count()
         elif request.user.user_type == "4":    
-            badgenewappointment = slot.objects.filter(lab__admin =request.user,is_active=True,is_cancelled=False,status="",is_applied=True).count()
+            badgenewappointment = Slot.objects.filter(lab__admin =request.user,is_active=True,is_cancelled=False,status="",is_applied=True).count()
             print(badgenewappointment)
 
     return{'badgelabappointment':badgenewappointment,'badgehosappointment':badgehosappointment}

@@ -1,5 +1,5 @@
 
-from patient.models import LabTest, slot
+from patient.models import LabTest, Slot
 from lab.models import Medias
 from hospital.models import ServiceAndCharges
 from django.core.files.storage import FileSystemStorage
@@ -244,7 +244,7 @@ def deleteMainGallery(request):
 class ViewAppointmentViews(SuccessMessageMixin,View):
     def get(self, request, *args, **kwargs):
         try:
-            bookings = slot.objects.filter(lab=request.user.labs,is_active=True,is_cancelled = False)
+            bookings = Slot.objects.filter(lab=request.user.labs,is_active=True,is_cancelled = False)
             booking_labtest_list =[] 
             for booking in bookings:
                 labtest = LabTest.objects.filter(slot=booking)
@@ -263,7 +263,7 @@ class ViewAppointmentViews(SuccessMessageMixin,View):
         is_rejected =False
         is_applied = False        
         try:
-            booking = slot.objects.get(id=id)
+            booking = get_object_or_404(Slot, id=id)
             showtime = datetime.datetime.now(tz=IST)
             print(status)
         
@@ -291,7 +291,7 @@ class ViewAppointmentViews(SuccessMessageMixin,View):
             return HttpResponse(e)
 
 def dateleLabAppointment(request, id):
-    booking = get_object_or_404(slot,id=id)
+    booking = get_object_or_404(Slot,id=id)
     labtests = LabTest.objects.filter(slot=booking)
     for labtest in labtests:
         labtest.is_active =False
@@ -305,7 +305,7 @@ def UploadReportViews(request,id):
     report = request.FILES.get('report')        
     desc = request.POST.get('desc')
     try:
-        booking = get_object_or_404(slot,id=id)
+        booking = get_object_or_404(Slot,id=id)
         if report:
             print()
             fs=FileSystemStorage()

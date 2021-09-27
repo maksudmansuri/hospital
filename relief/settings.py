@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from datetime import timedelta
 import os
 from pathlib import Path
+from typing import DefaultDict
 import django_heroku
 # import django_heroku
 import dj_database_url 
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'patient',
     'rest_framework',
     'rest_framework.authtoken',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -80,6 +82,7 @@ TEMPLATES = [
                 'patient.context_processors.basket',
                 'radmin.context_processors.Badgeson',
                 'radmin.context_processors.BadgeNewAppointment',
+                'patient.context_processors.notificationprocessors',
             ],
         },
     },
@@ -110,7 +113,7 @@ REST_FRAMWORK = {
 }
 WSGI_APPLICATION = 'relief.wsgi.application'
 
-ASGI_APPLICATION = 'OC3.routing.application'
+ASGI_APPLICATION = 'relief.asgi.application'
 
 LOGIN_REDIRECT_URL = "/"
 
@@ -201,4 +204,13 @@ EMAIL_PORT = 587
 
 
 django_heroku.settings(locals())
+
+CHANNEL_LAYERS = {
+    'Default' : {
+        'BACKEND':'channels_redis.core.RedisChannelLayer',
+        'CONFIG':{
+            "hosts" : [('127.0.0.1',6379)],
+        },
+    },
+}
 

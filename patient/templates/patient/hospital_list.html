@@ -134,11 +134,7 @@ body {
         <div class="front card-block container_foto">
         
           <!-- To add FontAwesome Icons use Unicode characters and to set size use font-size instead of fa-*x because when calculating the height (see js), the size of the icon is not calculated if using classes -->
-          {% comment %} <span class="card-img-top fa" style="font-size: 4em">&#xf118;</span> {% endcomment %}
-            <article class="text-left">
-            <h2>TÍTULO DE <br>LA IMAGEN</h2>
-            <h4>Descripción corta de la imagen en cuestión</h4>
-            </article>
+          {% comment %} <span class="card-img-top fa" style="font-size: 4em">&#xf118;</span> {% endcomment %}            
           <a href="#" ><img src="{{hospital.hospital.profile_pic}}" alt=""></a>
           <h4 class="card-title">{{hospital.hospital.hopital_name}}</h4>
           <h6 class="card-subtitle text-muted">{{hospital.hospital.landline}}</h6>

@@ -16,6 +16,7 @@ urlpatterns = [
     # Laboratory urls
     path('laboratory_list', views.LabListViews.as_view(), name="laboratory_list"),
     path('laboratory_details/<id>', views.labDetailsViews.as_view(), name="laboratory_details"),
+    path('send_to_doctor/<id>', views.ReportSendToDoctorViews, name="send_to_doctor"),
     #Pharmacy urls
     path('pharmacy_list', views.PharmacyListViews.as_view(), name="pharmacy_list"),
     path('pharmacy_details/<id>', views.PharmacyDetailsViews.as_view(), name="pharmacy_details"),

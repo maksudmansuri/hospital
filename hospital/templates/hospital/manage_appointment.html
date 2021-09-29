@@ -50,7 +50,7 @@
                             {% for book in booking %}
                                 <tr>
                                     <td>
-                                        <span class="fw-bold">{{forloop.counter}}</span>
+                                        <span class="fw-bold">{{book.id}} | P- {{book.patient.id}}</span>
                                     </td>
                                     <td>
                                         

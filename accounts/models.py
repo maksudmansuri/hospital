@@ -299,7 +299,6 @@ class DoctorForHospital(models.Model):
     def __str__(self):
         return self.hospital.hospital_name
 
-
 class OPDTime(models.Model):
     id                      =           models.AutoField(primary_key=True)
     user                    =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -319,7 +318,6 @@ class OPDTime(models.Model):
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
     
-
 @receiver(post_save,sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender,instance=None,created=False,**kwargs):
     if created:

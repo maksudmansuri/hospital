@@ -3,18 +3,43 @@ import pharmacy
 from django.db.models.base import Model
 import patient
 from django.contrib.auth.models import User
-from hospital.models import HospitalServices, HospitalStaffDoctors, ServiceAndCharges
+from hospital.models import HospitalRooms, HospitalServices, HospitalStaffDoctors, ServiceAndCharges
 from accounts.models import CustomUser, Hospitals, Labs, Patients, Pharmacy
 from django.db import models
 
 # Create your models here.
-
+class ForSome(models.Model):
+    id                  =models.AutoField(primary_key=True)
+    petient             =models.OneToOneField(Patients,on_delete=models.CASCADE)
+    fisrt_name          =models.CharField(max_length=250,blank=True,null=True,default="")
+    last_name           =models.CharField(max_length=250,blank=True,null=True,default="")
+    address             =models.CharField(max_length=500,blank=True,null=True,default="")
+    city                =models.CharField(max_length=250,blank=True,null=True,default="")
+    state               =models.CharField(max_length=250,blank=True,null=True,default="")
+    country             =models.CharField(max_length=250,blank=True,null=True,default="")
+    zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
+    dob                 =models.DateField(blank=True,null=True)
+    alternate_mobile    =models.CharField(max_length=250,blank=True,null=True,default="")
+    profile_pic         =models.FileField(upload_to="patients/profile/images/%Y/%m/%d/",blank=True,null=True,default="")
+    gender              =models.CharField(max_length=255,null=True,default="")
+    bloodgroup          =models.CharField(max_length=255,null=True,default="")
+    is_appiled          =models.BooleanField(blank=True,null=True,default=False)
+    is_verified         =models.BooleanField(blank=True,null=True,default=False)
+    is_active           =models.BooleanField(blank=True,null=True,default=False)
+    created_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    updated_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    objects             =models.Manager()
+    
+    def __str__(self): 
+        return self.fisrt_name +" "+ self.last_name
+ 
 class Booking(models.Model):
     id                      =           models.AutoField(primary_key=True)
     patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    hospitalstaffdoctor     =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE)
+    for_whom                =           models.ForeignKey(ForSome, on_delete=models.CASCADE,null=True,blank=True)
+    hospitalstaffdoctor     =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,null=True,blank=True)
     amount                  =           models.FloatField()
-    # hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE)
+    hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE,null=True,blank=True)
     service                 =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE)
     booking_type            =           models.CharField(default="",blank=True,null=True,max_length=64)
     applied_date            =           models.CharField(default="",blank=True,null=True,max_length=64)
@@ -32,6 +57,61 @@ class Booking(models.Model):
     modified_date           =           models.DateField(blank=True,null=True)
     add_note                =           models.CharField(max_length=5000,blank=True,null=True,default="")
     is_active               =           models.BooleanField(default=False)
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+
+class ReBooking(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    booking                 =           models.ForeignKey(Booking, on_delete=models.CASCADE)    
+    amount                  =           models.FloatField()
+    service                 =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE)
+    applied_date            =           models.CharField(default="",blank=True,null=True,max_length=64)
+    applied_time            =           models.CharField(default="",blank=True,null=True,max_length=64)
+    is_applied              =           models.BooleanField(default=True,blank=True,null=True)
+    status                  =           models.CharField(default="",blank=True,null=True,max_length=64)
+    accepted_date           =           models.DateTimeField(blank=True,null=True)
+    taken_date              =           models.DateTimeField(blank=True,null=True)
+    rejected_date           =           models.DateTimeField(blank=True,null=True)
+    is_rejected             =           models.BooleanField(default=False)
+    is_taken                =           models.BooleanField(default=False)
+    is_accepted             =           models.BooleanField(default=False)
+    is_cancelled            =           models.BooleanField(default=False)
+    modified_time           =           models.TimeField(blank=True,null=True)
+    modified_date           =           models.DateField(blank=True,null=True)
+    add_note                =           models.CharField(max_length=5000,blank=True,null=True,default="")
+    is_active               =           models.BooleanField(default=False)
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+
+class Admited(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    booking                 =           models.ForeignKey(Booking, on_delete=models.CASCADE,null=True,blank =True)
+    booking                 =           models.ForeignKey(ReBooking, on_delete=models.CASCADE,null=True,blank =True)
+    bed_charges             =           models.FloatField(null=True,blank =True,default=0)
+    other_charges           =           models.FloatField(null=True,blank =True,default=0)
+    doctor_charges          =           models.FloatField(null=True,blank =True,default=0)
+    tax_charges             =           models.FloatField(null=True,blank =True,default=0)
+    total_charges           =           models.FloatField(null=True,blank =True,default=0)
+    hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE,null=True,blank =True)
+    room                    =           models.ForeignKey(HospitalRooms, on_delete=models.CASCADE,null=True,blank =True)
+    status                  =           models.CharField(default="",blank=True,null=True,max_length=64)
+    admined_date            =           models.DateTimeField(blank=True,null=True)
+    discharge_date          =           models.DateTimeField(blank=True,null=True)
+    is_rejected             =           models.BooleanField(default=False)
+    is_cancelled            =           models.BooleanField(default=False)
+    add_note                =           models.CharField(max_length=5000,blank=True,null=True,default="")
+    is_active               =           models.BooleanField(default=False)
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+
+class FollowedUp(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    booking                 =           models.ForeignKey(Booking, on_delete=models.CASCADE)
+    next_date               =           models.DateTimeField(auto_now_add=True)
+    previous_date           =           models.DateTimeField(auto_now_add=True)
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
@@ -57,6 +137,7 @@ class Slot(models.Model):
     add_note                =           models.CharField(max_length=5000,blank=True,null=True,default="")
     report                  =           models.FileField(max_length=100,blank=True,null=True,default="")
     desc                    =           models.CharField(max_length=50,blank=True,null=True,default="")
+    send_to_doctor          =           models.BooleanField(default=False)
     is_active               =           models.BooleanField(default=False)
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
@@ -184,7 +265,7 @@ class Notification(models.Model):
     Notification_type           =           models.IntegerField()
     to_user                 =           models.ForeignKey(CustomUser,related_name="notification_to", on_delete=models.CASCADE,null=True)
     from_user               =           models.ForeignKey(CustomUser,related_name="notification_from", on_delete=models.CASCADE,null=True)
-    booking                 =           models.ForeignKey(Booking,related_name="hospital", on_delete=models.CASCADE,null=True,blank=True)
+    booking                 =           models.ForeignKey(Booking,related_name="hospitalbooking", on_delete=models.CASCADE,null=True,blank=True)
     slot                    =           models.ForeignKey(Slot,related_name="labs", on_delete=models.CASCADE,null=True,blank=True)
     picturesmedicine        =           models.ForeignKey(PicturesForMedicine,related_name="picturesmedicine", on_delete=models.CASCADE,null=True,blank=True)
     # report                  =           models.FileField(_(""), upload_to=None, max_length=100)
@@ -192,3 +273,4 @@ class Notification(models.Model):
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
+

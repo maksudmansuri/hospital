@@ -37,7 +37,7 @@
                         <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>B.ID</th>
                                     <th>Full Name</th> 
                                     <th>Test For</th>    
                                     <th>Updated Date</th>   
@@ -50,7 +50,7 @@
                             {% for book in booking_labtest_list %}
                                 <tr>
                                     <td>
-                                        <span class="fw-bold">{{forloop.counter}}</span>
+                                        <span class="fw-bold">{{book.booking.id}} | P-{{book.booking.patient.id}} </span>
                                     </td>
                                     <td>
                                         
@@ -78,7 +78,7 @@
                                             {% comment %}<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#depedit{{room.id}}"><i class="icofont-edit text-success"></i></button>{% endcomment %}
                                             {% if book.booking.status == "taken" and book.booking.report == ""%}
                                            <a type="button" class="btn btn-outline-secondary" id="uploadreport" data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{book.booking.id}}"  ><i class="icofont-upload-alt text-danger"></i><a> {% endif %} 
-                                           <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom"  {% if book.booking.report %} href="{% url 'delete_lab_appointment' book.booking.id %}" disabled {% endif %}><i class="icofont-ui-delete text-danger"></i><a>
+                                           <a type="button" class="btn btn-outline-secondary deleterow" id="deleteroom"  {% if book.booking.report or book.booking.status == "rejected"%} href="{% url 'delete_lab_appointment' book.booking.id %}" disabled {% endif %}><i class="icofont-ui-delete text-danger"></i><a>
                                            {% if book.booking.report %} 
                                            <a type="button" class="btn btn-outline-secondary deleterow" href="{{book.booking.report}}" download><i class="icofont-download text-primary"></i></a>{% endif %}
                                            
@@ -212,7 +212,8 @@
 
     $(document).ready(function() {
     $('select.status').change(function(){   
-        console.log("inside lab")   
+        console.log($(this).data('index'))
+        console.log($(this).val())   
         $.ajax({
             type: 'POST',
             url: "{% url 'view_lab_appointment' %}",
@@ -224,8 +225,9 @@
                 'action': 'post'
 
             },
-            success: function () {
-               location.reload();
+            success: function (json) {
+                console.log(json)
+                location.reload();
             },
             error: function (xhr, errmsg, err) {
 

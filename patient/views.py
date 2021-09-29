@@ -157,6 +157,9 @@ class DoctorsBookAppoinmentViews(SuccessMessageMixin,View):
         hospitalservice = ServiceAndCharges.objects.filter(user=hospital.admin)
         opdtime = OPDTime.objects.get(user=hospital.admin)       
         hospitalstaffdoctorschedual =HospitalStaffDoctorSchedual.objects.filter(hospitalstaffdoctor=hospitalstaffdoctor)
+        opd_time = []
+        opd_time.append(opdtime.start_time)
+        
         # opd_time = []
         # for dcsh in hospitalstaffdoctorschedual:
         #     if dcsh.work == "OPD":
@@ -178,8 +181,8 @@ class ViewBookedAnAppointmentViews(SuccessMessageMixin,ListView):
         labbooks = Slot.objects.filter(patient = request.user)
         booking_labtest_list =[]
         for labbook in labbooks:            
-                labtests = LabTest.objects.filter(slot=labbook)
-                booking_labtest_list.append({'labbook':labbook,'labtests':labtests})
+            labtests = LabTest.objects.filter(slot=labbook)
+            booking_labtest_list.append({'labbook':labbook,'labtests':labtests})
         phamacybooking = PicturesForMedicine.objects.filter(patient = request.user)
         print(booked)
         param = {'booked':booked,"booking_labtest_list":booking_labtest_list,'phamacybooking':phamacybooking}
@@ -275,6 +278,7 @@ def CancelBookedAnAppointmentViews(request,id):
     booked = Booking.objects.get(id=id)
     booked.is_cancelled = True
     booked.save()
+    messages.add_message(request,messages.SUCCESS,"Cancelled Successfully !")
     return HttpResponseRedirect(reverse('viewbookedanappointment'))
 
 
@@ -317,10 +321,19 @@ class BookAnAppointmentForLABViews(SuccessMessageMixin,View):
         #     messages.add_message(request,messages.ERROR,"Network Issue try after some time")
         #     return HttpResponse(e)
 
+def ReportSendToDoctorViews(request,id):
+    slot = get_object_or_404(Slot,id=id)
+    slot.send_to_doctor =True
+    slot.save()
+    messages.add_message(request,messages.SUCCESS,"Send to doctor Successfully !")
+    return HttpResponseRedirect(reverse("viewbookedanappointment"))
+
+
 def CancelLabBookedAnAppointmentViews(request,id):
     booked = Slot.objects.get(id=id)
     booked.is_cancelled = True
     booked.save()
+    messages.add_message(request,messages.SUCCESS,"Cancelled Successfully !")
     return HttpResponseRedirect(reverse('viewbookedanappointment'))
        
 """
@@ -345,6 +358,7 @@ class labDetailsViews(DetailView):
         opdtime = OPDTime.objects.get(user=lab.admin)            
         param = {'lab':lab,'services':services,'opdtime':opdtime}  
         return render(request,"patient/lab_details.html",param)
+
 
 """
 Pharmacy view and profile

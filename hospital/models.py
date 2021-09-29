@@ -221,7 +221,6 @@ class HospitalsPatients(models.Model):
     def __str__(self): 
         return self.fisrt_name +" "+ self.last_name
 
-
 class HospitalServices(models.Model):
     id                      =           models.AutoField(primary_key=True)
     hospital                =           models.ForeignKey(Hospitals, on_delete=models.CASCADE)

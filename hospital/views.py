@@ -1031,7 +1031,7 @@ class manageAppointmentView(SuccessMessageMixin,View):
         is_applied = False        
         try:
             booking = Booking.objects.get(id=id)
-            showtime = datetime.datetime.now(tz=IST)
+            showtime = datetime.now(tz=IST)
             print(status)
         
             if status == 'accepted':

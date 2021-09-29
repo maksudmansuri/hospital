@@ -105,7 +105,8 @@
                                                     <img class="avatar rounded-circle" src="{{labbooks.labbook.lab.profile_pic}}" alt="">
                                                     <div class="flex-fill ms-3 text-truncate">
                                                         <h6 class="d-flex justify-content-between mb-0"><span>{{labbooks.labbook.lab}}</span></h6>
-                                                        <span class="text-muted">{{labbooks.labbook.lab}}</span>
+                                                        <span class="text-muted">{{labbooks.labbook.lab}}</span><br>
+                                                        <span class="text-muted">{{labbooks.labbook.id}}</span>
                                                     </div>
                                                 </a>
                                                 
@@ -131,8 +132,7 @@
                                                         <span>{{labbooks.labbook.rejected_date}}</span></h6>
                                                     {% elif labbooks.labbook.status == "taken" %}
                                                         <h6><span class="badge bg-success">Treatment on:</span>
-                                                        <span>{{labbooks.labbook.taken_date}}</span></h6>                              
-
+                                                        <span>{{labbooks.labbook.taken_date}}</span></h6> 
                                                     {% else %}
                                                         <h6><span class="badge bg-warning">Applied on (Pending):</span></strong>
                                                         <span>{{labbooks.labbook.created_at}}</span></h6>
@@ -142,9 +142,10 @@
                                                 <div class="card-hover-show">
                                                 {% if labbooks.labbook.is_cancelled == False%}
                                                     <a class="btn btn-sm btn-white border lift" href="#" download><i class="icofont-download text-primary"></i> Invoice</a>
-                                                    <a class="btn btn-sm btn-white border lift" href="#">Send</a>
-                                                    {% if labbooks.labbook.report%}
-                                                         <a type="button" class="btn btn-outline-secondary deleterow" href="{{labbooks.labbook.report}}" download><i class="icofont-download text-primary"></i> Report</a>
+                                                    {% if labbooks.labbook.report %}
+                                                    {% if labbooks.labbook.send_to_doctor == False %}
+                                                    <a class="btn btn-sm btn-white border lift" href="{% url 'send_to_doctor' labbooks.labbook.id  %}">Send</a>{% endif %}
+                                                    <a type="button" class="btn btn-outline-secondary deleterow" href="{{labbooks.labbook.report}}" download><i class="icofont-download text-primary"></i> Report</a>
                                                     {% endif %}
                                                     {% if labbooks.labbook.status == "accepted" or  labbooks.labbook.status == none %}
                                                     <a class="btn btn-sm btn-white border lift" href="{% url 'cancellabbookedanappointment' labbooks.labbook.id %}">Cancel</a>
@@ -260,6 +261,6 @@
         $('.loading').hide();
       }
     });
-  </script>
+</script>
    
 {% endblock custom_js %}

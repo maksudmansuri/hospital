@@ -264,7 +264,7 @@ class ViewAppointmentViews(SuccessMessageMixin,View):
         is_applied = False        
         try:
             booking = get_object_or_404(Slot, id=id)
-            showtime = datetime.datetime.now(tz=IST)
+            showtime = datetime.now(tz=IST)
             print(status)
         
             if status == 'accepted':
@@ -286,6 +286,7 @@ class ViewAppointmentViews(SuccessMessageMixin,View):
             booking.status=status        
             booking.is_applied=is_applied
             booking.save()
+            print(booking)
             return HttpResponse("ok")
         except Exception as e:
             return HttpResponse(e)

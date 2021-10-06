@@ -67,6 +67,7 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
         specialist = request.POST.get("specialist")
         profile_pic = request.FILES.get("profile_pic")
 
+        firm = request.POST.get("firm")
         about = request.POST.get("about")
         address1 = request.POST.get("address1")
         address2 = request.POST.get("address2")
@@ -164,6 +165,7 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
             hospital.twitter=twitter
             hospital.is_appiled=True
             hospital.is_verified=False
+            hospital.firm=firm
             hospital.save()
             #edit customUSer
             hospital.admin.first_name=first_name
@@ -481,10 +483,11 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
         try:
             hospital=Hospitals.objects.get(admin=request.user)
             doctors = HospitalStaffDoctors.objects.filter(hospital=hospital)
+            is_virtual_available_check = HospitalStaffDoctors.objects.filter(is_virtual_available=True,hospital=hospital,is_active=True).count()
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("manage_staff"))        
-        param={'hospital':hospital,'doctors':doctors}
+        param={'hospital':hospital,'doctors':doctors,'is_virtual_available_check':is_virtual_available_check}
         return render(request,"hospital/manage_doctor.html",param)        
 
     def post(self, request, *args, **kwargs):
@@ -511,6 +514,9 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
         gender = request.POST.get("gender")
         # for Hospital staff user creation
         joindate = request.POST.get("joindate")
+        opd_charges = request.POST.get("opd_charges")
+        home_charges = request.POST.get("home_charges")
+        emergency_charges = request.POST.get("emergency_charges")
         is_active = request.POST.get("is_active")
         is_virtual = request.POST.get("is_virtual_available")
         print(is_virtual)
@@ -534,11 +540,11 @@ class manageDoctorView(SuccessMessageMixin,CreateView):
         print(profile_pic_url)
         hospital=Hospitals.objects.get(admin=request.user)
 
-        doctor = HospitalDoctors(fisrt_name=first_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,phone=phone,degree=degree,dob=dob,alternate_mobile=alternate_mobile,profile_pic=profile_pic_url,gender=gender,facebook=facebook,instagram=instagram,linkedin=linkedin,specialist=specialist)        
+        doctor = HospitalDoctors(fisrt_name=first_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,phone=phone,degree=degree,dob=dob,alternate_mobile=alternate_mobile,profile_pic=profile_pic_url,gender=gender,facebook=facebook,instagram=instagram,linkedin=linkedin,specialist=specialist)
         doctor.save()
        
-        staffdoctor= HospitalStaffDoctors(doctor=doctor,hospital=hospital,joindate=joindate,is_active=active,ssn_id=ssn_id,is_virtual_available=is_virtual_available,email=email)
-        staffdoctor.is_Active=True
+        staffdoctor= HospitalStaffDoctors(doctor=doctor,hospital=hospital,joindate=joindate,is_active=active,ssn_id=ssn_id,is_virtual_available=is_virtual_available,email=email,emergency_charges=emergency_charges,home_charges=home_charges,opd_charges=opd_charges)
+        staffdoctor.is_active=True
         staffdoctor.save()
        
         # except:
@@ -671,21 +677,37 @@ class manageDoctorSchedualView(SuccessMessageMixin,View):
         Friday = request.POST.get("Friday")
         Saturday = request.POST.get("Saturday")
         Sunday = request.POST.get("Sunday")
-        shift = request.POST.get("shift")
+        opd_duration = request.POST.get("opd_duration")
         work = request.POST.get("work")
         start_time1 = request.POST.get("start_time")
-        start_time = datetime.strptime(start_time1,"%H:%M").time()
+        start_time = None
+        if start_time1 and start_time1 != None:
+            start_time = datetime.strptime(start_time1,"%H:%M").time()
+        break_time_start1 = request.POST.get("break_time_start")
+        break_time_start = None
+        if break_time_start1 and break_time_start1 != None:
+            break_time_start = datetime.strptime(break_time_start1,"%H:%M").time()
+        break_time_end1 = request.POST.get("break_time_end")
+        break_time_end = None
+        if break_time_end1 and break_time_end1 != None:
+            break_time_end = datetime.strptime(break_time_end1,"%H:%M").time()
         end_time1 = request.POST.get("end_time")
-        end_time = datetime.strptime(end_time1,"%H:%M").time()
+        end_time = None
+        if end_time1 and end_time1 != None:
+            end_time = datetime.strptime(end_time1,"%H:%M").time()
+        print("1 one")
         if Sunday is None and Monday is None and Tuesday is None and Wednesday is None and Thursday is None and Friday is None and Saturday is None:
             messages.add_message(request,messages.ERROR,"At least select one day")
             print("these all none")
             return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':id}))
-        if start_time >= end_time:
-            messages.add_message(request,messages.ERROR,"End time is Greater than Start time ")
-            print(messages.error)
+        if break_time_start != None or break_time_end != None:
+            if start_time >= end_time or break_time_start >= end_time or break_time_end >= end_time or start_time >= break_time_start  or start_time >= break_time_end or break_time_start >= break_time_end:
+                messages.add_message(request,messages.ERROR,"Time Does not match please arrang eproper timing ")
+                return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':id}))
+        elif start_time >= end_time:
+            messages.add_message(request,messages.ERROR,"Time Does not match please arrang eproper timing ")
             return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':id})) 
-        
+        print("2")
         # hsds = HospitalStaffDoctorSchedual.objects.filter(id=id and (Q(sunday = Sunday) | Q(monday=Monday) | Q(tuesday=Tuesday)| Q(wednesday = Wednesday) | Q(thursday=Thursday) | Q(friday=Friday)| Q(saturday=Saturday)) )      hospitalstaffdoctor_id
         hsds = HospitalStaffDoctorSchedual.objects.filter(hospitalstaffdoctor_id=id)
         print(hsds)
@@ -722,7 +744,7 @@ class manageDoctorSchedualView(SuccessMessageMixin,View):
         hospitalstaffdoctor = HospitalStaffDoctors.objects.get(id=id)
         hospital=Hospitals.objects.get(admin=request.user)
         # for day in days:
-        hospitalstaffdoctorschedual= HospitalStaffDoctorSchedual(hospital=hospital,hospitalstaffdoctor=hospitalstaffdoctor,end_time=end_time,work=work,shift=shift,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,start_time=start_time)
+        hospitalstaffdoctorschedual= HospitalStaffDoctorSchedual(hospital=hospital,hospitalstaffdoctor=hospitalstaffdoctor,end_time=end_time,work=work,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,start_time=start_time,break_time_start=break_time_start,break_time_end=break_time_end,opd_duration=int(opd_duration))
         hospitalstaffdoctorschedual.save()
        
         # except:
@@ -741,8 +763,12 @@ def updateDoctorSchedual(request ,id,sid):
         Friday = request.POST.get("Friday")
         Saturday = request.POST.get("Saturday")
         Sunday = request.POST.get("Sunday")
-        shift = request.POST.get("shift")
+        opd_duration = request.POST.get("opd_duration")
         work = request.POST.get("work")
+        break_time_start1 = request.POST.get("break_time_start")
+        break_time_start = datetime.strptime(break_time_start1,"%H:%M").time()
+        break_time_end1 = request.POST.get("break_time_end")
+        break_time_end = datetime.strptime(break_time_end1,"%H:%M").time()
         start_time1 = request.POST.get("start_time")
         start_time = datetime.strptime(start_time1,"%H:%M").time()
         end_time1 = request.POST.get("end_time")
@@ -753,47 +779,50 @@ def updateDoctorSchedual(request ,id,sid):
             messages.add_message(request,messages.ERROR,"At least select one day")
             print("these all none")
             return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':sid}))
-        if start_time >= end_time:
-            messages.add_message(request,messages.ERROR,"End time is does not match")
+        if start_time >= end_time or break_time_start >= end_time or break_time_end >= end_time or start_time >= break_time_start  or start_time >= break_time_end or break_time_start >= break_time_end:
+            messages.add_message(request,messages.ERROR,"Time does not match")
             print(messages.error)
             return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':sid})) 
         deletehsds = HospitalStaffDoctorSchedual.objects.get(id=id)
         deletehsds.delete()
-        hsds = HospitalStaffDoctorSchedual.objects.filter(Q(sunday = Sunday) | Q(monday=Monday) | Q(tuesday=Tuesday)| Q(wednesday = Wednesday) | Q(thursday=Thursday) | Q(friday=Friday)| Q(saturday=Saturday))
+        hospitalstaffdoctor = HospitalStaffDoctors.objects.get(id=sid)
+        print(hospitalstaffdoctor)
+        hospital=Hospitals.objects.get(admin=request.user)
+        hsds = HospitalStaffDoctorSchedual.objects.filter(hospitalstaffdoctor = hospitalstaffdoctor)
+        print(hsds)
+        print("1")
         for hsd in hsds:
             if hsd.sunday == Sunday:
                 if hsd.start_time <= start_time  and start_time <= hsd.end_time or hsd.start_time <= end_time  and end_time <= hsd.end_time :
-                    messages.add_message(request,messages.ERROR,"Already time slot booked")
+                    messages.add_message(request,messages.ERROR," sunday Already time slot booked")
                     return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':sid}))  
             if hsd.monday == Monday:
                 if hsd.start_time <= start_time  and start_time <= hsd.end_time or hsd.start_time <= end_time  and end_time <= hsd.end_time :
-                    messages.add_message(request,messages.ERROR,"Already time slot booked")
+                    messages.add_message(request,messages.ERROR," monday Already time slot booked")
                     return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':sid}))
             if hsd.tuesday == Tuesday:
                 if hsd.start_time <= start_time  and start_time <= hsd.end_time or hsd.start_time <= end_time  and end_time <= hsd.end_time :
-                    messages.add_message(request,messages.ERROR,"Already time slot booked")
+                    messages.add_message(request,messages.ERROR," tuesday Already time slot booked")
                     return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':sid}))
             if hsd.wednesday == Wednesday:
                 if hsd.start_time <= start_time  and start_time <= hsd.end_time or hsd.start_time <= end_time  and end_time <= hsd.end_time :
-                    messages.add_message(request,messages.ERROR,"Already time slot booked")
+                    messages.add_message(request,messages.ERROR," wednesday Already time slot booked")
                     return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':sid}))
             if hsd.thursday == Thursday:
                 if hsd.start_time <= start_time  and start_time <= hsd.end_time or hsd.start_time <= end_time  and end_time <= hsd.end_time :
-                    messages.add_message(request,messages.ERROR,"Already time slot booked")
+                    messages.add_message(request,messages.ERROR,"thursday Already time slot booked")
                     return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':sid}))
             if hsd.friday == Friday:
                 if hsd.start_time <= start_time  and start_time <= hsd.end_time or hsd.start_time <= end_time  and end_time <= hsd.end_time :
-                    messages.add_message(request,messages.ERROR,"Already time slot booked")
+                    messages.add_message(request,messages.ERROR,"friday Already time slot booked")
                     return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':sid}))
             if hsd.saturday == Saturday:
                 if hsd.start_time <= start_time  and start_time <= hsd.end_time or hsd.start_time <= end_time  and end_time <= hsd.end_time :
-                    messages.add_message(request,messages.ERROR,"Already time slot booked")
-                    return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':sid}))
-
-        hospitalstaffdoctor = HospitalStaffDoctors.objects.get(id=sid)
-        hospital=Hospitals.objects.get(admin=request.user)
-
-        hospitalstaffdoctorschedual= HospitalStaffDoctorSchedual(hospital=hospital,hospitalstaffdoctor=hospitalstaffdoctor,end_time=end_time,work=work,shift=shift,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,start_time=start_time)
+                    messages.add_message(request,messages.ERROR," SAturday Already time slot booked")
+                    return HttpResponseRedirect(reverse("manage_doctorschedule", kwargs={'id':sid}))       
+        
+        print("hello")
+        hospitalstaffdoctorschedual= HospitalStaffDoctorSchedual(hospital=hospital,hospitalstaffdoctor=hospitalstaffdoctor,end_time=end_time,work=work,sunday=Sunday,monday=Monday,tuesday=Tuesday,wednesday=Wednesday,thursday=Thursday,friday=Friday,saturday=Saturday,start_time=start_time,break_time_start=break_time_start,break_time_end=break_time_end,opd_duration=int(opd_duration))
         hospitalstaffdoctorschedual.save()
         # except:
         #     messages.add_message(request,messages.ERROR,"Connection Error Try after some time")
@@ -1009,8 +1038,6 @@ def deleteServicePrice(request,id):
     messages.add_message(request,messages.SUCCESS,"Successfully Delete")
     return HttpResponseRedirect(reverse("manage_price"))
 
-
-
 class manageAppointmentView(SuccessMessageMixin,View):
     def get(self, request, *args, **kwargs):
         try:
@@ -1081,7 +1108,6 @@ def dateleAppointment(request, id):
     messages.add_message(request,messages.SUCCESS,"Appointment Successfully Deleted")
     return HttpResponseRedirect(reverse("manage_appointment"))
 
-
 class manageTreatmentViews(SuccessMessageMixin,DetailView):
     def get(self, request, *args, **kwargs):
         try:
@@ -1131,7 +1157,6 @@ class manageReliefPatientViews(SuccessMessageMixin,ListView):
        
         print("Appoinment update saved")      
         return HttpResponseRedirect(reverse("manage_relief_patient"))
-
 
 def deleteReliefHospitalPatient(request,id):
     patient = TreatmentReliefPetient.objects.get(id=id)

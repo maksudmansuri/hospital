@@ -10,18 +10,21 @@ from django.db import models
 # Create your models here.
 class ForSome(models.Model):
     id                  =models.AutoField(primary_key=True)
-    petient             =models.OneToOneField(Patients,on_delete=models.CASCADE)
+    name_title          =models.CharField(max_length=50,blank=True,null=True,default="")
+    patient             =models.ForeignKey(Patients,on_delete=models.CASCADE)
     fisrt_name          =models.CharField(max_length=250,blank=True,null=True,default="")
+    email               =models.EmailField(max_length=254,blank=True,null=True,default="xyz@gmail.com")
     last_name           =models.CharField(max_length=250,blank=True,null=True,default="")
     address             =models.CharField(max_length=500,blank=True,null=True,default="")
     city                =models.CharField(max_length=250,blank=True,null=True,default="")
     state               =models.CharField(max_length=250,blank=True,null=True,default="")
     country             =models.CharField(max_length=250,blank=True,null=True,default="")
     zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
-    dob                 =models.DateField(blank=True,null=True)
-    alternate_mobile    =models.CharField(max_length=250,blank=True,null=True,default="")
-    profile_pic         =models.FileField(upload_to="patients/profile/images/%Y/%m/%d/",blank=True,null=True,default="")
+    age                 =models.IntegerField(blank=True,null=True)
+    phone               =models.CharField(max_length=250,blank=True,null=True,default="")
+    ID_proof            =models.FileField(upload_to="someone/ID/images/%Y/%m/%d/",blank=True,null=True,default="")
     gender              =models.CharField(max_length=255,null=True,default="")
+    add_notes           =models.CharField(max_length=5000,null=True,default="")
     bloodgroup          =models.CharField(max_length=255,null=True,default="")
     is_appiled          =models.BooleanField(blank=True,null=True,default=False)
     is_verified         =models.BooleanField(blank=True,null=True,default=False)
@@ -61,6 +64,9 @@ class Booking(models.Model):
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
 
+    class Meta:
+        ordering = ['-created_at']
+
 class ReBooking(models.Model):
     id                      =           models.AutoField(primary_key=True)
     booking                 =           models.ForeignKey(Booking, on_delete=models.CASCADE)    
@@ -85,6 +91,9 @@ class ReBooking(models.Model):
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
 
+    class Meta:
+        ordering = ['-created_at']
+
 class Admited(models.Model):
     id                      =           models.AutoField(primary_key=True)
     booking                 =           models.ForeignKey(Booking, on_delete=models.CASCADE,null=True,blank =True)
@@ -107,6 +116,9 @@ class Admited(models.Model):
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
 
+    class Meta:
+        ordering = ['-created_at']
+
 class FollowedUp(models.Model):
     id                      =           models.AutoField(primary_key=True)
     booking                 =           models.ForeignKey(Booking, on_delete=models.CASCADE)
@@ -115,6 +127,9 @@ class FollowedUp(models.Model):
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
+
+    class Meta:
+        ordering = ['next_date']
 
 class Slot(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -143,6 +158,9 @@ class Slot(models.Model):
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
 
+    class Meta:
+        ordering = ['-created_at']
+
 class PicturesForMedicine(models.Model):
     id                      =           models.AutoField(primary_key=True)
     patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -170,6 +188,9 @@ class PicturesForMedicine(models.Model):
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
 
+    class Meta:
+        ordering = ['-created_at']
+
 class TreatmentReliefPetient(models.Model):
     id                      =           models.AutoField(primary_key=True)
     booking                 =           models.ForeignKey(Booking, on_delete=models.CASCADE)
@@ -181,6 +202,9 @@ class TreatmentReliefPetient(models.Model):
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
+
+    class Meta:
+        ordering = ['-created_at']
 
 class PatientSymptons(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -203,6 +227,9 @@ class PatientReports(models.Model):
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
 
+    class Meta:
+        ordering = ['-created_at']
+
 class PatientMedicine(models.Model):
     id                      =           models.AutoField(primary_key=True)
     TreatmentReliefPetient  =           models.ForeignKey(TreatmentReliefPetient,on_delete=models.CASCADE)
@@ -214,6 +241,9 @@ class PatientMedicine(models.Model):
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
+
+    class Meta:
+        ordering = ['-created_at']
 
 class PatientBottelAndInjections(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -244,6 +274,9 @@ class LabTest(models.Model):
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
+    
+    class Meta:
+        ordering = ['-created_at']
 
 class Orders(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -257,7 +290,14 @@ class Orders(models.Model):
     status                  =           models.CharField(default="",blank=True,null=True,max_length=64,choices=STATUS_TYPE_CHOICE)    
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
+    is_booking_Verified     =           models.BooleanField(default=False)
+    is_taken                =           models.BooleanField(default=False)
+    counter                 =           models.IntegerField(default=0, blank=False)
+    taken_date_time         =           models.DateTimeField(blank=True,null=True,auto_now=True)
     objects                 =           models.Manager()
+
+    class Meta:
+        ordering = ['-created_at']
 
 class Notification(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -274,3 +314,13 @@ class Notification(models.Model):
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()
 
+class phoneOPTforoders(models.Model):
+    id =  models.AutoField(primary_key=True)
+    order_id =  models.ForeignKey(Orders,  on_delete=models.CASCADE,null=True,blank=True)
+    user =  models.ForeignKey(CustomUser,  on_delete=models.CASCADE,null=True,blank=True)
+    otp      =  models.CharField(max_length=50,null=True,blank=True,default="")
+    count      =  models.IntegerField(null=True,blank=True,default=0)
+    validated      =  models.BooleanField(null=True,blank=True,default=False)
+    otp_session_id  = models.CharField(max_length=50,null=True,blank=True,default=None)
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)

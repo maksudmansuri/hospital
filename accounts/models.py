@@ -72,6 +72,7 @@ class CustomUser(AbstractBaseUser):
     is_Email_Verified      = models.BooleanField(blank=False, default=False)
     counter         = models.IntegerField(default=0, blank=False) #OTP counter
     otp_session_id  = models.CharField(max_length=120, null=True, default = "")
+    otp              = models.CharField(max_length=120, null=True, default = "")
     profile_pic         =models.FileField(upload_to="user/profile_pic",max_length=500,null=True,default="")
     USERNAME_FIELD = 'email'
 
@@ -137,6 +138,7 @@ class Hospitals(models.Model):
     establishment_year  =models.DateField(auto_now=False, auto_now_add=False,blank=True,null=True)
     registration_number =models.CharField(max_length=50,blank=True,null=True,default="")
     alternate_mobile    =models.CharField(max_length=50,blank=True,null=True,default="")
+    firm                =models.CharField(max_length=256,blank=True,null=True,default="")
     website             =models.URLField(max_length=256,blank=True,null=True,default="")
     linkedin            =models.URLField(max_length=256,blank=True,null=True,default="")
     facebook            =models.URLField(max_length=256,blank=True,null=True,default="")
@@ -169,20 +171,20 @@ class Patients(models.Model):
     country             =models.CharField(max_length=250,blank=True,null=True,default="")
     zip_Code            =models.CharField(max_length=250,blank=True,null=True,default="")
     dob                 =models.DateField(blank=True,null=True)
+    age                 =models.IntegerField(blank=True,null=True)
     alternate_mobile    =models.CharField(max_length=250,blank=True,null=True,default="")
     profile_pic         =models.FileField(upload_to="patients/profile/images/%Y/%m/%d/",blank=True,null=True,default="")
     gender              =models.CharField(max_length=255,null=True,default="")
     bloodgroup          =models.CharField(max_length=255,null=True,default="")
-    is_appiled          =models.BooleanField(blank=True,null=True,default=False)
-    is_verified         =models.BooleanField(blank=True,null=True,default=False)
     is_active           =models.BooleanField(blank=True,null=True,default=False)
     created_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
     updated_at          =models.DateTimeField(auto_now_add=True,null=True,blank=True)
     objects             =models.Manager()
     
-    def __str__(self): 
+    def __str__(self):
+        self.is_active =True
         return self.fisrt_name +" "+ self.last_name
-
+        
 class HospitalDoctors(models.Model):
     id                  =models.AutoField(primary_key=True)
     # admin               =models.OneToOneField(CustomUser,on_delete=models.CASCADE)

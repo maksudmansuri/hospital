@@ -39,7 +39,9 @@
                                                     <img class="avatar rounded-circle" src="{{book.hospitalstaffdoctor.hospital.profile_pic}}" alt="">
                                                     <div class="flex-fill ms-3 text-truncate">
                                                         <h6 class="d-flex justify-content-between mb-0"><span class="hospitaldoctor">Dr.{{book.hospitalstaffdoctor}}</span></h6>
-                                                        <span class="text-muted hospital">{{book.hospitalstaffdoctor.hospital}}</span>
+                                                        <span class="text-muted hospital">{{book.hospitalstaffdoctor.hospital}}</span><br>
+                                                        {% if book.for_whom %} For :- <span class="text hospital">{{book.for_whom}}</span>{% endif %}
+                                                       Booking ID is  :- <span class="text hospital">B-{{book.id}}</span>
                                                     </div>
                                                 </a>
                                                 

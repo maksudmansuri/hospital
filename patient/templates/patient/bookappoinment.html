@@ -83,7 +83,7 @@
                             <span class="py-1 fw-bold small-11 mb-0 mt-1 text-muted">Heart Surgeon,London,
                                 England</span>
                             <p class="mt-2">{{hospital.about}}</p>
-                            <div class="row g-2 pt-2">                                
+                            {% comment %} <div class="row g-2 pt-2">                                
                                 <div class="col-xl-3">
                                     <div class="d-flex align-items-center">
                                         <i class="icofont-birthday-cake"></i>
@@ -98,7 +98,7 @@
                                     </div>
                                 </div>
                                 
-                            </div>
+                            </div> {% endcomment %}
                         </div>
                     </div>
                 </div>
@@ -136,14 +136,19 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-xl-4 posts">
-                                    <a type="button" class="btn btn-primary style-4" data-bs-toggle="modal"
-                                        data-bs-target="#onlineopd">Online</a>
+                                    {% if hospitalstaffdoctor.is_virtual_available %}
+                                    <a type="button" class="btn btn-primary style-4"
+                                        href="{% url 'list_of_virtual_doctor' %}">Online</a>
+                                    {% endif %}
                                     </div>
                                     <div class="col-xl-4 posts">
-                                    <a type="button" class="btn btn-primary style-4" data-bs-toggle="modal"
-                                        data-bs-target="#home-visit">Home Visit</a>
+                                     {% if hospitalstaffdoctor.home_charges > 0 %}
+                                    <a type="button" class="btn btn-primary style-4" href="{% url 'home_visit_doctor' %}" >Home Visit</a>
+                                        {% endif %}
                                     </div>
+                                    
                                     <div class="col-xl-4  posts">
+                                   
                                     <a type="button" class="btn btn-primary style-4" data-bs-toggle="modal"
                                         data-bs-target="#book-an-appointment">For OPD</a>
                                     </div>
@@ -545,7 +550,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')">
                                             <label class="form-check-label" for="flexCheckDefault">
-                                                Is it for some else ? <a href="#" title="Terms and Conditions"> Add New.</a>
+                                                Is it for some else ? <a data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#DoctorModalLg"><span class="badge bg-primary"> Add New.</span></a>
                                             </label>
                                         </div>
                                     </div>
@@ -564,12 +569,13 @@
                                             {% endif %}
                                             {% endfor %}
                                         </select>
-                                    </div>
+                                    </div> 
                                     <div>
                                         <select class="form-select mb-3" aria-label="Default select example" id ="hdocid">                                           
                                             <option value="{{hospitalstaffdoctor.id}}" selected>{{hospitalstaffdoctor.doctor.name_title}} {{hospitalstaffdoctor.doctor.fisrt_name}} {{hospitalstaffdoctor.doctor.last_name}}</option>                                                
                                         </select>
                                     </div>
+                                    
                                     <div>
                                         <button type="button"  data-bs-dismiss="modal" aria-label="Close" class="btn btn-primary disabled request" id="sbt_button" > Request appointment
                                             <span name = "schdate">On</span>
@@ -792,6 +798,139 @@
         </div>
     </div>
 <!--End Homvisit OPD-->
+
+<!--Start Add Someone as patient-->
+    <div class="modal fade" id="DoctorModalLg" tabindex="-1" aria-labelledby="DoctorModalLgLabel" aria-hidden="true"
+        style="display: none;">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h4" id="DoctorModalLgLabel">Add Patient Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <div class="card mb-3">
+                                <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                    <h6 class="mb-0 fw-bold ">Patients Basic Inforamtion</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form  method="post" id="hpatientadd" enctype="multipart/form-data" action="{% url 'add_someone_as_patient' %}">
+                                        {% csrf_token %}
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-md-2">
+                                                <label class="form-label">Title *</label>
+                                                <select class="form-select" aria-label="Default select example"
+                                                    name="name_title">
+                                                    <option {% if request.user.name_title == "Mr." %}selected{% endif %}
+                                                        value="Mr."> Mr.</option>
+                                                    <option {% if request.user.name_title == "Mrs." %}selected{% endif %}
+                                                        value="Mrs."> Mrs.</option>
+                                                    <option {% if request.user.name_title == "Miss" %}selected{% endif %}
+                                                        value="Miss"> Miss</option>
+                                                    <option {% if request.user.name_title == "Ms." %}selected{% endif %}
+                                                        value="Ms."> Ms.</option>
+                                                    <option {% if request.user.name_title == "Dr." %}selected{% endif %}
+                                                        value="Dr."> Dr.</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label for="firstname" class="form-label">First Name *</label>
+                                                <input type="text" class="form-control" id="firstname" name="fisrt_name">
+                                                <input type="hidden" class="form-control" id="action" name="action" value="add">
+                                                <input type="hidden" class="form-control" id="id" name="id" value="{{hospital.id}}">
+                                                <input type="hidden" class="form-control" id="did" name="did" value="{{hospitalstaffdoctor.id}}">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label for="lastname" class="form-label">Last Name *</label>
+                                                <input type="text" class="form-control" id="lastname" name="last_name">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="address" class="form-label">Address </label>
+                                                <input type="text" class="form-control" id="address" name="address">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="zip_Code" class="form-label">zip_Code </label>
+                                                <input type="text" class="form-control" id="zip_Code" name="zip_Code">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="city" class="form-label">City </label>
+                                                <input type="text" class="form-control" id="city" name="city">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="age" class="form-label">Age *</label>
+                                                <input type="text" class="form-control" id="dob" name="age">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="phonenumber" class="form-label">Phone Number *</label>
+                                                <input type="text" class="form-control" id="phone" name="phone">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="emailaddress" class="form-label">Email Address</label>
+                                                <input type="email" class="form-control" id="emailaddress" name="email">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="formFileMultiple" class="form-label">ID Proof Upload </label>
+                                                <input class="form-control" type="file" id="formFileMultiple"
+                                                    name="ID_proof">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Gender *</label>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="gender"
+                                                                id="gender" value="Male" checked>
+                                                            <label class="form-check-label" for="exampleRadios11">
+                                                                Male
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="gender"
+                                                                id="gender" value="Female"> <label class="form-check-label"
+                                                                for="exampleRadios22">
+                                                            Female
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                             <div class="col-md-6">
+                                                <label  class="form-label">Blood Group *</label>
+                                                <select class="form-select" aria-label="Default select example" name="bloodgroup" required>
+                                                    <option selected disabled>Blood Group</option>
+                                                    <option {% if patient.bloodgroup == "A+" %}selected{% endif %} value="A+">A+</option>
+                                                    <option {% if patient.bloodgroup == "A-" %}selected{% endif %} value="A-">A-</option>
+                                                    <option {% if patient.bloodgroup == "B+" %}selected{% endif %} value="B+">B+</option>
+                                                    <option {% if patient.bloodgroup == "B-" %}selected{% endif %} value="B-">B-</option>
+                                                    <option {% if patient.bloodgroup == "AB-" %}selected{% endif %} value="AB-">AB-</option>
+                                                    <option {% if patient.bloodgroup == "AB+" %}selected{% endif %} value="AB+">AB+</option>
+                                                    <option {% if patient.bloodgroup == "O-" %}selected{% endif %} value="O-">O-</option>
+                                                    <option {% if patient.bloodgroup == "O+" %}selected{% endif %} value="O+">O+</option>
+                                                    
+                                                </select>
+                                            </div> 
+                                            <div class="col-md-6">
+                                                <label for="addnote" class="form-label">Add Note</label>
+                                                <textarea class="form-control" id="addnote" name="add_notes"
+                                                    rows="3"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary mt-4 submit_btn">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--End Add Someone as patient-->
 {% endblock modal_fade %}
 
 {% block custom_js %}
@@ -817,12 +956,14 @@
                 alert("you have selected Break time kinldy choose working time")
                 window.location.reload();
         }
+        someone = $('#someone').val(),
         $.ajax({
             type: 'POST',
             url: "{% url 'bookanappointment' %}",
             data: {
                 'doctorid':$('#hdocid').val(),
                 'serviceid':$('#serviceid').val(),
+                'someone':$('#someone').val(),
                 'time':schtime,
                 'date':scdat,
                 'csrfmiddlewaretoken': "{{csrf_token}}",
@@ -830,10 +971,11 @@
             },
             success: function (id) {
                 console.log(id)
-                //window.location.replace("{% url 'checkout' %}");
+                alert("OTP have been sent successfully to your phone ");
+                window.location.replace("{% url 'checkout' %}");
             },
             error: function (xhr, errmsg, err) {
-
+                alert(errmsg);
             }
         });
     })
@@ -859,6 +1001,34 @@
     };
     }
 
+</script>
+
+<script>
+ $(".submit_btn").click(function(){
+        var form=new FormData($("#hpatientadd"));
+       // form.append("long_desc",tinyMCE.activeEditor.getContent());
+        console.log("hello")
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'add_someone_as_patient' %}",
+            data:form,
+            success: function (json) {
+                console.log(json)
+            },
+            error: function (xhr, errmsg, err) {
+
+            }
+        });
+        //Ajax code
+
+        
+       // setTimeout(location.reload.bind(location), 2000);
+
+        //update staff from edit page fade
+       
+
+    })
 </script>
 
 {% endblock custom_js %}

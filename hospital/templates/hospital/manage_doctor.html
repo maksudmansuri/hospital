@@ -130,7 +130,7 @@
                                                         </div>
                                                         <div class="col-md-8">
                                                             <label for="profile_pic" class="form-label">Select Profile Picture *</label>
-                                                            <input type="file" class="form-control select_media" name="profile_pic">
+                                                            <input type="file" class="form-control select_media" name="profile_pic" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="fisrt_name" class="form-label">First Name</label>
@@ -143,48 +143,60 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="phone" class="form-label">Phone Number</label>
-                                                            <input type="text" class="form-control" id="phone" name="phone" required>
+                                                            <input type="text" class="form-control" id="phone" name="phone" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="alternate_mobile" class="form-label">Alternate Number</label>
-                                                            <input type="text" class="form-control" id="alternate_mobile" name="alternate_mobile" required>
+                                                            <input type="text" class="form-control" id="alternate_mobile" name="alternate_mobile" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="ssn_id" class="form-label">SSN ID </label>
-                                                            <input type="text" class="form-control" id="ssn_id" name="ssn_id" required>
+                                                            <input type="text" class="form-control" id="ssn_id" name="ssn_id" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="address" class="form-label">Address</label>
-                                                            <input type="text" class="form-control" id="address" name="address" required>
+                                                            <input type="text" class="form-control" id="address" name="address" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="city" class="form-label">City</label>
-                                                            <input type="text" class="form-control" id="city" name="city" required>
+                                                            <input type="text" class="form-control" id="city" name="city" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="state" class="form-label">State</label>
-                                                            <input type="text" class="form-control" id="state" name="state" required>
+                                                            <input type="text" class="form-control" id="state" name="state" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="country" class="form-label">Country</label>
-                                                            <input type="text" class="form-control" id="country" name="country" required>
+                                                            <input type="text" class="form-control" id="country" name="country" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="zip_Code" class="form-label">Zip Code</label>
-                                                            <input type="text" class="form-control" id="zip_Code" name="zip_Code" required>
+                                                            <input type="text" class="form-control" id="zip_Code" name="zip_Code" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="zip_Code" class="form-label">Date Of Birth</label>
-                                                            <input type="date" class="form-control" id="dob" name="dob" required>
+                                                            <input type="date" class="form-control" id="dob" name="dob" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="email" class="form-label">Email Address</label>
-                                                            <input type="email" class="form-control" id="email" name="email" required>
+                                                            <input type="email" class="form-control" id="email" name="email" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="joindate" class="form-label">Join Date</label>
-                                                            <input type="date" class="form-control" id="joindate" name="joindate" required>
-                                                        </div>                                                        
+                                                            <input type="date" class="form-control" id="joindate" name="joindate" >
+                                                        </div> 
+                                                        <div class="col-md-6">
+                                                            <label for="opd_charges" class="form-label">OPD Charges</label>
+                                                            <input type="text" class="form-control" id="opd_charges" name="opd_charges" >
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="home_charges" class="form-label">Home Visit Charges</label>
+                                                            <input type="text" class="form-control" id="home_charges" name="home_charges" >
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="emergency_charges-Charges" class="form-label">Emergency Charges</label>
+                                                            <input type="text" class="form-control" id="emergency_charges" name="emergency_charges" >
+                                                        </div>                                                     
                                                         <div class="col-md-6">
                                                             <label for="degree" class="form-label">Degree</label>
                                                             <div class="tooltips">
@@ -221,6 +233,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        {% if is_virtual_available_check < 1 %}
                                                         <div class="col-md-6">
                                                             <label  class="form-label">I-Health Virtual call  Attend?</label>
                                                             <div class="row">
@@ -242,12 +255,13 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        {% endif %}
                                                         <div class="col-md-12">
                                                             <label for="speciality" class="form-label">Social link</label>
                                                             <div class="row g-3 row-cols-1 row-cols-lg-3">
-                                                                <div class="col"><input type="text" class="form-control" id="speciality" required placeholder="Facebook Link" name="facebook"></div>
-                                                                <div class="col"><input type="text" class="form-control" id="speciality" required placeholder="Instagram Link" name="instagram"></div>
-                                                                <div class="col"><input type="text" class="form-control" id="speciality" required placeholder="linkedin Link" name="linkedin"></div>
+                                                                <div class="col"><input type="text" class="form-control" id="speciality"  placeholder="Facebook Link" name="facebook"></div>
+                                                                <div class="col"><input type="text" class="form-control" id="speciality"  placeholder="Instagram Link" name="instagram"></div>
+                                                                <div class="col"><input type="text" class="form-control" id="speciality"  placeholder="linkedin Link" name="linkedin"></div>
                                                             </div>
                                                             
                                                         </div>
@@ -323,7 +337,7 @@
                                                         </div>
                                                         <div class="col-md-8">
                                                             <label for="profile_pic" class="form-label">Select Profile Picture *</label>
-                                                            <input type="file" class="form-control select_media" name="profile_pic" value="{{doctor.doctor.profile_pic}}">
+                                                            <input type="file" class="form-control select_media" name="profile_pic" value="{{doctor.doctor.profile_pic}}" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="fisrt_name" class="form-label">First Name</label>
@@ -340,44 +354,56 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="alternate_mobile" class="form-label">Alternate Number</label>
-                                                            <input type="text" class="form-control" id="alternate_mobile" name="alternate_mobile" value="{{doctor.doctor.alternate_mobile}}" required>
+                                                            <input type="text" class="form-control" id="alternate_mobile" name="alternate_mobile" value="{{doctor.doctor.alternate_mobile}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="ssn_id" class="form-label">SSN ID </label>
-                                                            <input type="text" class="form-control" id="ssn_id" name="ssn_id" value="{{doctor.ssn_id}}" required>
+                                                            <input type="text" class="form-control" id="ssn_id" name="ssn_id" value="{{doctor.ssn_id}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="address" class="form-label">Address</label>
-                                                            <input type="text" class="form-control" id="address" name="address" value="{{doctor.doctor.address}}" required>
+                                                            <input type="text" class="form-control" id="address" name="address" value="{{doctor.doctor.address}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="city" class="form-label">City</label>
-                                                            <input type="text" class="form-control" id="city" name="city" value="{{doctor.doctor.city}}" required>
+                                                            <input type="text" class="form-control" id="city" name="city" value="{{doctor.doctor.city}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="state" class="form-label">State</label>
-                                                            <input type="text" class="form-control" id="state" name="state" value="{{doctor.doctor.state}}" required>
+                                                            <input type="text" class="form-control" id="state" name="state" value="{{doctor.doctor.state}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="country" class="form-label">Country</label>
-                                                            <input type="text" class="form-control" id="country" name="country" value="{{doctor.doctor.country}}" required>
+                                                            <input type="text" class="form-control" id="country" name="country" value="{{doctor.doctor.country}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="zip_Code" class="form-label">Zip Code</label>
-                                                            <input type="text" class="form-control" id="zip_Code" name="zip_Code" value="{{doctor.doctor.zip_Code}}" required>
+                                                            <input type="text" class="form-control" id="zip_Code" name="zip_Code" value="{{doctor.doctor.zip_Code}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="zip_Code" class="form-label">Date Of Birth</label>
-                                                            <input type="date" class="form-control" id="dob" name="dob" value="{{doctor.doctor.dob|date:'Y-m-d'}}" required>
+                                                            <input type="date" class="form-control" id="dob" name="dob" value="{{doctor.doctor.dob|date:'Y-m-d'}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="email" class="form-label">Email Address</label>
-                                                            <input type="email" class="form-control" name="email" value="{{doctor.email}}" required>
+                                                            <input type="email" class="form-control" name="email" value="{{doctor.email}}" >
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="joindate" class="form-label">Join Date</label>
-                                                            <input type="date" class="form-control" id="joindate" name="joindate" value="{{doctor.joindate|date:'Y-m-d'}}" required>
-                                                        </div>                                                        
+                                                            <input type="date" class="form-control" id="joindate" name="joindate" value="{{doctor.joindate|date:'Y-m-d'}}" >
+                                                        </div> 
+                                                        <div class="col-md-6">
+                                                            <label for="opd_charges" class="form-label">OPD Charges</label>
+                                                            <input type="text" class="form-control" id="opd_charges" name="opd_charges" value="{{doctor.opd_charges}}" >
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="home_charges" class="form-label">Home Visit Charges</label>
+                                                            <input type="text" class="form-control" id="home_charges" name="home_charges" value="{{doctor.home_charges}}" >
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="emergency_charges-Charges" class="form-label">Emergency Charges</label>
+                                                            <input type="text" class="form-control" id="emergency_charges" name="emergency_charges" value="{{doctor.emergency_charges}}">
+                                                        </div>                                                                        
                                                         {% comment %} <div class="col-md-6">
                                                             <label for="degree1" class="form-label">Degree</label>
                                                             <div class="tooltips">
@@ -414,6 +440,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        
+                                                       {% if doctor.is_virtual_available %}
                                                         <div class="col-md-6">
                                                             <label  class="form-label">I-Health Virtual call  Attend?</label>
                                                             <div class="row">
@@ -435,12 +463,14 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                       {% endif %}
+                                                       
                                                         <div class="col-md-12">
                                                             <label for="speciality" class="form-label">Social link</label>
                                                             <div class="row g-3 row-cols-1 row-cols-lg-3">
-                                                                <div class="col"><input type="text" class="form-control" id="speciality" required placeholder="Facebook Link" name="facebook" value="{{doctor.doctor.facebook}}"></div>
-                                                                <div class="col"><input type="text" class="form-control" id="speciality" required placeholder="Instagram Link" name="instagram" value="{{doctor.doctor.instagram}}"></div>
-                                                                <div class="col"><input type="text" class="form-control" id="speciality" required placeholder="linkedin Link" name="linkedin" value="{{doctor.doctor.linkedin}}"></div>
+                                                                <div class="col"><input type="text" class="form-control" id="speciality"  placeholder="Facebook Link" name="facebook" value="{{doctor.doctor.facebook}}"></div>
+                                                                <div class="col"><input type="text" class="form-control" id="speciality"  placeholder="Instagram Link" name="instagram" value="{{doctor.doctor.instagram}}"></div>
+                                                                <div class="col"><input type="text" class="form-control" id="speciality"  placeholder="linkedin Link" name="linkedin" value="{{doctor.doctor.linkedin}}"></div>
                                                             </div>
                                                             
                                                         </div>

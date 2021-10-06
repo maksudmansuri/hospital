@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,re_path
 from patient import views
 
 urlpatterns = [   
@@ -28,6 +28,14 @@ urlpatterns = [
 
     path('handlerequest', views.handlerequest, name="handlerequest"),
 
+    # Virtual patient
+    path('list_of_virtual_doctor', views.ListofVirtualDoctor, name="list_of_virtual_doctor"),
+    
+    
+    # Home Visit patient
+    path('home_visit_doctor', views.HomeVisitDoctor, name="home_visit_doctor"),
 
-  
+    # add Some one as petient add , update , delete
+    path('add_someone_as_patient', views.AddSomeoneAsPatient, name="add_someone_as_patient"),
+
 ]

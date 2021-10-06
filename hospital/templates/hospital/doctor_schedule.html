@@ -59,7 +59,7 @@
                 <div class="row align-items-center clearfix g-3">
                     <div class="border-0 mb-4">
                         <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
-                            <h3 class="fw-bold mb-0">{{hospitalstaffdoctor}}'SDoctor Schedule</h3>
+                            <h3 class="fw-bold mb-0">{{hospitalstaffdoctor}}'S Doctor Schedule</h3>
                             <div class="col-auto d-flex w-sm-100">
                                 <button type="button" class="btn btn-primary btn-set-task w-sm-100" data-bs-toggle="modal" data-bs-target="#depadd{{hospitalstaffdoctor.doctor.id}}"><i class="icofont-plus-circle me-2 fs-6"></i>Add Schedule</button>
                             </div>
@@ -73,7 +73,6 @@
                                 <table class="table  align-middle mb-0" id="myProjectTable" style="width:100%">
                                   <thead>
                                     <tr>
-                                    <th >Shift</th>
                                       <th>Time</th>
                                       <th>Monday</th>
                                       <th>Tuesday</th>
@@ -87,8 +86,7 @@
                                   <tbody>
                                   {% for hospitalstaffdoctorschedule in hospitalstaffdoctorschedual %}
                                     <tr>
-                                      <th>{{hospitalstaffdoctorschedule.shift}}</th>
-                                      <th>{{hospitalstaffdoctorschedule.start_time|time:'h:i'}} to {{hospitalstaffdoctorschedule.end_time|time:'h:i'}}</th></a>
+                                      <th>{{hospitalstaffdoctorschedule.start_time|time:"H:i"}} to {{hospitalstaffdoctorschedule.end_time|time:'H:i'}}</th></a>
                                       <td>{% if hospitalstaffdoctorschedule.monday == "YES" %}<a data-bs-toggle="modal" data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}</td>
                                      <td>{% if hospitalstaffdoctorschedule.tuesday == "YES" %}<a data-bs-toggle="modal" data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}</td>
                                       <td>{% if hospitalstaffdoctorschedule.wednesday == "YES" %}<a data-bs-toggle="modal" data-bs-target="#depupdate{{hospitalstaffdoctorschedule.id}}">{{hospitalstaffdoctorschedule.work}}</a>{% endif %}</td>
@@ -163,36 +161,35 @@
                                       <p id="error-checkbox"></p>
                                   </div>
                               </div>
-                              <div class="col-sm-3">
-                                <label for="shift" class="form-label">Schedule Day</label>
-                                <select class="form-select" aria-label="Default select example" name="shift">
-                                <option  value="Morning">Morning</option>
-                                <option  value="Noon">Noon</option>
-                                <option  value="Evening">Evening</option>
-                                <option  value="All-Day">All Day</option>
-                                {% comment %} <option  value="Friday">Friday</option>
-                                <option  value="Saturday">Saturday</option>
-                                <option  value="Sunday">Sunday</option> {% endcomment %}
-                                </select>
-                              </div>
-                              <div class="col-sm-3">
-                                <label for="work" class="form-label">Schedule Day</label>
+                              <div class="col-sm-">
+                                <label for="work" class="form-label">Schedual Day</label>
                                 <select class="form-select" aria-label="Default select example" name="work">
-                                <option  value="OPD">OPD</option>
-                                <option  value="OT">OT</option>
-                                <option  value="Patient Visit">Patient Visit</option>
-                                <option  value="Break">Break</option>
-                                <option  value="Not-Working">Not Working On this time</option>
+                                <option  value="OPD"{% if hospitalstaffdoctorschedule.work == "OPD" %}selected{% endif %}>OPD</option>
+                                <option  value="OT"{% if hospitalstaffdoctorschedule.work == "OT" %}selected{% endif %}>OT</option>
+                                <option  value="Patient-Visit"{% if hospitalstaffdoctorschedule.work == "Patient-Visit" %}selected{% endif %}>Patient Visit</option>
+                                <option  value="Break"{% if hospitalstaffdoctorschedule.work == "Break" %}selected{% endif %}>Break</option>
+                                <option  value="Not-Working"{% if hospitalstaffdoctorschedule.work == "Not-Working" %}selected{% endif %}>Not Working On this time</option>
                                 </select>
-                              </div>
-
-                              <div class="col-sm-3">
+                              </div> 
+                              <div class="col-sm-6">
                                 <label for="start_time" class="form-label">Start Schedule Time</label>
                                 <input type="time" class="form-control" id="start_time" name="start_time">
                               </div>
-                              <div class="col-sm-3">
+                              <div class="col-sm-6">
                                 <label for="end_time" class="form-label">End Schedule Time</label>
                                 <input type="time" class="form-control" id="end_time" name="end_time">
+                              </div>
+                              <div class="col-sm-6">
+                                <label for="break_time_start" class="form-label">Start Breack Time</label>
+                                <input type="time" class="form-control" id="break_time_start" name="break_time_start">
+                              </div>
+                              <div class="col-sm-6">
+                                <label for="break_time_end" class="form-label">End Breack Time</label>
+                                <input type="time" class="form-control" id="break_time_end" name="break_time_end">
+                              </div>
+                              <div class="col-sm-12">
+                                <label for="break_time_end" class="form-label">Duration for OPD ( In Minutes ) </label>
+                                <input type="text" class="form-control"  placeholder="10 or 15 ..etc" id="opd_duration" name="opd_duration">
                               </div>
                             </div>
                             <div class="modal-footer">
@@ -259,7 +256,7 @@
                                       <p id="error-checkbox"></p>
                                   </div>
                               </div>
-                              <div class="col-sm-3">
+                              {% comment %} <div class="col-sm-3">
                                 <label for="shift" class="form-label">Schedule Day</label>
                                 <select class="form-select" aria-label="Default select example" name="shift">
                                 <option  value="Morning"{% if hospitalstaffdoctorschedule.shift == "Morning" %}selected{% endif %}>Morning</option>
@@ -268,11 +265,11 @@
                                 <option  value="All-Day" {% if hospitalstaffdoctorschedule.shift == "All-Day" %}selected{% endif %}>All Day</option>
                                 {% comment %} <option  value="Friday">Friday</option>
                                 <option  value="Saturday">Saturday</option>
-                                <option  value="Sunday">Sunday</option> {% endcomment %}
+                                <option  value="Sunday">Sunday</option> 
                                 </select>
-                              </div>
-                              <div class="col-sm-3">
-                                <label for="work" class="form-label">Schedule Day</label>
+                              </div>{% endcomment %}
+                              <div class="col-sm-12">
+                                <label for="work" class="form-label">Schedual Day  *</label>
                                 <select class="form-select" aria-label="Default select example" name="work">
                                 <option  value="OPD"{% if hospitalstaffdoctorschedule.work == "OPD" %}selected{% endif %}>OPD</option>
                                 <option  value="OT"{% if hospitalstaffdoctorschedule.work == "OT" %}selected{% endif %}>OT</option>
@@ -280,15 +277,27 @@
                                 <option  value="Break"{% if hospitalstaffdoctorschedule.work == "Break" %}selected{% endif %}>Break</option>
                                 <option  value="Not-Working"{% if hospitalstaffdoctorschedule.work == "Not-Working" %}selected{% endif %}>Not Working On this time</option>
                                 </select>
-                              </div>
+                              </div> 
 
-                              <div class="col-sm-3">
-                                <label for="start_time" class="form-label">Start Schedule Time</label>
+                              <div class="col-sm-6">
+                                <label for="start_time" class="form-label">Start Schedule Time *</label>
                                 <input type="time" class="form-control" id="start_time" name="start_time" value="{{hospitalstaffdoctorschedule.start_time|time:"H:i"}}" >
                               </div>
-                              <div class="col-sm-3">
-                                <label for="end_time" class="form-label">End Schedule Time</label>
+                              <div class="col-sm-6">
+                                <label for="end_time" class="form-label">End Schedule Time *</label>
                                 <input type="time" class="form-control" id="end_time" name="end_time" value="{{hospitalstaffdoctorschedule.end_time|time:"H:i"}}">
+                              </div>
+                              <div class="col-sm-6">
+                                <label for="break_time_start" class="form-label">Start Breack Time *</label>
+                                <input type="time" class="form-control" id="break_time_start" name="break_time_start" value="{{hospitalstaffdoctorschedule.break_time_start|time:"H:i"}}">
+                              </div>
+                              <div class="col-sm-6">
+                                <label for="break_time_end" class="form-label">End Breack Time *</label>
+                                <input type="time" class="form-control" id="break_time_end" name="break_time_end" value="{{hospitalstaffdoctorschedule.break_time_end|time:"H:i"}}">
+                              </div>
+                              <div class="col-sm-12">
+                                <label for="break_time_end" class="form-label">Duration for OPD ( In Minutes ) *</label>
+                                <input type="text" class="form-control"  placeholder="10 or 15 ..etc"  value ="{{hospitalstaffdoctorschedule.opd_duration }}" id="opd_duration" name="opd_duration">
                               </div>
                             </div>
                             <div class="modal-footer">
@@ -308,26 +317,6 @@
 
 {% block custom_js %}
 <script>
-  $(document).ready(function() {
-        $('#myProjectTable')
-        .addClass( 'nowrap' )
-        .dataTable( {
-            responsive: true,
-            columnDefs: [
-                { targets: [-1, -3], className: 'dt-body-right' }
-            ]
-        });
-        $('.deleterow').on('click',function(){
-        var tablename = $(this).closest('table').DataTable();  
-        tablename
-            .row( $(this)
-            .parents('tr') )
-            .remove()
-            .draw();
-
-        } );
-       
-
-    });
+ 
     </script>
     {% endblock custom_js %}

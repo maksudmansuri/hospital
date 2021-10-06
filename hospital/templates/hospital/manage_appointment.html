@@ -50,7 +50,7 @@
                             {% for book in booking %}
                                 <tr>
                                     <td>
-                                        <span class="fw-bold">{{book.id}} | P- {{book.patient.id}}</span>
+                                        <span class="fw-bold">B-{{book.id}} | P-{{book.patient.id}}</span>
                                     </td>
                                     <td>
                                         
@@ -97,8 +97,8 @@
  
 {% endblock content %}
 {% block modal_fade %}
-    {% for room in rooms %}
-        <div class="modal fade" id="depedit{{room.id}}" tabindex="-1"  aria-hidden="true">
+    {% for book in booking %}
+        <div class="modal fade" id="treatmentadd{{book.id}}" tabindex="-1"  aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
                 <div class="modal-content">
                 <form id="roomupdate" method="post" action="{% url 'update_room' %}">
@@ -168,10 +168,11 @@
 
 <script>
 
-    $(document).ready(function() {
-    $('select.status').change(function(){   
-        console.log("inside hospital")   
-        $.ajax({
+$(document).ready(function() {
+    $('select.status').change(function(){
+        console.log("inside hospital") 
+
+       /* $.ajax({
             type: 'POST',
             url: "{% url 'manage_appointment' %}",
             data:{
@@ -187,7 +188,7 @@
             },
             error: function (xhr, errmsg, err) {
 
-            }
+            }*/
            
         });
       

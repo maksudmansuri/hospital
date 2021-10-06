@@ -1,15 +1,19 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
+from django.contrib.sites.shortcuts import get_current_site
+from django.db.models import deletion
 from django.db.models.query_utils import Q
+from pyotp.otp import OTP
 from lab.models import Medias
 from django.views.generic.base import View
 # from requests.models import Response
 from hospital.models import HospitalMedias, HospitalStaffDoctorSchedual, HospitalStaffDoctors, ServiceAndCharges
 from patient import models
-from patient.models import Booking, Orders, LabTest, PicturesForMedicine, Temp, Slot
+import patient
+from patient.models import Booking, ForSome, Orders, LabTest, PicturesForMedicine, Temp, Slot, phoneOPTforoders
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
-from accounts.models import HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy
+from accounts.models import CustomUser, HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.list import ListView
@@ -19,7 +23,74 @@ from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
 import json
 from patient import PaytmChecksum
+from django.utils.encoding import force_bytes,force_text,DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+from accounts.utils import generate_token
+import base64
+import pyotp
+from django.core.exceptions import ObjectDoesNotExist
+from datetime import datetime
+import random
+import http.client
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage, message
+from django.conf import settings
+import ast
+conn = http.client.HTTPConnection("2factor.in")
 # Create your views here.
+class generateKey:
+    @staticmethod
+    def returnValue(bookindId):
+        return str(bookindId) + str(datetime.date(datetime.now())) + "Some Random Secret Key"
+
+def verifyOTP(request,orderID):
+    # try:
+    #     order = get_object_or_404(Orders,id=orderID) #booking id find
+    # except Exception as e:
+    #     messages.add_message(request,messages.ERROR,"Booking id number does not Exits")
+    #     return HttpResponseRedirect(reverse("hospitalsingup"))  # False Call
+    # if request.POST:
+    #     first=request.POST.get("first")
+    #     second=request.POST.get("second")
+    #     third=request.POST.get("third")
+    #     forth=request.POST.get("forth")
+    #     fifth=request.POST.get("fifth")
+    #     sixth=request.POST.get("sixth")
+
+    #     postotp = first+second+third+forth+fifth+sixth  #added in one string
+
+    #     keygen = generateKey()
+    #     key = base64.b32encode(keygen.returnValue(orderID).encode())  # Generating Key
+    #     OTP = pyotp.HOTP(key)  # HOTP Model
+    #     if OTP.verify(postotp, order.counter):  # Verifying the OTP
+    #         order.is_booking_Verified = True
+    #         order.taken_date_time=True
+    #         order.save()
+    #         messages.add_message(request,messages.SUCCESS,"Mobile Verified Successfuly")
+    #     #emila message for email verification
+    #     current_site=get_current_site(request) #fetch domain    
+    #     email_subject='Active your Account',
+    #     message=render_to_string('accounts/activate.html',
+    #     {
+    #         'user':user,
+    #         'domain':current_site.domain,
+    #         'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+    #         'token':generate_token.make_token(user)
+    #     } #convert Link into string/message
+    #     )
+    #     print(message)
+    #     email_message=EmailMessage(
+    #         email_subject,
+    #         message,
+    #         settings.EMAIL_HOST_USER,
+    #         [user.email]
+    #     )#compose email
+    #     print(email_message)
+    #     email_message.send() #send Email
+    #     messages.add_message(request,messages.SUCCESS,"Sucessfully Singup Please Verify Your Account Email")        
+        return HttpResponseRedirect(reverse("dologin"))
+        # return HttpResponseRedirect(reverse("dologin"))
 
 """
 Personal Details of Patients
@@ -31,8 +102,8 @@ class patientdDashboardViews(SuccessMessageMixin,ListView):
 
             if patient.fisrt_name and patient.last_name and patient.address and patient.city and patient.zip_Code and patient.state and patient.country and patient.dob and patient.profile_pic and patient.gender and patient.bloodgroup:
                 return render(request,"patient/index.html")            
-            
-            messages.add_message(request,messages.ERROR,"Some detail still Missing !")
+            else:
+                messages.add_message(request,messages.ERROR,"Some detail still Missing !")
             
             return render(request,"patient/patient_update.html",{'patient':patient})
         except Exception as e:
@@ -61,6 +132,10 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
         gender = request.POST.get('gender')
         dob = request.POST.get('dob')
         bloodgroup = request.POST.get('bloodgroup')
+        age1 = (date.today() - datetime.strptime(dob, "%Y-%m-%d").date()) // timedelta(days=365.2425)
+        # import datetime
+        # age = (datetime.date.today() - datetime.datetime.strptime(dob, "%Y-%m-%d").date())/365
+        print(age1)
         try:            
             user= request.user
             user.patients.name_title=name_title
@@ -81,14 +156,15 @@ class patientdUpdateViews(SuccessMessageMixin,UpdateView):
             user.patients.gender=gender
             user.patients.dob=dob
             user.patients.bloodgroup=bloodgroup
+            user.patients.age=age1
             user.patients.save()            
             user.save()
             messages.add_message(request,messages.SUCCESS,"User Detail updates Successfully !")
             return HttpResponseRedirect(reverse("patient_home"))
         except Exception as e:
-            HttpResponse(e)
+            return HttpResponse(e)
 
-""""
+"""" 
 Hospital list and profile
 """
 class HospitalListViews(ListView):
@@ -140,11 +216,10 @@ class HospitalDetailsViews(DetailView):
             opd_time = []
             for dcsh in hospitalstaffdoctorschedual:
                 if dcsh.work == "OPD":
-                    shift = dcsh.shift
                     start_time = dcsh.start_time
                     end_time = dcsh.end_time
-                opd_time.append({'shift':shift,'start_time':start_time,'end_time':end_time})
-            hospitalstaffdoctor_list.append({'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual,'opd_time':opd_time})
+                opd_time.append({'start_time':start_time,'end_time':end_time})
+            hospitalstaffdoctor_list.append({'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual})
         param = {'hospital':hospital,'hospitalstaffdoctor_list':hospitalstaffdoctor_list,'hospitalservice':hospitalservice}  
         return render(request,"patient/hospital_details.html",param)
  
@@ -155,10 +230,11 @@ class DoctorsBookAppoinmentViews(SuccessMessageMixin,View):
         hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hosital_id)
         hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,is_active=True,id=hositaldcotorid_id)
         hospitalservice = ServiceAndCharges.objects.filter(user=hospital.admin)
-        opdtime = OPDTime.objects.get(user=hospital.admin)       
+        opdtime = OPDTime.objects.get(user=hospital.admin) 
+        someone = ForSome.objects.filter(patient=request.user.patients)
         hospitalstaffdoctorschedual =HospitalStaffDoctorSchedual.objects.filter(hospitalstaffdoctor=hospitalstaffdoctor)
         opd_time = []
-        opd_time.append(opdtime.start_time)
+        opd_time.append(opdtime.opening_time)
         
         # opd_time = []
         # for dcsh in hospitalstaffdoctorschedual:
@@ -168,7 +244,7 @@ class DoctorsBookAppoinmentViews(SuccessMessageMixin,View):
         #         end_time = dcsh.end_time
         #     opd_time.append({'shift':shift,'start_time':start_time,'end_time':end_time})
         
-        param = {'hospital':hospital,'hospitalservice':hospitalservice,'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual,'opdtime':opdtime}  
+        param = {'hospital':hospital,'hospitalservice':hospitalservice,'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalstaffdoctorschedual':hospitalstaffdoctorschedual,'opdtime':opdtime,'someones':someone}  
         return render(request,"patient/bookappoinment.html",param)
 
 """" 
@@ -191,30 +267,51 @@ class ViewBookedAnAppointmentViews(SuccessMessageMixin,ListView):
 
 class BookAnAppointmentViews(SuccessMessageMixin,View):
     def post(self,request, *args, **kwargs):
-        try:
-            if request.method == "POST":
-                doctorid = request.POST.get('doctorid')
-                hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
-                serviceid = request.POST.get('serviceid')
-                service = ServiceAndCharges.objects.get(id=serviceid)
-                date = request.POST.get('date')
-                time = request.POST.get('time') 
-                print(doctorid,hospitalstaffdoctor,serviceid,service,date,time)
+        # try:
+        if request.method == "POST":
+            doctorid = request.POST.get('doctorid')
+            hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
+            serviceid = request.POST.get('serviceid')
+            someone = request.POST.get('someone')
+            
+            service = ServiceAndCharges.objects.get(id=serviceid)
+            date = request.POST.get('date')
+            time = request.POST.get('time')
+
+            print(doctorid,hospitalstaffdoctor,serviceid,service,date,time)
+            if someone:
+                forsome = get_object_or_404(ForSome,id=someone)
+                booking = Booking(patient = request.user,for_whom=forsome,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge)
+            else:
                 booking = Booking(patient = request.user,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge)
-                booking.save()
-                print("booking saved")
-                order = Orders(patient=request.user,service=service,amount=service.service_charge,booking_for=1,bookingandlabtest=booking.id,status=1)
-                order.save()
-                print("order saved")
-                if Temp.objects.get(user=request.user):
-                    temp = Temp.objects.get(user=request.user)
-                    temp.delete()
-                temp =  Temp(user=request.user,order_id=order.id)
-                temp.save()     
+            booking.save()
+            print("booking saved")
+            order = Orders(patient=request.user,service=service,amount=service.service_charge,booking_for=1,bookingandlabtest=booking.id,status=1)
+            order.save()
+            print("order saved")
+            if Temp.objects.get(user=request.user):
+                temp = Temp.objects.get(user=request.user)
+                temp.delete()
+            temp =  Temp(user=request.user,order_id=order.id)
+            temp.save()
+            mobile= request.user.phone
+            key = send_otp(mobile)
+            print(key)
+            if key:
+                obj = phoneOPTforoders(order_id=order,user=request.user,otp=key)
+                obj.save()
+                # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
+                # res = conn.getresponse()
+                # data = res.read()
+                # data=data.decode("utf-8")
+                # data=ast.literal_eval(data)
+                # print(data)            
                 return HttpResponse("ok")
-        except Exception as e:
-            messages.add_message(request,messages.ERROR,"Network Issue try after some time")
-            return HttpResponse(e)
+            else:
+                    return HttpResponse("error")
+    # except Exception as e:
+    #         messages.add_message(request,messages.ERROR,"Network Issue try after some time")
+    #         return HttpResponse(e)
 
             
             # import checksum generation utility
@@ -273,7 +370,6 @@ class BookAnAppointmentViews(SuccessMessageMixin,View):
             # response = requests.post(url, data = post_data, headers = {"Content-type": "application/json"}).json()
             # print(response)        
 
-
 def CancelBookedAnAppointmentViews(request,id):
     booked = Booking.objects.get(id=id)
     booked.is_cancelled = True
@@ -281,6 +377,55 @@ def CancelBookedAnAppointmentViews(request,id):
     messages.add_message(request,messages.SUCCESS,"Cancelled Successfully !")
     return HttpResponseRedirect(reverse('viewbookedanappointment'))
 
+def send_otp(phone):
+    if phone:
+        key = random.randint(999,9999)
+        print(key)
+        return key
+    else:
+        return False
+
+def verifyBookingOTP(request,id,phone):
+    try:
+        order = get_object_or_404(Orders,id=id)
+        phoneotp = get_object_or_404(phoneOPTforoders, order_id = order)
+        user = phoneotp.user #mobile is a user
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,e)
+        return HttpResponseRedirect(reverse("hospitalsingup"))  # False Call
+    if request.POST:
+        postotp=request.POST.get("opt")
+
+        key = phoneotp.otp  # Generating Key
+        if postotp == str(key):  # Verifying the OTP
+            order.is_booking_Verified = True
+            order.save()
+            phoneotp.validated = True          
+            phoneotp.save()
+            messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
+        #emila message for email verification
+        # current_site=get_current_site(request) #fetch domain    
+        # email_subject='Confirmation email for you booking order',
+        # message=render_to_string('accounts/activate.html',
+        # {
+        #     'user':user,
+        #     'domain':current_site.domain,
+        #     'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+        #     'token':generate_token.make_token(user)
+        # } #convert Link into string/message
+        # )
+        # print(message)
+        # email_message=EmailMessage(
+        #     email_subject,
+        #     message,
+        #     settings.EMAIL_HOST_USER,
+        #     [user.email]
+        # )#compose email
+        # print(email_message)
+        # email_message.send() #send Email
+        # messages.add_message(request,messages.SUCCESS,"Sucessfully Singup Please Verify Your Account Email")  
+        return HttpResponse("done")     
+       
 
 """"
 History for Lab Booking
@@ -408,10 +553,95 @@ class UploadPresPhotoViews(SuccessMessageMixin,View):
             temp.save() 
             print("temp")
             return render(request,"patient/confirmation.html")
-            return HttpResponseRedirect(reverse("pharmacy_details" , kwargs={'id':pharmacyid}))
+            # return HttpResponseRedirect(reverse("pharmacy_details" , kwargs={'id':pharmacyid}))
 
 
+"""
+Add Someone As patient and Update  and delete
+"""
+def AddSomeoneAsPatient(request):
+    if request.method == "POST":
+        action =request.POST.get("action")
+        fisrt_name = request.POST.get("fisrt_name")
+        last_name = request.POST.get("last_name")
+        name_title = request.POST.get("name_title")
+        age = request.POST.get("age")
+        email = request.POST.get("email")
+        add_notes = request.POST.get("add_notes")
+        phone = request.POST.get("phone")
+        ID_number = request.POST.get("ID_number")
+        status = request.POST.get("status")
+        ID_proof = request.FILES.get("ID_proof")
+        address = request.POST.get("address")
+        city = request.POST.get("city")
+        gender = request.POST.get("gender")
+        bloodgroup = request.POST.get("bloodgroup")
+        id = request.POST.get("id")
+        did = request.POST.get("did")
+        someoneid = request.POST.get("someoneid")
+        state = "Gujarat"
+        country = "India"
+        zip_Code = request.POST.get("zip_Code")
+        if action == "add":            
+            # for Hospital staff user creation
+            try:
+                profile_pic_url = ""
+                if ID_proof:
+                    fs=FileSystemStorage()
+                    filename=fs.save(ID_proof.name,ID_proof)
+                    media_url=fs.url(filename)
+                    profile_pic_url = media_url
+                print("insdie id_proof")     
+            
+                patient=get_object_or_404(Patients,admin=request.user)
+                someone = ForSome(patient=patient,name_title=name_title,fisrt_name=fisrt_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,age=age,phone=phone,ID_proof=profile_pic_url,add_notes=add_notes,gender=gender,is_active=True,email=email,bloodgroup=bloodgroup)        
+                someone.save()            
+                messages.add_message(request,messages.SUCCESS,"Successfully Added")
+                return HttpResponseRedirect(reverse("bookappoinment", kwargs={'id':id,"did":did}))
+            except Exception as e:
+                return HttpResponse(e)
+        elif action == "update":
+            try:
+                profile_pic_url = ""
+                if ID_proof:
+                    fs=FileSystemStorage()
+                    filename=fs.save(ID_proof.name,ID_proof)
+                    media_url=fs.url(filename)
+                    profile_pic_url = media_url
+                print("insdie id_proof")     
+            
+                patient=get_object_or_404(Patients,admin=request.user)
+                someone = get_object_or_404(ForSome,id=someoneid)
+                someone.patient=patient
+                someone.name_title=name_title
+                someone.fisrt_name=fisrt_name
+                someone.last_name=last_name
+                someone.address=address
+                someone.city=city
+                someone.state=state
+                someone.country=country
+                someone.zip_Code=zip_Code
+                someone.age=age
+                someone.phone=phone
+                someone.ID_proof=profile_pic_url
+                someone.add_notes=add_notes
+                someone.gender=gender
+                someone.is_active=True
+                someone.email=email
+                someone.bloodgroup=bloodgroup        
+                someone.save()            
+                messages.add_message(request,messages.SUCCESS,"Successfully updated")
+                return HttpResponseRedirect(reverse("bookappoinment", kwargs={'id':id,"did":did}))
+            except Exception as e:
+                return HttpResponse(e)       
+        elif action == "delete":
+            patient=get_object_or_404(Patients,admin=request.user)
+            patient.is_active= delete()
+            messages.add_message(request,messages.SUCCESS,"Successfully Deleted")
+        else:
+            return HttpResponse("on other side")
 
+    
 """
 Checkout page
 """
@@ -435,6 +665,9 @@ def CheckoutViews(request):
 
 def PaytmProcessViews(request):
     return HttpResponse("onpayment page")
+
+
+
 """
 Paytm handler
 """
@@ -457,3 +690,18 @@ def handlerequest(request):
     # else:
     #     print("Checksum Mismatched")
     pass
+
+
+"""
+List of doctor or hospital for online
+"""
+def ListofVirtualDoctor(reuqest):
+    return render(reuqest,"patient/virtual.html")
+
+
+
+"""
+Home visit doctor list
+"""
+def HomeVisitDoctor(reuqest):
+    return render(reuqest,"patient/home_visit.html")

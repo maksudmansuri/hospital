@@ -1,4 +1,5 @@
 from django.urls import path
+from django.urls.conf import re_path
 from .import views
 from accounts import logoutview as profileview
 
@@ -78,4 +79,6 @@ urlpatterns = [
     #delete price add price
     path('add_price',views.PriceCreate,name="add_price"),
     path('delete_price/<id>',views.deletePrice,name="delete_price"),
+    
+    re_path('verifybooking',views.verifybooking,name="verifybooking")
 ]  

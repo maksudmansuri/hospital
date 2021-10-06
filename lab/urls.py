@@ -1,4 +1,5 @@
 from django.urls import path
+from django.urls.conf import re_path
 from django.views.generic.base import View
 from .import views
 
@@ -19,6 +20,9 @@ urlpatterns = [
     path('delete_main_gallery',views.deleteMainGallery,name="delete_main_gallery"),
 
     path('updload_lab_report/<id>',views.UploadReportViews,name="updload_lab_report"),
+
+
+    re_path('verifylabtestbooking',views.verifylabtestbooking,name="verifylabtestbooking"),
     
 
  

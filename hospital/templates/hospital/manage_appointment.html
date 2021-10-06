@@ -66,12 +66,15 @@
                                         {{book.applied_time}} , {{book.applied_date}}
                                     </td>
                                     <td>
+                                    {% if book.status == ""  or book.status == "rejected" %}
                                        <select class="form-select status" aria-label="Default select example" data-index="{{book.id}}" id="status" name="status"{% if book.status == "rejected" %} disabled {%endif%} >
                                             <option selected disabled >Status</option>
                                             <option value="accepted" {% if book.status == "accepted" %}selected{% endif %} >Accepted</option>
-                                            <option value="rejected" {% if book.status == "rejected" %}selected{% endif %}>Rejected</option>
-                                            <option value="taken" {% if book.status == "taken" %}selected{% endif %}>Taken</option>
+                                            <option value="rejected" {% if book.status == "rejected" %}selected{% endif %}>Rejected</option>                                   
                                         </select>
+                                        {% elif  book.status == "accepted" %}
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{book.id}}">Enter OTP</button>
+                                        {% endif %}
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic outlined example">
@@ -98,68 +101,31 @@
 {% endblock content %}
 {% block modal_fade %}
     {% for book in booking %}
-        <div class="modal fade" id="treatmentadd{{book.id}}" tabindex="-1"  aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+       <!-- Modal Modal Center-->
+        <div class="modal fade" id="exampleModalCenter{{book.id}}" tabindex="-1" aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                <form id="roomupdate" method="post" action="{% url 'update_room' %}">
-                {% csrf_token %}
                     <div class="modal-header">
-                        <h5 class="modal-title  fw-bold" id="depaddLabel">Edit Appointment</h5>
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    
-                    <div class="modal-body">               
-                        <div class="deadline-form">                        
-                            <div class="row g-3 mb-3">
-                                <div class="col-sm-6">
-                                    <label for="room_no" class="form-label">Room No *</label>
-                                    <input type="text" class="form-control" id="room_no" name="room_no" value="{{room.room_no}}">
-                                </div> 
-                                <div class="col-sm-6">
-                                <label for="depone" class="form-label">Floor</label>
-                                <input type="text" class="form-control" id="floor" name="floor" value="{{room.floor}}">
-                                </div>                       
-                                <div class="col-sm-6">
-                                    <label  class="form-label">Room Type *</label>
-                                    <select class="form-select" aria-label="Default select example" name="room" value="{{room.room}}">
-                                    {% for price in prices %}
-                                        <option value="{{price.id}}">{{price}} -INR{{price.rooms_price}}</option>
-                                    {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label  class="form-label">Department *</label>
-                                    <select class="form-select" aria-label="Default select example" name="department">
-                                    {% for department in departments %}
-                                        <option {% if room.department == department %}selected{% endif %} value="{{department.id}}">{{department}}</option>
-                                    {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="col-sm-6"></div>
-                            <div class="col-sm-6">
-                                <label class="custom-switch mt-2">
-                                    <input type="checkbox" name="is_active" id ="is_active" class="custom-switch-input" {% if room.is_active %}checked{% endif %}>
-                                    <span class="custom-switch-indicator" ></span>
-                                    <span class="custom-switch-description">Room is active ?</span>
-                                </label>
-                                </div>
-                            
-                            </div>                        
+                    <div class="modal-body">
+                    <form action="{% url 'verifybooking' %}" method ="post">
+                    {% csrf_token %}
+                        <div class="col-md-12">
+                            <label class="form-label">Enter 4 Digit OTP Number *</label>
+                            <input type="tel" class="form-control" id="otp" name="otp" required="" maxlength="4">
+                            <input type="hidden" class="form-control" id="id" name="booking_id" value="{{book.id}}">                            
                         </div>
-                        
-                    
-                    </div>
-                
-                    <div class="modal-footer">
-                        {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button> {% endcomment %}
-                        <button type="submit" class="btn btn-primary">Add</button>
-                    </div>
-
-                </div>
-                </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Start Treatment</button>
+                            
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div> 
+        </div>
     {% endfor %}
 
 {% endblock modal_fade %}
@@ -172,7 +138,7 @@ $(document).ready(function() {
     $('select.status').change(function(){
         console.log("inside hospital") 
 
-       /* $.ajax({
+       $.ajax({
             type: 'POST',
             url: "{% url 'manage_appointment' %}",
             data:{
@@ -188,7 +154,7 @@ $(document).ready(function() {
             },
             error: function (xhr, errmsg, err) {
 
-            }*/
+            }
            
         });
       

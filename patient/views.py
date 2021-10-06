@@ -385,47 +385,7 @@ def send_otp(phone):
     else:
         return False
 
-def verifyBookingOTP(request,id,phone):
-    try:
-        order = get_object_or_404(Orders,id=id)
-        phoneotp = get_object_or_404(phoneOPTforoders, order_id = order)
-        user = phoneotp.user #mobile is a user
-    except Exception as e:
-        messages.add_message(request,messages.ERROR,e)
-        return HttpResponseRedirect(reverse("hospitalsingup"))  # False Call
-    if request.POST:
-        postotp=request.POST.get("opt")
-
-        key = phoneotp.otp  # Generating Key
-        if postotp == str(key):  # Verifying the OTP
-            order.is_booking_Verified = True
-            order.save()
-            phoneotp.validated = True          
-            phoneotp.save()
-            messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
-        #emila message for email verification
-        # current_site=get_current_site(request) #fetch domain    
-        # email_subject='Confirmation email for you booking order',
-        # message=render_to_string('accounts/activate.html',
-        # {
-        #     'user':user,
-        #     'domain':current_site.domain,
-        #     'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-        #     'token':generate_token.make_token(user)
-        # } #convert Link into string/message
-        # )
-        # print(message)
-        # email_message=EmailMessage(
-        #     email_subject,
-        #     message,
-        #     settings.EMAIL_HOST_USER,
-        #     [user.email]
-        # )#compose email
-        # print(email_message)
-        # email_message.send() #send Email
-        # messages.add_message(request,messages.SUCCESS,"Sucessfully Singup Please Verify Your Account Email")  
-        return HttpResponse("done")     
-       
+     
 
 """"
 History for Lab Booking
@@ -460,8 +420,23 @@ class BookAnAppointmentForLABViews(SuccessMessageMixin,View):
                 temp.delete()
             temp =  Temp(user=request.user,order_id=order.id)
             temp.save() 
-            print("temp")    
-            return HttpResponse("ok")
+            print("temp")
+            mobile= request.user.phone
+            key = send_otp(mobile)
+            print(key)
+            if key:
+                obj = phoneOPTforoders(order_id=order,user=request.user,otp=key)
+                obj.save()
+                # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
+                # res = conn.getresponse()
+                # data = res.read()
+                # data=data.decode("utf-8")
+                # data=ast.literal_eval(data)
+                # print(data)            
+                return HttpResponse("ok")
+            else:
+                return HttpResponse("error")
+           
         # except Exception as e:
         #     messages.add_message(request,messages.ERROR,"Network Issue try after some time")
         #     return HttpResponse(e)
@@ -552,6 +527,18 @@ class UploadPresPhotoViews(SuccessMessageMixin,View):
             temp =  Temp(user=request.user,order_id=order.id)
             temp.save() 
             print("temp")
+            mobile= request.user.phone
+            key = send_otp(mobile)
+            print(key)
+            if key:
+                obj = phoneOPTforoders(order_id=order,user=request.user,otp=key)
+                obj.save()
+                # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
+                # res = conn.getresponse()
+                # data = res.read()
+                # data=data.decode("utf-8")
+                # data=ast.literal_eval(data)
+                # print(data)
             return render(request,"patient/confirmation.html")
             # return HttpResponseRedirect(reverse("pharmacy_details" , kwargs={'id':pharmacyid}))
 

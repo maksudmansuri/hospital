@@ -1,4 +1,5 @@
 from django.urls import path
+from django.urls.conf import re_path
 from .import views
 
 urlpatterns = [  
@@ -8,5 +9,6 @@ urlpatterns = [
     path('updload_invoice_pharmacy/<id>',views.UpdloadInvoicePharmacy,name="updload_invoice_pharmacy"),
     path('pharmacy_manage_gallery',views.ViewImageViews.as_view(),name="pharmacy_manage_gallery"),
     path('delete_pharmacy_appointment/<id>',views.deleteServicesViews,name="delete_pharmacy_appointment"),
+    re_path('verifypharmacybooking',views.verifypharmacybooking,name="verifypharmacybooking"),
  
 ]

@@ -168,6 +168,7 @@ class PicturesForMedicine(models.Model):
     store_invoice           =           models.FileField(upload_to=None, max_length=256,default="",blank=True,null=True)
     pharmacy                =           models.ForeignKey(Pharmacy, on_delete=models.CASCADE)
     amount                  =           models.FloatField(default=0,blank=True,null=True)
+    amount_paid             =           models.BooleanField(default=False)
     applied_date            =           models.DateField(auto_now=False, auto_now_add=False,blank=True,null=True,max_length=64)
     applied_time            =           models.TimeField(auto_now=False, auto_now_add=False,blank=True,null=True,max_length=64)
     is_applied              =           models.BooleanField(default=True,blank=True,null=True)

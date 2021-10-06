@@ -1,4 +1,4 @@
-from patient.models import Booking, TreatmentReliefPetient
+from patient.models import Booking, Orders, TreatmentReliefPetient, phoneOPTforoders
 from django.db.models.query_utils import Q
 from django.urls.base import reverse
 from hospital import urls
@@ -1042,7 +1042,7 @@ class manageAppointmentView(SuccessMessageMixin,View):
     def get(self, request, *args, **kwargs):
         try:
             hospital=Hospitals.objects.get(admin=request.user)
-            booking = Booking.objects.filter(service__user=hospital.admin,is_active=True,is_cancelled = False)
+            booking = Booking.objects.filter(service__user=hospital.admin,is_active=True,is_cancelled = False,is_taken=False)
         except Exception as e:
             messages.add_message(request,messages.ERROR,"user not available")
             return HttpResponseRedirect(reverse("manage_appoinment"))        
@@ -1063,12 +1063,7 @@ class manageAppointmentView(SuccessMessageMixin,View):
         
             if status == 'accepted':
                 is_accepted = True
-                booking.accepted_date= showtime
-            elif status == 'taken':
-                is_taken= True
-                booking.taken_date= showtime
-                treatmentreliefpetient = TreatmentReliefPetient(patient=booking.patient.patients,booking=booking,status="CHECKUPED",amount_paid=booking.service.service_charge,is_active=True)
-                treatmentreliefpetient.save()
+                booking.accepted_date= showtime                
             elif status == 'rejected':
                 is_rejected = True
                 booking.rejected_date= showtime
@@ -1083,7 +1078,65 @@ class manageAppointmentView(SuccessMessageMixin,View):
             return HttpResponse("ok")
         except Exception as e:
             return HttpResponse(e)
-      
+
+
+def verifybooking(request):
+    if request.POST:
+        try:
+            id = request.POST.get("booking_id")
+            booking = Booking.objects.get(id=id)
+            order = get_object_or_404(Orders,booking_for=1,bookingandlabtest=id)
+            phoneotp = get_object_or_404(phoneOPTforoders, order_id = order)
+            user = phoneotp.user #mobile is a user     
+        
+            postotp=request.POST.get("otp")
+            
+            showtime = datetime.now(tz=IST)
+            key = phoneotp.otp  # Generating Key
+            print(key)
+            print(postotp)
+            if postotp == str(key):  # Verifying the OTP
+                order.is_booking_Verified = True
+                order.save()
+                phoneotp.validated = True          
+                phoneotp.save()
+                is_taken= True
+                booking.is_taken=is_taken
+                booking.status="taken"        
+                booking.taken_date= showtime
+                booking.save()
+                treatmentreliefpetient = TreatmentReliefPetient(patient=booking.patient.patients,booking=booking,status="CHECKUPED",amount_paid=booking.service.service_charge,is_active=True)
+                treatmentreliefpetient.save()
+                messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
+            else:
+                messages.add_message(request,messages.ERROR,"OTP does not matched")
+            return HttpResponseRedirect(reverse("manage_appointment"))
+            #emila message for email verification
+            # current_site=get_current_site(request) #fetch domain    
+            # email_subject='Confirmation email for you booking order',
+            # message=render_to_string('accounts/activate.html',
+            # {
+            #     'user':user,
+            #     'domain':current_site.domain,
+            #     'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+            #     'token':generate_token.make_token(user)
+            # } #convert Link into string/message
+            # )
+            # print(message)
+            # email_message=EmailMessage(
+            #     email_subject,
+            #     message,
+            #     settings.EMAIL_HOST_USER,
+            #     [user.email]
+            # )#compose email
+            # print(email_message)
+            # email_message.send() #send Email
+            # messages.add_message(request,messages.SUCCESS,"Sucessfully Singup Please Verify Your Account Email")  
+           
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)
+            return HttpResponse(e)  # False Call    
+        
 """
 Update appointment yet not implemented will think more that
 """

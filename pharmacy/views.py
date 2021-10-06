@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from patient.models import PicturesForMedicine
+from patient.models import Orders, PicturesForMedicine, phoneOPTforoders
 from django.core.files.storage import FileSystemStorage
 import pharmacy
 from django.http.response import HttpResponse, HttpResponseRedirect
@@ -180,7 +180,7 @@ class ViewPharmacyAppointmentViews(SuccessMessageMixin,View):
         is_applied = False        
         try:
             booking = PicturesForMedicine.objects.get(id=id)
-            showtime = datetime.datetime.now(tz=IST)
+            showtime = datetime.now(tz=IST)
             print(status)
         
             if status == 'accepted':
@@ -206,6 +206,60 @@ class ViewPharmacyAppointmentViews(SuccessMessageMixin,View):
         except Exception as e:
             return HttpResponse(e)
 
+def verifypharmacybooking(request):
+    if request.POST:
+        try:
+            id = request.POST.get("slot_id")
+            booking = PicturesForMedicine.objects.get(id=id)
+            order = get_object_or_404(Orders,booking_for=3,bookingandlabtest=id)
+            phoneotp = get_object_or_404(phoneOPTforoders, order_id = order)
+            user = phoneotp.user #mobile is a user     
+        
+            postotp=request.POST.get("otp")
+            
+            showtime = datetime.now(tz=IST)
+            key = phoneotp.otp  # Generating Key
+            print(key)
+            print(postotp)
+            if postotp == str(key):  # Verifying the OTP
+                order.is_booking_Verified = True
+                order.save()
+                phoneotp.validated = True          
+                phoneotp.save()
+                is_taken= True
+                booking.is_taken=is_taken
+                booking.status="taken"        
+                booking.taken_date= showtime
+                booking.save()
+                messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
+            else:
+                messages.add_message(request,messages.ERROR,"OTP does not matched")
+            return HttpResponseRedirect(reverse("view_pharmacy_appointment"))
+            #emila message for email verification
+            # current_site=get_current_site(request) #fetch domain    
+            # email_subject='Confirmation email for you booking order',
+            # message=render_to_string('accounts/activate.html',
+            # {
+            #     'user':user,
+            #     'domain':current_site.domain,
+            #     'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+            #     'token':generate_token.make_token(user)
+            # } #convert Link into string/message
+            # )
+            # print(message)
+            # email_message=EmailMessage(
+            #     email_subject,
+            #     message,
+            #     settings.EMAIL_HOST_USER,
+            #     [user.email]
+            # )#compose email
+            # print(email_message)
+            # email_message.send() #send Email
+            # messages.add_message(request,messages.SUCCESS,"Sucessfully Singup Please Verify Your Account Email")  
+           
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,e)
+            return HttpResponse(e)
     
 def UpdloadInvoicePharmacy(request,id):
     store_invoice = request.FILES.get('store_invoice') 

@@ -33,7 +33,8 @@ urlpatterns = [
     
     
     # Home Visit patient
-    path('home_visit_doctor', views.HomeVisitDoctor, name="home_visit_doctor"),
+    path('home_visit_doctor/<id>/<did>', views.HomeVisitDoctor.as_view(), name="home_visit_doctor"),
+    path('bookanappointmentforhomevisit', views.BookanAppointmentForHomeVisit, name="bookanappointmentforhomevisit"),
 
     # add Some one as petient add , update , delete
     path('add_someone_as_patient', views.AddSomeoneAsPatient, name="add_someone_as_patient"),

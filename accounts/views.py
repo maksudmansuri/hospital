@@ -1,4 +1,4 @@
-from patient.views import send_otp
+
 from typing import Counter
 from django.contrib.messages import views
 from django.http import request, response
@@ -31,7 +31,15 @@ import ast
 conn = http.client.HTTPConnection("2factor.in")
 # Create your views here.
 
+def send_otp(phone):
+    if phone:
+        key = random.randint(999,9999)
+        print(key)
+        return key
+    else:
+        return False
 
+    
 # This class returns the string needed to generate the key
 class generateKey:
     @staticmethod

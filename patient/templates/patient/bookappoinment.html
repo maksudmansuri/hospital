@@ -143,7 +143,7 @@
                                     </div>
                                     <div class="col-xl-4 posts">
                                      {% if hospitalstaffdoctor.home_charges > 0 %}
-                                    <a type="button" class="btn btn-primary style-4" href="{% url 'home_visit_doctor' %}" >Home Visit</a>
+                                    <a type="button" class="btn btn-primary style-4" href="{% url 'home_visit_doctor' hospital.id hospitalstaffdoctor.id %}" >Home Visit</a>
                                         {% endif %}
                                     </div>
                                     
@@ -841,6 +841,7 @@
                                                 <input type="hidden" class="form-control" id="action" name="action" value="add">
                                                 <input type="hidden" class="form-control" id="id" name="id" value="{{hospital.id}}">
                                                 <input type="hidden" class="form-control" id="did" name="did" value="{{hospitalstaffdoctor.id}}">
+                                                <input type="hidden" class="form-control" id="page_name" name="page_name" value="OPD">
                                             </div>
                                             <div class="col-md-5">
                                                 <label for="lastname" class="form-label">Last Name *</label>

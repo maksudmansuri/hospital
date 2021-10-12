@@ -12,8 +12,8 @@ import patient
 from patient.models import Booking, ForSome, Orders, LabTest, PicturesForMedicine, Temp, Slot, phoneOPTforoders
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView
-from accounts.models import CustomUser, HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy
+from django.views.generic.edit import CreateView, UpdateView
+from accounts.models import CustomUser, DoctorForHospital, HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.list import ListView
@@ -569,6 +569,7 @@ def AddSomeoneAsPatient(request):
         state = "Gujarat"
         country = "India"
         zip_Code = request.POST.get("zip_Code")
+        page_name = request.POST.get("page_name")
         if action == "add":            
             # for Hospital staff user creation
             try:
@@ -584,7 +585,12 @@ def AddSomeoneAsPatient(request):
                 someone = ForSome(patient=patient,name_title=name_title,fisrt_name=fisrt_name,last_name=last_name,address=address,city=city,state=state,country=country,zip_Code=zip_Code,age=age,phone=phone,ID_proof=profile_pic_url,add_notes=add_notes,gender=gender,is_active=True,email=email,bloodgroup=bloodgroup)        
                 someone.save()            
                 messages.add_message(request,messages.SUCCESS,"Successfully Added")
-                return HttpResponseRedirect(reverse("bookappoinment", kwargs={'id':id,"did":did}))
+                if page_name == "HOMEVISIT":
+                    return HttpResponseRedirect(reverse("home_visit_doctor", kwargs={'id':id,"did":did}))
+                if page_name == "OPD":
+                    return HttpResponseRedirect(reverse("bookappoinment", kwargs={'id':id,"did":did}))
+                # if page_name == "ONLINE":
+                # if page_name == "SETTING":
             except Exception as e:
                 return HttpResponse(e)
         elif action == "update":
@@ -690,5 +696,57 @@ def ListofVirtualDoctor(reuqest):
 """
 Home visit doctor list
 """
-def HomeVisitDoctor(reuqest):
-    return render(reuqest,"patient/home_visit.html")
+class HomeVisitDoctor(CreateView):
+    def get(self, request, *args, **kwargs):
+        hospital_id= kwargs['id']
+        hositaldcotorid_id= kwargs['did']
+        hospital = get_object_or_404(Hospitals,is_verified=True,is_deactive=False,id=hospital_id)
+        hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,is_active=True,id=hositaldcotorid_id)
+        someones = ForSome.objects.filter(patient=request.user.patients)
+        hospitalservice = ServiceAndCharges.objects.filter(user=hospital.admin)
+        param = {'someones':someones,'hospital':hospital,'hospitalstaffdoctor':hospitalstaffdoctor,'hospitalservice':hospitalservice}
+        return render(request,"patient/home_visit.html",param)
+
+def BookanAppointmentForHomeVisit(request):
+   if request.method == "POST":
+       if request.method == "POST":
+            doctorid = request.POST.get('doctorid')
+            hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
+            serviceid = request.POST.get('serviceid')
+            someone = request.POST.get('someone')
+            
+            service = ServiceAndCharges.objects.get(id=serviceid)
+            date = request.POST.get('date')
+            time = request.POST.get('time')
+
+            print(doctorid,hospitalstaffdoctor,serviceid,service,date,time)
+            if someone:
+                forsome = get_object_or_404(ForSome,id=someone)
+                booking = Booking(patient = request.user,for_whom=forsome,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge,booking_type="HOME")
+            else:
+                booking = Booking(patient = request.user,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge,booking_type="HOME")
+            booking.save()
+            print("booking saved")
+            order = Orders(patient=request.user,service=service,amount=service.service_charge,booking_for=1,bookingandlabtest=booking.id,status=1)
+            order.save()
+            print("order saved")
+            if Temp.objects.get(user=request.user):
+                temp = Temp.objects.get(user=request.user)
+                temp.delete()
+            temp =  Temp(user=request.user,order_id=order.id)
+            temp.save()
+            mobile= request.user.phone
+            key = send_otp(mobile)
+            print(key)
+            if key:
+                obj = phoneOPTforoders(order_id=order,user=request.user,otp=key)
+                obj.save()
+                # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
+                # res = conn.getresponse()
+                # data = res.read()
+                # data=data.decode("utf-8")
+                # data=ast.literal_eval(data)
+                # print(data)            
+                return HttpResponse("ok")
+            else:
+                return HttpResponse("error")

@@ -108,6 +108,8 @@
                                     <option value="X-ray/Radiology Services">X-ray/Radiology Services</option>
                                     <option value="Laboratory Services">Laboratory Services</option>
                                     <option value="Blood Services">Blood Services</option>
+                                    <option value="HOMEVISIT">HOME VISIT</option>
+                                    <option value="ONLINE">ON-LINE</option>
                                 </select>
                             </div>
                             <div class="col-sm-6">
@@ -158,6 +160,7 @@
                                     <option {% if service.service_name == "X ray/Radiology Services" %}selected{% endif %} value="X ray/Radiology Services">X ray/Radiology Services</option>
                                     <option {% if service.service_name == "Laboratory Services" %}selected{% endif %} value="laboratory">Laboratory Services</option>
                                     <option {% if service.service_name == "Blood Services" %}selected{% endif %} value="blood">Blood Services</option></select>
+                                    <option {% if service.service_name == "HOMEVISIT" %}selected{% endif %} value="blood">HOME VISIT</option></select>
                             </div>
                             <div class="col-sm-6">
                                 <label for="depone" class="form-label">Service Charges</label>

@@ -14,6 +14,8 @@ urlpatterns = [
  
 
     path('manage_relief_patient',views.manageReliefPatientViews.as_view(),name="manage_relief_patient"),
+    path('relief_patient_profile/<id>',views.ReliefPatientViewsProfile.as_view(),name="relief_patient_profile"),
+    path('relief_patient_files/<id>',views.ReliefPatientViewsFiles,name="relief_patient_files"),
     path('manage_treatment/<id>',views.manageTreatmentViews.as_view(),name="manage_treatment"),
     path('delete__relief_hospital_patient/<id>',views.deleteReliefHospitalPatient,name="delete__relief_hospital_patient"),
 

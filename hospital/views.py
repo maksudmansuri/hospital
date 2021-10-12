@@ -1,4 +1,5 @@
-from patient.models import Booking, Orders, TreatmentReliefPetient, phoneOPTforoders
+import patient
+from patient.models import Booking, LabTest, Orders, Slot, TreatmentReliefPetient, patientFile, phoneOPTforoders
 from django.db.models.query_utils import Q
 from django.urls.base import reverse
 from hospital import urls
@@ -1185,6 +1186,54 @@ class manageTreatmentViews(SuccessMessageMixin,DetailView):
        
         print("Appoinment update saved")      
         return HttpResponseRedirect(reverse("manage_treatment"))
+
+class ReliefPatientViewsProfile(SuccessMessageMixin,DetailView):
+     def get(self, request, *args, **kwargs):
+        try:
+            id = kwargs['id']
+            hospital=Hospitals.objects.get(admin=request.user)
+            treatmentreliefpetient = TreatmentReliefPetient.objects.get(is_active=True,id=id)
+            oldbooking = TreatmentReliefPetient.objects.filter(is_active=True,patient=treatmentreliefpetient.patient)
+            hospitaldoctors = HospitalStaffDoctors.objects.filter(hospital=hospital,is_active=True)
+            serviceandcharges = ServiceAndCharges.objects.filter(user=hospital.admin)
+            patientfiles = patientFile.objects.filter(treatmentreliefpetient=treatmentreliefpetient) 
+            slot = Slot.objects.filter(patient=treatmentreliefpetient.patient.admin) # yet not required
+            labtests =LabTest.objects.filter(slot__patient=treatmentreliefpetient.patient.admin,is_active=True,slot__send_to_doctor=True)
+            print(labtests)
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"user not available")
+            return HttpResponseRedirect(reverse("manage_relief_patient"))        
+        param={'hospital':hospital,'treatmentreliefpetient':treatmentreliefpetient,'oldbooking':oldbooking,'hospitaldoctors':hospitaldoctors,'serviceandcharges':serviceandcharges,'patientfiles':patientfiles,'labtests':labtests}
+        return render(request,"hospital/patient_profile.html",param)        
+
+def ReliefPatientViewsFiles(request,id):
+    if request.method == "POST":
+        file = request.FILES.get("file")
+        hospitaldoctors_id = request.POST.get("hospitaldoctors")
+        file_purpose = request.POST.get("file_purpose")
+        # file_date = request.POST.get("file_date")
+        # file_time = request.POST.get("file_time")
+        file_addnote = request.POST.get("file_addnote")
+        amount_paid = request.POST.get("amount_paid")
+        print(id,file,hospitaldoctors_id,file_addnote,file_purpose,amount_paid)
+        is_active= True
+        treatmentreliefpetient = TreatmentReliefPetient.objects.get(id=id)
+        hospitaldoctors = HospitalStaffDoctors.objects.get(id=hospitaldoctors_id)
+        patient = treatmentreliefpetient.patient
+        booking = treatmentreliefpetient.booking    
+        try:
+            patientfile = patientFile(treatmentreliefpetient=treatmentreliefpetient,patient=patient,booking=booking,amount_paid=float(amount_paid),hospitaldoctors=hospitaldoctors,file_purpose=file_purpose,file_addnote=file_addnote,is_active=is_active)
+            if file:
+                fs=FileSystemStorage()
+                filename1=fs.save(file.name,file)
+                profile_pic_url=fs.url(filename1)
+                patientfile.file=profile_pic_url
+            patientfile.save()
+            return HttpResponseRedirect(reverse("relief_patient_profile",kwargs={'id':patient.id}))
+        except Exception as e:
+            messages.add_message(request,messages.ERROR,"user not available")
+            return HttpResponseRedirect(reverse("relief_patient_profile",kwargs={'id':patient.id}))
+    
 
 class manageReliefPatientViews(SuccessMessageMixin,ListView):
     def get(self, request, *args, **kwargs):

@@ -207,6 +207,26 @@ class TreatmentReliefPetient(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+class patientFile(models.Model):
+    id                      =           models.AutoField(primary_key=True)
+    treatmentreliefpetient  =           models.ForeignKey(TreatmentReliefPetient, on_delete=models.CASCADE)
+    booking                 =           models.ForeignKey(Booking, on_delete=models.CASCADE,null=True)
+    patient                 =           models.ForeignKey(Patients, on_delete=models.CASCADE,null=True)
+    hospitaldoctors         =           models.ForeignKey(HospitalStaffDoctors, on_delete=models.CASCADE,null=True)
+    amount_paid             =           models.FloatField()
+    file                    =           models.FileField(upload_to="patients/documents/fiel/%Y/%m/%d/",blank=True,null=True,default="")
+    # file_date               =           models.DateField(blank=True,null=True)
+    # file_time               =           models.TimeField(blank=True,null=True)
+    file_purpose            =           models.CharField(default="",blank=True,null=True,max_length=500)
+    file_addnote            =           models.TextField(default="",blank=True,null=True,max_length=5000)
+    is_active               =           models.BooleanField(default=False)
+    created_at              =           models.DateTimeField(auto_now_add=True)
+    updated_at              =           models.DateTimeField(auto_now=True)
+    objects                 =           models.Manager()
+
+    class Meta:
+        ordering = ['-created_at']
+
 class PatientSymptons(models.Model):
     id                      =           models.AutoField(primary_key=True)
     TreatmentReliefPetient  =           models.ForeignKey(TreatmentReliefPetient,on_delete=models.CASCADE)

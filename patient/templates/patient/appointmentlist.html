@@ -198,13 +198,15 @@
                                                     </h6> 
                                                 {% else %}
                                                    
-                                                    {% if book.status == "accepted" %}
+                                                    {% if book.status == "accepted" and book.amount_paid == False and book.store_invoice == "" %}
                                                         <h6><span class="badge bg-primary">Accepted Your Appointment on:</span> 
                                                         <span>{{book.accepted_date}}</span></h6>
+                                                    {% elif book.status == "accepted" and book.store_invoice and book.amount_paid == False %}
+                                                        <h6><span class="badge bg-primary">Need to pay  &#x20B9;{{book.amount}} :</span> 
                                                     {% elif book.status == "rejected" %}
                                                     <h6><span class="badge bg-danger">Rejected on:</span></h3>
                                                         <span>{{book.rejected_date}}</span></h6>
-                                                    {% elif book.status == "taken" %}
+                                                    {% elif book.status == "taken" and book.amount_paid == True %}
                                                         <h6><span class="badge bg-success">Treatment on:</span>
                                                         <span>{{book.taken_date}}</span></h6>                                
                                                     {% else %}

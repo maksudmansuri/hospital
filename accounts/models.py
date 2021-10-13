@@ -64,7 +64,7 @@ class CustomUser(AbstractBaseUser):
     name_title   =models.CharField(max_length=256,blank=True,null=True,default="")
     first_name = models.CharField(max_length=254)
     last_name = models.CharField(max_length=254)
-    user_type_data=((1,"AdminHOD"),(2,"Hospitals"),(3,"HospitalDoctors"),(4,"Patients"),(5 ,"Labs"),(6 ,"Pharmacy"))
+    user_type_data=((1,"AdminHOD"),(2,"Hospitals"),(3,"HospitalDoctors"),(4,"Patients"),(5 ,"Labs"),(6 ,"Pharmacy"),(0,"Admin"))
     user_type=models.CharField(choices=user_type_data,max_length=50)
     phone_regex     = RegexValidator( regex = r'^\+?1?\d{9,10}$', message ="Phone number must be entered in the format +919999999999. Up to 10 digits allowed.")
     phone           = models.CharField('Phone',validators =[phone_regex], max_length=10, unique = True,null=True)

@@ -159,7 +159,7 @@ def dologin(request):
                         return HttpResponseRedirect(reverse('pharmacy_home'))
                 else:
                 # For Djnago default Admin Login 
-                    return HttpResponseRedirect(reverse('admin'))
+                    return HttpResponseRedirect(reverse('admin:index'))
                     
                     # return RedirectView.as_view(url=reverse_lazy('admin:index'))
                     # return HttpResponseRedirect(reverse('admin_home'))

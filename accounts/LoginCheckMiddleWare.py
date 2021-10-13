@@ -95,7 +95,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 else:
                     # return redirect("/admin")
                     return HttpResponseRedirect(reverse("pharmacy_home"))
-            elif user.is_superuser==True:
+            elif user.user_type == "0":
                 # if modulename == "ecaadmin.views" or modulename == "django.views.static":
                 #     pass
                 # elif modulename == "front.views":
@@ -112,6 +112,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                 #     pass
                 if modulename == "accounts.adminView":
                     pass
+                print("admin")
                 return HttpResponseRedirect(reverse('admin:index'))
                 # else:
                     # return RedirectView.as_view(url=reverse_lazy('admin:index'))

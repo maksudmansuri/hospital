@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'patient',
     'rest_framework',
     'rest_framework.authtoken',
+    'channels',
+    'chat',
 
 ]
 
@@ -61,6 +63,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.RemoteUserBackend',
+        'django.contrib.auth.backends.ModelBackend',
+) 
 
 ROOT_URLCONF = 'relief.urls'
 
@@ -106,9 +113,19 @@ REST_FRAMWORK = {
     # 'REST_SESSION_LOGIN' : False
    
 }
-WSGI_APPLICATION = 'relief.wsgi.application'
+# WSGI_APPLICATION = 'relief.wsgi.application'
 
-ASGI_APPLICATION = 'OC3.routing.application'
+ASGI_APPLICATION = 'relief.asgi.application'
+
+#for channels only
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
 
 LOGIN_REDIRECT_URL = "/"
 
@@ -199,3 +216,4 @@ EMAIL_PORT = 587
 
 
 django_heroku.settings(locals())
+

@@ -653,9 +653,6 @@
 </div>
 {% endfor %}
 <!--End Schedule-->
-
-
-
 <!--Book an  appointment.Modal-->
 
     <div class="modal fade" id="book-an-appointment{{doctors.hospitalstaffdoctor.id}}" tabindex="-1" aria-labelledby="exampleModalCenterTitle"
@@ -709,8 +706,24 @@
                                 </div>
                                
                                 <div class="inner-wrap ">
-                                    <h6 id="staticBackdropLiveLabel">OPD TIME: <b> Form {{opdtime.opening_time}} To {{opdtime.close_time}} <b></h6>
-                                    <h6 id="staticBackdropLiveLabel1">BREAK TIME: <b> Form {{opdtime.break_start_time}} To {{opdtime.break_end_time}}<b></h6>
+                                    <h6 id="staticBackdropLiveLabel">OPD TIME: <b> From {{opdtime.opening_time}} To {{opdtime.close_time}} <b></h6>
+                                    <h6 id="staticBackdropLiveLabel1">BREAK TIME: <b> From {{opdtime.break_start_time}} To {{opdtime.break_end_time}}<b></h6>
+                                     <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onchange="checkedFunc('flexCheckDefault')">
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                Is it for some else ? <a data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#DoctorModalLg"><span class="badge bg-primary"> Add New.</span></a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <select class="form-select mb-3" aria-label="Default select example" id ="someone" name="someone" disabled ="disabled">
+                                            <option value="" selected>Select Person</option>
+                                            {% for someone in someones %}
+                                            <option value="{{someone.id}}">{{someone}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
                                     <div class="about_div">
                                      <div class="about_div_row first_about">
                                         <select class="form-select mb-3" aria-label="Default select example" id ="serviceid" name="serviceid[]">
@@ -751,6 +764,139 @@
             </div>
         </div>
     </div>
+
+<!--Start Add Someone as patient-->
+    <div class="modal fade" id="DoctorModalLg" tabindex="-1" aria-labelledby="DoctorModalLgLabel" aria-hidden="true"
+        style="display: none;">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h4" id="DoctorModalLgLabel">Add Patient Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <div class="card mb-3">
+                                <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                                    <h6 class="mb-0 fw-bold ">Patients Basic Inforamtion</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form  method="post" id="hpatientadd" enctype="multipart/form-data" action="{% url 'add_someone_as_patient' %}">
+                                        {% csrf_token %}
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-md-2">
+                                                <label class="form-label">Title *</label>
+                                                <select class="form-select" aria-label="Default select example"
+                                                    name="name_title">
+                                                    <option {% if request.user.name_title == "Mr." %}selected{% endif %}
+                                                        value="Mr."> Mr.</option>
+                                                    <option {% if request.user.name_title == "Mrs." %}selected{% endif %}
+                                                        value="Mrs."> Mrs.</option>
+                                                    <option {% if request.user.name_title == "Miss" %}selected{% endif %}
+                                                        value="Miss"> Miss</option>
+                                                    <option {% if request.user.name_title == "Ms." %}selected{% endif %}
+                                                        value="Ms."> Ms.</option>
+                                                    <option {% if request.user.name_title == "Dr." %}selected{% endif %}
+                                                        value="Dr."> Dr.</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label for="firstname" class="form-label">First Name *</label>
+                                                <input type="text" class="form-control" id="firstname" name="fisrt_name">
+                                                <input type="hidden" class="form-control" id="action" name="action" value="add">
+                                                <input type="hidden" class="form-control" id="id" name="id" value="{{lab.id}}">
+                                                <input type="hidden" class="form-control" id="page_name" name="page_name" value="LAB">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label for="lastname" class="form-label">Last Name *</label>
+                                                <input type="text" class="form-control" id="lastname" name="last_name">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="address" class="form-label">Address </label>
+                                                <input type="text" class="form-control" id="address" name="address">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="zip_Code" class="form-label">zip_Code </label>
+                                                <input type="text" class="form-control" id="zip_Code" name="zip_Code">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="city" class="form-label">City </label>
+                                                <input type="text" class="form-control" id="city" name="city">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="age" class="form-label">Age *</label>
+                                                <input type="text" class="form-control" id="dob" name="age">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="phonenumber" class="form-label">Phone Number *</label>
+                                                <input type="text" class="form-control" id="phone" name="phone">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="emailaddress" class="form-label">Email Address</label>
+                                                <input type="email" class="form-control" id="emailaddress" name="email">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="formFileMultiple" class="form-label">ID Proof Upload </label>
+                                                <input class="form-control" type="file" id="formFileMultiple"
+                                                    name="ID_proof">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Gender *</label>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="gender"
+                                                                id="gender" value="Male" checked>
+                                                            <label class="form-check-label" for="exampleRadios11">
+                                                                Male
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="gender"
+                                                                id="gender" value="Female"> <label class="form-check-label"
+                                                                for="exampleRadios22">
+                                                            Female
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                             <div class="col-md-6">
+                                                <label  class="form-label">Blood Group *</label>
+                                                <select class="form-select" aria-label="Default select example" name="bloodgroup" required>
+                                                    <option selected disabled>Blood Group</option>
+                                                    <option {% if patient.bloodgroup == "A+" %}selected{% endif %} value="A+">A+</option>
+                                                    <option {% if patient.bloodgroup == "A-" %}selected{% endif %} value="A-">A-</option>
+                                                    <option {% if patient.bloodgroup == "B+" %}selected{% endif %} value="B+">B+</option>
+                                                    <option {% if patient.bloodgroup == "B-" %}selected{% endif %} value="B-">B-</option>
+                                                    <option {% if patient.bloodgroup == "AB-" %}selected{% endif %} value="AB-">AB-</option>
+                                                    <option {% if patient.bloodgroup == "AB+" %}selected{% endif %} value="AB+">AB+</option>
+                                                    <option {% if patient.bloodgroup == "O-" %}selected{% endif %} value="O-">O-</option>
+                                                    <option {% if patient.bloodgroup == "O+" %}selected{% endif %} value="O+">O+</option>
+                                                    
+                                                </select>
+                                            </div> 
+                                            <div class="col-md-6">
+                                                <label for="addnote" class="form-label">Add Note</label>
+                                                <textarea class="form-control" id="addnote" name="add_notes"
+                                                    rows="3"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary mt-4 submit_btn">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--End Add Someone as patient-->
 {% endblock modal_fade %}
 
 {% block custom_js %}
@@ -781,6 +927,7 @@
             data: {
                 'labid':"{{lab.id}}",
                 'doctorid':'blank',
+                'someone' : $('#someone').val(),
                 'serviceid[]':val1,
                 'time':schtime,
                 'date':scdat,
@@ -836,6 +983,51 @@
         })   
     })  {% endcomment %}
 
+</script>
+<script>
+    function checkedFunc(element1Id) {
+    
+        var myLayer = document.getElementById('someone');
+        var element1 = document.getElementById(element1Id);
+    if (element1.checked == true) {
+            myLayer.class = "submit";
+            myLayer.removeAttribute("disabled");
+    } else {
+            myLayer.class = "button:disabled";
+
+            myLayer.setAttribute("disabled","disabled");
+    };
+    }
+
+</script>
+
+
+<script>
+ $(".submit_btn").click(function(){
+        var form=new FormData($("#hpatientadd"));
+       // form.append("long_desc",tinyMCE.activeEditor.getContent());
+        console.log("hello")
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'add_someone_as_patient' %}",
+            data:form,
+            success: function (json) {
+                console.log(json)
+            },
+            error: function (xhr, errmsg, err) {
+
+            }
+        });
+        //Ajax code
+
+        
+       // setTimeout(location.reload.bind(location), 2000);
+
+        //update staff from edit page fade
+       
+
+    })
 </script>
 
 {% endblock custom_js %}

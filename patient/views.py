@@ -397,14 +397,19 @@ class BookAnAppointmentForLABViews(SuccessMessageMixin,View):
             serviceid_list = request.POST.getlist('serviceid[]')
             date = request.POST.get('date')
             labid = request.POST.get('labid')
+            someone = request.POST.get('someone')
             lab = get_object_or_404(Labs,id=labid)
             time = request.POST.get('time') 
             print(serviceid_list,date,labid,lab,time)
-            labbooking = Slot(patient = request.user,lab=lab,applied_date=date,applied_time=time,is_applied=True,is_active=True) 
+            if someone:
+                forsome = get_object_or_404(ForSome,id=someone)
+                labbooking = Slot(patient = request.user,for_whom=forsome,lab=lab,applied_date=date,applied_time=time,is_applied=True,is_active=True) 
+            else:   
+                labbooking = Slot(patient = request.user,lab=lab,applied_date=date,applied_time=time,is_applied=True,is_active=True) 
             labbooking.save()
             total = 0
-            
-            for serviceid in serviceid_list:          
+                        
+            for serviceid in serviceid_list:
                 service = ServiceAndCharges.objects.get(id=serviceid)
                 labservices = LabTest(service=service,lab=lab,slot=labbooking,is_active=True)
                 labservices.save()
@@ -475,8 +480,9 @@ class labDetailsViews(DetailView):
         lab_id=kwargs['id']
         lab = get_object_or_404(Labs,is_verified=True,is_deactive=False,id=lab_id)
         services = ServiceAndCharges.objects.filter(user=lab.admin)
+        someones = ForSome.objects.filter(patient=request.user.patients)
         opdtime = OPDTime.objects.get(user=lab.admin)            
-        param = {'lab':lab,'services':services,'opdtime':opdtime}  
+        param = {'lab':lab,'services':services,'opdtime':opdtime,'someones':someones}  
         return render(request,"patient/lab_details.html",param)
 
 
@@ -589,6 +595,8 @@ def AddSomeoneAsPatient(request):
                     return HttpResponseRedirect(reverse("home_visit_doctor", kwargs={'id':id,"did":did}))
                 if page_name == "OPD":
                     return HttpResponseRedirect(reverse("bookappoinment", kwargs={'id':id,"did":did}))
+                if page_name == "LAB":
+                    return HttpResponseRedirect(reverse("laboratory_details", kwargs={'id':id}))
                 # if page_name == "ONLINE":
                 # if page_name == "SETTING":
             except Exception as e:

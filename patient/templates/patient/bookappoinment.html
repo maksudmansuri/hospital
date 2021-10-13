@@ -556,8 +556,9 @@
                                     </div>
                                     <div>
                                         <select class="form-select mb-3" aria-label="Default select example" id ="someone" disabled ="disabled">
+                                            <option value="" selected>Select Person</option>
                                             {% for someone in someones %}
-                                            <option value="{{someone.id}}" selected>{{someone}}</option>
+                                            <option value="{{someone.id}}">{{someone}}</option>
                                             {% endfor %}
                                         </select>
                                     </div>

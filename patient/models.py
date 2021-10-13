@@ -134,8 +134,9 @@ class FollowedUp(models.Model):
 
 class Slot(models.Model):
     id                      =           models.AutoField(primary_key=True)
-    patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    lab                     =           models.ForeignKey(Labs, on_delete=models.CASCADE)
+    patient                 =           models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True,blank=True)
+    for_whom                =           models.ForeignKey(ForSome, on_delete=models.CASCADE,null=True,blank=True)
+    lab                     =           models.ForeignKey(Labs, on_delete=models.CASCADE,null=True,blank=True)
     amount                  =           models.FloatField(default=0)
     applied_date            =           models.CharField(default="",blank=True,null=True,max_length=64)
     applied_time            =           models.CharField(default="",blank=True,null=True,max_length=64)

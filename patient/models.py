@@ -1,4 +1,9 @@
+import json
+import channels
+from channels.layers import get_channel_layer
 from django.db.models.fields import IntegerField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 import pharmacy
 from django.db.models.base import Model
 import patient
@@ -6,6 +11,8 @@ from django.contrib.auth.models import User
 from hospital.models import HospitalRooms, HospitalServices, HospitalStaffDoctors, ServiceAndCharges
 from accounts.models import CustomUser, Hospitals, Labs, Patients, Pharmacy
 from django.db import models
+from asgiref.sync import async_to_sync,sync_to_async
+
 
 # Create your models here.
 class ForSome(models.Model):
@@ -67,6 +74,36 @@ class Booking(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+    @staticmethod
+    def give_booking_details(id):
+        instance = Booking.objects.filter(id=id).first()
+        data = {}
+        data['booking_id'] = instance.id
+        data['amount'] = instance.amount
+        data['status'] = instance.status
+        return data
+
+ 
+@receiver(post_save, sender=Booking)
+def booking_status_handler(sender,instance,created, **kwargs):
+    if not created:
+        channel_layer = get_channel_layer()
+        data = {}
+        data['booking_id'] = instance.id
+        data['amount'] = instance.amount
+        data['status'] = instance.status
+
+        async_to_sync(channel_layer.group_send)(
+            'booking_%s' % instance.id,{
+                'type' : 'booking_status',
+                'value' : json.dumps(data)
+            }
+        )
+
+
+    
+
 
 class ReBooking(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -322,8 +359,6 @@ class Orders(models.Model):
     class Meta:
         ordering = ['-created_at']
 
-
-
 class phoneOPTforoders(models.Model):
     id =  models.AutoField(primary_key=True)
     order_id =  models.ForeignKey(Orders,  on_delete=models.CASCADE,null=True,blank=True)
@@ -334,3 +369,5 @@ class phoneOPTforoders(models.Model):
     otp_session_id  = models.CharField(max_length=50,null=True,blank=True,default=None)
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
+
+

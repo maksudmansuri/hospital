@@ -1,6 +1,10 @@
+import channels
 from django.db import models
 from accounts.models import CustomUser
 from patient.models import Booking, PicturesForMedicine, Slot
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+import json
 # Create your models here.
 
 
@@ -19,5 +23,15 @@ class Notification(models.Model):
     objects                 =           models.Manager()
 
     def save(self,*args, **kwargs):
-        print("save called")
+        channels_layer = get_channel_layer()
+        notification_objs = Notification.objects.filter(user_has_seen=False).count()
+        data = {'count' : notification_objs, 'current_notification':self.booking.status}
+
+        async_to_sync(channels_layer.group_send)(
+            'test_consumer_group',{
+                'type' : 'send_notification',
+                'value' : json.dumps(data)
+            }
+
+        ) 
         super(Notification,self).save(*args, **kwargs)

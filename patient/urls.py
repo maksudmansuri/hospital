@@ -39,4 +39,9 @@ urlpatterns = [
     # add Some one as petient add , update , delete
     path('add_someone_as_patient', views.AddSomeoneAsPatient, name="add_someone_as_patient"),
 
+    path('<booking_id>',views.bookingConfirmation,name="booking_confirmation")
+
+
+    
+
 ]

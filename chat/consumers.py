@@ -8,15 +8,22 @@ class TestConsumer(WebsocketConsumer):
         self.room_name = "test_consumer"
         self.room_group_name = "test_consumer_group"
         async_to_sync(self.channel_layer.group_add)(
-            self.room_name, self.room_group_name
+            self.room_group_name,self.channel_name,
         )
         self.accept()
         self.send(text_data=json.dumps({'status':'connected connect with dajngo'}))
 
     def receive(self,text_data):
         print(text_data)
-        pass
+        self.send(text_data=json.dumps({'status':'we got it'})) 
 
     def disconnect(self):
         pass
+
+
+    def send_notification(self,event):
+        print('send notification')
+        data =json.loads(event.get('value'))
+        self.send(text_data=json.dumps({'paylod':data}))
+        print('send notification')
 

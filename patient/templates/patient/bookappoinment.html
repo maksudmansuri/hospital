@@ -973,6 +973,7 @@
             },
             success: function (id) {
                 console.log(id)
+                
                 alert("OTP have been sent successfully to your phone ");
                 window.location.replace("{% url 'checkout' %}");
             },
@@ -1031,6 +1032,19 @@
        
 
     })
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.23.0/axios.min.js" integrity="sha512-Idr7xVNnMWCsgBQscTSCivBNWWH30oo/tzYORviOCrLKmBaRxRflm2miNhTFJNVmXvCtzgms5nlJF4az2hiGnA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    function createOrder(){
+        axios.post('/patient/bookappoinment',{})
+        .then(res=> {
+            console.log(res)
+            if(res.data.status){
+                window.location.reload();
+            }
+        })
+    }
 </script>
 
 {% endblock custom_js %}

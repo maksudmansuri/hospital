@@ -35,7 +35,7 @@
                                     {% for book in booked %}
                                         <div class="card mb-3">
                                             <div class="card-body d-sm-flex justify-content-between">
-                                                <a href="javascript:void(0);" class="d-flex">
+                                                <a href="{% url 'booking_confirmation' book.id %}" class="d-flex">
                                                     <img class="avatar rounded-circle" src="{{book.hospitalstaffdoctor.hospital.profile_pic}}" alt="">
                                                     <div class="flex-fill ms-3 text-truncate">
                                                         <h6 class="d-flex justify-content-between mb-0"><span class="hospitaldoctor">Dr.{{book.hospitalstaffdoctor}}</span></h6>

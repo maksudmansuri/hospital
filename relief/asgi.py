@@ -6,21 +6,31 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/asgi/
 """
 
 import os
+from channels import consumer
+from patient.consumers import BookingProgress
+from django.conf.urls import url
 
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter,URLRouter
 from django.urls import path
 from chat.consumers import *
+from channels.auth import AuthMiddlewareStack
+
+from patient.consumers import BookingProgress
+
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'relief.settings')
 
 application = get_asgi_application()
 
 ws_patterns = [
-    path('ws/test/' ,TestConsumer.as_asgi() )
+    path('ws/test/' ,TestConsumer.as_asgi() ),
+    path('ws/patient/<booking_id>',BookingProgress.as_asgi())
 ]
 
 application = ProtocolTypeRouter({
-    'websocket': URLRouter(ws_patterns)
+    'websocket' : AuthMiddlewareStack(URLRouter(
+        ws_patterns
+        ))
 })
 

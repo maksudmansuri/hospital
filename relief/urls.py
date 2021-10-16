@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from accounts import views as accViews
 from django.contrib.auth import views as auth_views
 urlpatterns = [
+    path('404',accViews.FourZeroFour , name='404'),
     path('admin/', admin.site.urls),
     path('', accViews.dologin,name='dologin'),
     path('radmin/', include("radmin.urls")),

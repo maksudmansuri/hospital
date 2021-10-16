@@ -455,6 +455,10 @@ def activate(request,uidb64,token):
 #         messages.add_message(request,messages.ERROR,"Mobile Verified Successfuly")
 #     return HttpResponseRedirect(reverse("dologin"))
 
+def FourZeroFour(request):
+    return render(request ,'accounts/404.html',)
+
+
 def logout_view(request):
     logout(request)
     return redirect('dologin')

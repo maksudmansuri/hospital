@@ -10,7 +10,7 @@ from hospital.models import HospitalMedias, HospitalStaffDoctorSchedual, Hospita
 from patient import models
 import patient
 from patient.models import Booking, ForSome, Orders, LabTest, PicturesForMedicine, Temp, Slot, phoneOPTforoders
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from accounts.models import CustomUser, DoctorForHospital, HospitalPhones, Hospitals, Labs, OPDTime, Patients, Pharmacy
@@ -38,6 +38,9 @@ from django.core.mail import EmailMessage, message
 from django.conf import settings
 import ast
 conn = http.client.HTTPConnection("2factor.in")
+from django.utils.decorators import method_decorator
+from django.db.models.signals import post_save
+from channels.layers import get_channel_layer 
 # Create your views here.
 class generateKey:
     @staticmethod
@@ -265,6 +268,19 @@ class ViewBookedAnAppointmentViews(SuccessMessageMixin,ListView):
          
         return render(request,"patient/appointmentlist.html",param)
 
+
+
+def bookingConfirmation(request,booking_id):
+    try:
+        booking = get_object_or_404(Booking,id=booking_id,patient=request.user )
+        context = {'booking' : booking}
+        return render(request , 'patient/confirmation.html', context)
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,"page not found!")
+        return render(request , 'accounts/404.html',)
+
+
+
 class BookAnAppointmentViews(SuccessMessageMixin,View):
     def post(self,request, *args, **kwargs):
         # try:
@@ -288,6 +304,8 @@ class BookAnAppointmentViews(SuccessMessageMixin,View):
             print("booking saved")
             order = Orders(patient=request.user,service=service,amount=service.service_charge,booking_for=1,bookingandlabtest=booking.id,status=1)
             order.save()
+
+
             print("order saved")
             if Temp.objects.get(user=request.user):
                 temp = Temp.objects.get(user=request.user)
@@ -306,9 +324,9 @@ class BookAnAppointmentViews(SuccessMessageMixin,View):
                 # data=data.decode("utf-8")
                 # data=ast.literal_eval(data)
                 # print(data)            
-                return HttpResponse("ok")
+                return JsonResponse({'message' : 'success','status': True})
             else:
-                    return HttpResponse("error")
+                return JsonResponse({'message' : 'Error','status': False})
     # except Exception as e:
     #         messages.add_message(request,messages.ERROR,"Network Issue try after some time")
     #         return HttpResponse(e)
@@ -384,6 +402,7 @@ def send_otp(phone):
         return key
     else:
         return False
+
 
      
 

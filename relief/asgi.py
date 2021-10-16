@@ -24,7 +24,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'relief.settings')
 application = get_asgi_application()
 
 ws_patterns = [
-    path('ws/test/' ,TestConsumer.as_asgi() ),
+    path('ws/notification/<user>' ,NotificationConsumer.as_asgi() ),
     path('ws/patient/<booking_id>',BookingProgress.as_asgi())
 ]
 

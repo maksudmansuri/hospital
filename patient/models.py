@@ -1,9 +1,11 @@
 import json
 import channels
 from channels.layers import get_channel_layer
+from django.contrib import admin
 from django.db.models.fields import IntegerField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.http import request
 import pharmacy
 from django.db.models.base import Model
 import patient
@@ -77,14 +79,16 @@ class Booking(models.Model):
 
     @staticmethod
     def give_booking_details(id):
-        instance = Booking.objects.filter(id=id).first()
+        instance = Booking.objects.filter(id=id).first()        
         data = {}
         data['booking_id'] = instance.id
         data['amount'] = instance.amount
         data['status'] = instance.status
         return data
 
- 
+
+
+
 @receiver(post_save, sender=Booking)
 def booking_status_handler(sender,instance,created, **kwargs):
     if not created:
@@ -100,10 +104,6 @@ def booking_status_handler(sender,instance,created, **kwargs):
                 'value' : json.dumps(data)
             }
         )
-
-
-    
-
 
 class ReBooking(models.Model):
     id                      =           models.AutoField(primary_key=True)

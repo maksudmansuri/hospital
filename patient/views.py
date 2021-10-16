@@ -3,6 +3,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import deletion
 from django.db.models.query_utils import Q
 from pyotp.otp import OTP
+from chat.models import Notification
 from lab.models import Medias
 from django.views.generic.base import View
 # from requests.models import Response
@@ -318,6 +319,8 @@ class BookAnAppointmentViews(SuccessMessageMixin,View):
             if key:
                 obj = phoneOPTforoders(order_id=order,user=request.user,otp=key)
                 obj.save()
+                notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.hospitalstaffdoctor.hospital.admin,booking=booking)
+                notification.save()
                 # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
                 # res = conn.getresponse()
                 # data = res.read()

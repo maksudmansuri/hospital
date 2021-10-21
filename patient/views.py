@@ -274,6 +274,10 @@ class ViewBookedAnAppointmentViews(SuccessMessageMixin,ListView):
 def bookingConfirmation(request,booking_id):
     try:
         booking = get_object_or_404(Booking,id=booking_id,patient=request.user )
+        notifications = Notification.objects.filter(booking=booking)
+        for notification in notifications:
+            notification.user_has_seen =True
+            notification.save()
         context = {'booking' : booking}
         return render(request , 'patient/confirmation.html', context)
     except Exception as e:
@@ -308,7 +312,14 @@ class BookAnAppointmentViews(SuccessMessageMixin,View):
 
 
             print("order saved")
-            if Temp.objects.get(user=request.user):
+            tc = 0
+            try:
+                tc = Temp.objects.filter(user=request.user).count()
+            except:
+                tc = 0
+            print("tc check below")
+            print(tc)
+            if tc > 0:
                 temp = Temp.objects.get(user=request.user)
                 temp.delete()
             temp =  Temp(user=request.user,order_id=order.id)
@@ -442,7 +453,14 @@ class BookAnAppointmentForLABViews(SuccessMessageMixin,View):
             order = Orders(patient=request.user,service=service,booking_for=2,bookingandlabtest=labbooking.id,amount=total,status=1)
             order.save()
             print("order")
-            if Temp.objects.get(user=request.user):
+            tc = 0
+            try:
+                tc = Temp.objects.filter(user=request.user).count()
+            except:
+                tc = 0
+            print("tc check below")
+            print(tc)
+            if tc > 0:
                 temp = Temp.objects.get(user=request.user)
                 temp.delete()
             temp =  Temp(user=request.user,order_id=order.id)
@@ -454,6 +472,8 @@ class BookAnAppointmentForLABViews(SuccessMessageMixin,View):
             if key:
                 obj = phoneOPTforoders(order_id=order,user=request.user,otp=key)
                 obj.save()
+                notification =  Notification(notification_type="1",from_user= request.user,to_user=lab.admin,slot=labbooking)
+                notification.save()
                 # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
                 # res = conn.getresponse()
                 # data = res.read()
@@ -508,6 +528,19 @@ class labDetailsViews(DetailView):
         return render(request,"patient/lab_details.html",param)
 
 
+def slotConfirmation(request,slot_id):
+    try:
+        slot = get_object_or_404(Slot,id=slot_id,patient=request.user )
+        notifications = Notification.objects.filter(slot=slot)
+        for notification in notifications:
+            notification.user_has_seen =True
+            notification.save()
+        context = {'slot' : slot}
+        return render(request , 'patient/slotconfirmation.html', context)
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,"page not found!")
+        return render(request , 'accounts/404.html',)
+
 """
 Pharmacy view and profile
 """
@@ -549,7 +582,14 @@ class UploadPresPhotoViews(SuccessMessageMixin,View):
             order = Orders(patient=request.user,service=service,booking_for=3,bookingandlabtest=picturesformedicine.id,status=1)
             order.save()
             print("order")
-            if Temp.objects.get(user=request.user):
+            tc = 0
+            try:
+                tc = Temp.objects.filter(user=request.user).count()
+            except:
+                tc = 0
+            print("tc check below")
+            print(tc)
+            if tc > 0:
                 temp = Temp.objects.get(user=request.user)
                 temp.delete()
             temp =  Temp(user=request.user,order_id=order.id)
@@ -561,14 +601,30 @@ class UploadPresPhotoViews(SuccessMessageMixin,View):
             if key:
                 obj = phoneOPTforoders(order_id=order,user=request.user,otp=key)
                 obj.save()
+                notification =  Notification(notification_type="1",from_user= request.user,to_user=pharmacy.admin,picturesmedicine=picturesformedicine)
+                notification.save()
                 # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
                 # res = conn.getresponse()
                 # data = res.read()
                 # data=data.decode("utf-8")
                 # data=ast.literal_eval(data)
                 # print(data)
-            return render(request,"patient/confirmation.html")
+            return render(request,"patient/amount_confirmation.html")
             # return HttpResponseRedirect(reverse("pharmacy_details" , kwargs={'id':pharmacyid}))
+
+def picturesformedicineConfirmation(request,booking_id):   
+    try:
+        picturesformedicine = get_object_or_404(PicturesForMedicine,id=booking_id,patient=request.user )
+        notifications = Notification.objects.filter(picturesmedicine=picturesformedicine)
+        for notification in notifications:
+            notification.user_has_seen =True
+            notification.save()
+        print("hello")
+        context = {'picturesformedicine' : picturesformedicine}
+        return render(request , 'patient/pharmacy_confirmation.html', context)
+    except Exception as e:
+        messages.add_message(request,messages.ERROR,"page not found!")
+        return render(request , 'accounts/404.html',)
 
 
 """

@@ -118,14 +118,14 @@
             <form method="post" action="{% url 'updload_invoice_pharmacy' booking.id %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Upload Report </h5>
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Upload Invoice </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                 <div class="deadline-form">                        
                     <div class="row g-3 mb-3">
                         <div class="col-md-12">
-                            <label for="formFileMultiple" class="form-label"> File Upload *</label>
+                            <label for="formFileMultiple" class="form-label"> Invoice Upload *</label>
                             <input class="form-control" type="file" id="store_invoice" name="store_invoice" onchange="Filevalidation()"  required accept="application/pdf,application/msword,
                             application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                         </div>

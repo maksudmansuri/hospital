@@ -1,3 +1,4 @@
+import datetime
 import json
 import channels
 from channels.layers import get_channel_layer
@@ -84,9 +85,23 @@ class Booking(models.Model):
         data['booking_id'] = instance.id
         data['amount'] = instance.amount
         data['status'] = instance.status
+        progress_pecentage = 0
+        if instance.status == "":
+            progress_pecentage = 20
+        if instance.status == "accepted":
+            progress_pecentage = 50
+        if instance.status == "taken":
+            progress_pecentage = 100
+        if instance.status == "rejected":
+            progress_pecentage = 100
+
+        data['progress'] = progress_pecentage
         return data
 
-
+    # def gettime(request):
+    #     instance = Booking.objects.filter(patient=request.user).first()
+    #     lefttime = datetime.datetime.now() - instance.created_at)
+    #     return lefttime
 
 
 @receiver(post_save, sender=Booking)
@@ -97,6 +112,18 @@ def booking_status_handler(sender,instance,created, **kwargs):
         data['booking_id'] = instance.id
         data['amount'] = instance.amount
         data['status'] = instance.status
+
+        progress_pecentage = 0
+        if instance.status == "":
+            progress_pecentage = 20
+        if instance.status == "accepted":
+            progress_pecentage = 50
+        if instance.status == "taken":
+            progress_pecentage = 100
+        if instance.status == "rejected":
+            progress_pecentage = 100
+
+        data['progress'] = progress_pecentage
 
         async_to_sync(channel_layer.group_send)(
             'booking_%s' % instance.id,{
@@ -198,7 +225,56 @@ class Slot(models.Model):
     objects                 =           models.Manager()
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-updated_at']
+
+    @staticmethod
+    def give_slot_details(id):
+        instance = Slot.objects.filter(id=id).first()        
+        data = {}
+        data['booking_id'] = instance.id
+        data['amount'] = instance.amount
+        data['status'] = instance.status
+        progress_pecentage = 0
+        if instance.status == "":
+            progress_pecentage = 20
+        if instance.status == "accepted":
+            progress_pecentage = 50
+        if instance.status == "taken":
+            progress_pecentage = 100
+        if instance.status == "rejected":
+            progress_pecentage = 100
+
+        data['progress'] = progress_pecentage
+        return data
+
+
+@receiver(post_save, sender=Slot)
+def slot_status_handler(sender,instance,created, **kwargs):
+    if not created:
+        channel_layer = get_channel_layer()
+        data = {}
+        data['booking_id'] = instance.id
+        data['amount'] = instance.amount
+        data['status'] = instance.status
+
+        progress_pecentage = 0
+        if instance.status == "":
+            progress_pecentage = 20
+        if instance.status == "accepted":
+            progress_pecentage = 50
+        if instance.status == "taken":
+            progress_pecentage = 100
+        if instance.status == "rejected":
+            progress_pecentage = 100
+
+        data['progress'] = progress_pecentage
+
+        async_to_sync(channel_layer.group_send)(
+            'booking_%s' % instance.id,{
+                'type' : 'slot_status',
+                'value' : json.dumps(data)
+            }
+        )
 
 class PicturesForMedicine(models.Model):
     id                      =           models.AutoField(primary_key=True)
@@ -230,6 +306,67 @@ class PicturesForMedicine(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+    @staticmethod
+    def give_picture_details(id):
+        instance = PicturesForMedicine.objects.filter(id=id).first()        
+        data = {}
+        data['booking_id'] = instance.id
+        data['amount'] = instance.amount
+        data['status'] = instance.status
+        data['amount_paid'] = instance.amount_paid
+        data['invoice'] = str(instance.store_invoice)
+
+        progress_pecentage = 0
+        if instance.status == "":
+            progress_pecentage = 20
+        elif instance.status == "accepted":
+            progress_pecentage = 40
+        elif instance.store_invoice:
+            progress_pecentage = 60
+        elif instance.amount_paid:
+            progress_pecentage = 80
+        elif instance.status == "taken":
+            progress_pecentage = 100
+        elif instance.status == "rejected":
+            progress_pecentage = 100
+
+        data['progress'] = progress_pecentage
+        return data
+
+@receiver(post_save, sender=PicturesForMedicine)
+def pictureformedicine_status_handler(sender,instance,created, **kwargs):
+    if not created:
+        channel_layer = get_channel_layer()
+        data = {}
+        data['booking_id'] = instance.id
+        data['amount'] = instance.amount
+        data['status'] = instance.status
+        data['amount_paid'] = instance.amount_paid
+        data['invoice'] = instance.store_invoice
+
+        progress_pecentage = 0
+        if instance.status == "":
+            progress_pecentage = 20
+        elif instance.status == "accepted":
+            progress_pecentage = 40
+        elif instance.store_invoice:
+            progress_pecentage = 60
+        elif instance.amount_paid:
+            progress_pecentage = 80
+        elif instance.status == "taken":
+            progress_pecentage = 100
+        elif instance.status == "rejected":
+            progress_pecentage = 100
+
+        data['progress'] = progress_pecentage
+
+        async_to_sync(channel_layer.group_send)(
+            'booking_%s' % instance.id,{
+                'type' : 'pictureformedicine_status',
+                'value' : json.dumps(data,default=str)
+            }
+        )
 
 class TreatmentReliefPetient(models.Model):
     id                      =           models.AutoField(primary_key=True)

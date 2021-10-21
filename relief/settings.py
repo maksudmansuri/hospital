@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'channels',
     'chat',
+    'django.contrib.humanize',
 
 ]
 
@@ -80,6 +81,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'chat.context_processors.headernotifications',
+                'chat.context_processors.patientcancel',
                 'patient.context_processors.basket',
                 'radmin.context_processors.Badgeson',
                 'radmin.context_processors.BadgeNewAppointment',

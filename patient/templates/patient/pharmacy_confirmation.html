@@ -1,9 +1,10 @@
+
 {% extends 'patient/base1.html' %}
 {% load static %}
-{% block title %} :: I-Health::  Pharmacy Appointment{% endblock title %}
+{% block title %} :: I-Health::  Pharmacy Medicine Appointment{% endblock title %}
 
 {% block custom_css %}
-{% endblock custom_css %}
+{% endblock custom_css %} 
 
 {% block content %}
 {% comment %} {% if booking.status == "accepted" %}
@@ -20,13 +21,16 @@
 <div>
 <span id="status"></span>
   <h5><strong> Your Appointment has been booked </strong></h5><br>
-  <h6>You are waiting for Hospital Approval </h6>
+  <span id="sub_title"><h6>You are waiting for Pharmacy Approval </h6></span>
 
 </div>
 <h3>Status</h3>
 <span class="badge rounded-pill bg-secondary" id="status_html">Pending</span><br></br>
 <div class="progress">
     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+
+<div id="amount_checkout">
 </div>
 {% endblock content %}
 
@@ -37,18 +41,27 @@
 {% block custom_js %}
 <script> 
 
-  var booking_id = '{{booking.id}}'
-  let socket =  new WebSocket('ws://localhost:8000/ws/patient/' + booking_id)
+  var booking_id = '{{picturesformedicine.id}}'
+  let socket =  new WebSocket('ws://localhost:8000/ws/patientpicture/' + booking_id)
 
  
 
   socket.onopen = function(e){
-    console.log("connected")
+    console.log("connected with slot booking")
   }
   socket.onmessage = function(e){
     console.log(e.data)
     var data = JSON.parse(e.data)
     console.log(data.payload.status)
+    var amount_payable = data.payload.amount
+    var invoice_payable = data.payload.invoice
+    if(data.payload.amount_paid == "0" && invoice_payable != "" ){
+      var amount_status = document.querySelector('#amount_checkout')
+      amount_status.innerHTML = `</br><h5> Pay the amount of Rs.${amount_payable}
+                    <button type="button" class="btn btn-primary"><span></span> Pay Now</button>
+                    <a type="button" class="btn btn-outline-secondary" href="${invoice_payable}" download="" data-bs-placement="top" title="Download your Invoice"><i class="icofont-download text-primary"></i> Download Invoice</a>`
+      
+    }
     increaseProgress(data.payload.status,data.payload.progress)
     }
   socket.onclose = function(e){

@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from chat.models import Notification
 from patient.models import Orders, PicturesForMedicine, phoneOPTforoders
 from django.core.files.storage import FileSystemStorage
 import pharmacy
@@ -127,6 +128,7 @@ class PharmacyUpdateViews(SuccessMessageMixin,UpdateView):
                 filename1=fs.save(profile_pic.name,profile_pic)
                 profile_pic_url=fs.url(filename1)
                 pharmacy.profile_pic=profile_pic_url
+                pharmacy.admin.profile_pic=profile_pic_url
 
             print(registration_proof)
             if registration_proof:
@@ -202,6 +204,8 @@ class ViewPharmacyAppointmentViews(SuccessMessageMixin,View):
             booking.status=status        
             booking.is_applied=is_applied
             booking.save()
+            notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.patient,picturesmedicine=booking)
+            notification.save()
             return HttpResponse("ok")
         except Exception as e:
             return HttpResponse(e)
@@ -231,6 +235,8 @@ def verifypharmacybooking(request):
                 booking.status="taken"        
                 booking.taken_date= showtime
                 booking.save()
+                notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.patient,picturesmedicine=booking)
+                notification.save()
                 messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
             else:
                 messages.add_message(request,messages.ERROR,"OTP does not matched")
@@ -274,16 +280,16 @@ def UpdloadInvoicePharmacy(request,id):
             report_url=fs.url(filename1)
             booking.store_invoice=report_url
             booking.amount=amount
+            booking.status="Amount Uploded"
             booking.desc = desc
             booking.save()
+            notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.patient,picturesmedicine=booking)
+            notification.save()
         messages.add_message(request,messages.SUCCESS,"invoice Successfully Uploaded")
         return HttpResponseRedirect(reverse("view_pharmacy_appointment"))
     except Exception as e:
         messages.add_message(request,messages.SUCCESS,e)
         return HttpResponseRedirect(reverse("view_pharmacy_appointment"))
-
-    
-    pass
 
 class ViewImageViews(ListView):
     pass

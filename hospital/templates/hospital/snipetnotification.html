@@ -1,31 +1,96 @@
   
-  
+  {% load humanize %}
     <div class="dropdown notifications zindex-popover">
         <a class="nav-link dropdown-toggle pulse" href="#" role="button" data-bs-toggle="dropdown">
-            <i class="icofont-alarm fs-5"></i>
+           
+            <i class="icofont-alarm fs-5" id="notification_count1">
+            {% if notification_count > 0 %}{{notification_count}}{% endif %}</i>
+            {% if notification_count > 0 %}
             <span class="pulse-ring"></span>
+            {% endif %}
         </a>
         <div id="NotificationsDiv" class="dropdown-menu rounded-lg shadow border-0 dropdown-animation dropdown-menu-sm-end p-0 m-0">
             <div class="card border-0 w380">
                 <div class="card-header border-0 p-3">
                     <h5 class="mb-0 font-weight-light d-flex justify-content-between">
                         <span>Notifications</span>
-                        <span class="badge text-white">{{notification_count}}</span>
+                        <span class="badge text-white" id="notification_count">{{notification_count}}</span>
                     </h5>
                 </div>
                 <div class="tab-content card-body">
                     <div class="tab-pane fade show active">
                         <ul class="list-unstyled list mb-0" id="linotification">
                         {% for notification in notifications  %}
-                            <li class="py-2 mb-1 border-bottom">
-                                <a href="javascript:void(0);" class="d-flex">
-                                    <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="">
-                                    <div class="flex-fill ms-2">
-                                        <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">{{notification.from_user.patients.fisrt_name}} {{notification.from_user.patients.last_name}}</span> <small>&times;</small></p>
-                                        <span class="">Added Appointment {{notification.booking.applied_time}}-{{notification.booking.applied_date}} <span class="badge bg-success">{% if notification.notification_type == "1" %} Booked{% endif %}</span></span>
-                                    </div>
-                                </a>
-                            </li>
+                            {% if notification.notification_type == 1 %}
+                                {% if notification.to_user.user_type == "2" %}                            
+                                    <li class="py-2 mb-1 border-bottom">
+                                        <a href="javascript:void(0);" class="d-flex">
+                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="">
+                                            <div class="flex-fill ms-2">
+                                                <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">{{notification.from_user.patients.fisrt_name}} {{notification.from_user.patients.last_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
+                                                <span class="">Appointment For {{notification.booking.booking_type}} <span class="badge bg-success">Booked</span></span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if notification.to_user.user_type == "4" %}
+                                    {% if notification.booking %}
+                                    <li class="py-2 mb-1 border-bottom">
+                                        <a href="{% url 'booking_confirmation' notification.booking.id %}" class="d-flex">
+                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="">
+                                            <div class="flex-fill ms-2">
+                                                <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">Hospital {{notification.from_user.hospitals.hopital_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
+                                                <span class="">Appointment No. {{notification.booking.id}} has been  <span class="badge {% if notification.booking.status == "rejected" %}bg-danger {% elif notification.booking.status == "accepted" %}bg-success{% elif notification.booking.status == "taken" %}bg-primary {% endif %} ">{{notification.booking.status}}</span> </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    {% elif notification.slot %}
+                                    <li class="py-2 mb-1 border-bottom">
+                                        <a href="{% url 'lab_confirmation' notification.slot.id %}" class="d-flex">
+                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="">
+                                            <div class="flex-fill ms-2">
+                                                <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold"> Lab {{notification.from_user.labs.lab_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
+                                                <span class="">Appointment No. {{notification.slot.id}} has been  <span class="badge {% if notification.slot.status == "rejected" %}bg-danger {% elif notification.slot.status == "accepted" %}bg-success{% elif notification.slot.status == "taken" %}bg-primary {% endif %} ">{{notification.slot.status}}</span> </span>
+                                            </div>
+                                        </a>
+                                    </li>                                    
+                                    {% elif notification.picturesmedicine %}
+                                    <li class="py-2 mb-1 border-bottom">
+                                        <a href="{% url 'pharmacy_confirmation' notification.picturesmedicine.id %}" class="d-flex">
+                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="">
+                                            <div class="flex-fill ms-2">
+                                                <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">Pharmacy {{notification.from_user.pharmacy.pharmacy_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
+                                                <span class="">Appointment No. {{notification.picturesmedicine.id}} has been  <span class="badge {% if notification.picturesmedicine.status == "rejected" %}bg-danger {% elif notification.picturesmedicine.status == "accepted" or notification.picturesmedicine.status == "Amount Uploded" %}bg-success{% elif notification.picturesmedicine.status == "taken" %}bg-primary {% endif %} ">{{notification.picturesmedicine.status}}</span> </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                {% endif %}
+                                {% if notification.to_user.user_type == "5" %}
+                                    <li class="py-2 mb-1 border-bottom">
+                                        <a href="javascript:void(0);" class="d-flex">
+                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="">
+                                            <div class="flex-fill ms-2">
+                                                <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">{{notification.from_user.patients.fisrt_name}} {{notification.from_user.patients.last_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
+                                                <span class="">Appointment For {{notification.booking.booking_type}} <span class="badge bg-success">Booked</span></span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if notification.to_user.user_type == "6" %}
+                                    <li class="py-2 mb-1 border-bottom">
+                                        <a href="javascript:void(0);" class="d-flex">
+                                            <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="">
+                                            <div class="flex-fill ms-2">
+                                                <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">{{notification.from_user.patients.fisrt_name}} {{notification.from_user.patients.last_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
+                                                <span class="">Appointment For {{notification.booking.booking_type}} <span class="badge bg-success">Booked</span></span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                            
+                            
                         {% endfor %}
                          {% comment %} <li class="py-2 mb-1 border-bottom">
                                 <a href="javascript:void(0);" class="d-flex">

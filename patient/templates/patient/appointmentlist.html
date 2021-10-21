@@ -104,7 +104,7 @@
                                     {% for labbooks in booking_labtest_list %}
                                         <div class="card mb-3">
                                             <div class="card-body d-sm-flex justify-content-between">
-                                                <a href="javascript:void(0);" class="d-flex">
+                                                <a href="{% url 'lab_confirmation' labbooks.labbook.id %}" class="d-flex">
                                                     <img class="avatar rounded-circle" src="{{labbooks.labbook.lab.profile_pic}}" alt="">
                                                     <div class="flex-fill ms-3 text-truncate">
                                                         <h6 class="d-flex justify-content-between mb-0"><span>{{labbooks.labbook.lab}}</span></h6>
@@ -179,7 +179,7 @@
                                     {% for book in phamacybooking %}
                                         <div class="card mb-3">
                                             <div class="card-body d-sm-flex justify-content-between">
-                                                <a href="javascript:void(0);" class="d-flex">
+                                                <a href="{% url 'pharmacy_confirmation' book.id %}" class="d-flex">
                                                     <img class="avatar rounded-circle" src="{{book.pharmacy.profile_pic}}" alt="">
                                                     <div class="flex-fill ms-3 text-truncate">
                                                         <h6 class="d-flex justify-content-between mb-0"><span>{{book.pharmacy}}</span></h6>
@@ -205,7 +205,7 @@
                                                     {% if book.status == "accepted" and book.amount_paid == False and book.store_invoice == "" %}
                                                         <h6><span class="badge bg-primary">Accepted Your Appointment on:</span> 
                                                         <span>{{book.accepted_date}}</span></h6>
-                                                    {% elif book.status == "accepted" and book.store_invoice and book.amount_paid == False %}
+                                                    {% elif book.status == "Amount Uploded" and book.store_invoice and book.amount_paid == False %}
                                                         <h6><span class="badge bg-primary">Need to pay  &#x20B9;{{book.amount}} :</span> 
                                                     {% elif book.status == "rejected" %}
                                                     <h6><span class="badge bg-danger">Rejected on:</span></h3>

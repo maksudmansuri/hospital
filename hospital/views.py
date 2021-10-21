@@ -1,3 +1,4 @@
+from chat.models import Notification
 import patient
 from patient.models import Booking, LabTest, Orders, Slot, TreatmentReliefPetient, patientFile, phoneOPTforoders
 from django.db.models.query_utils import Q
@@ -150,6 +151,7 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
                 filename1=fs.save(profile_pic.name,profile_pic)
                 profile_pic_url=fs.url(filename1)
                 hospital.profile_pic=profile_pic_url
+                hospital.admin.profile_pic=profile_pic_url
 
             print(registration_proof)
             if registration_proof:
@@ -157,6 +159,7 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
                 filename=fs.save(registration_proof.name,registration_proof)
                 registration_proof_url=fs.url(filename)
                 hospital.registration_proof=registration_proof_url
+                
             hospital.establishment_year=establishment_year
             hospital.alternate_mobile=alternate_mobile
             hospital.website=website
@@ -172,6 +175,7 @@ class hospitalUpdateViews(SuccessMessageMixin,UpdateView):
             hospital.admin.first_name=first_name
             hospital.admin.last_name=last_name
             hospital.admin.name_title=name_title       
+            
             hospital.admin.save()
             
             k=0
@@ -1075,7 +1079,11 @@ class manageAppointmentView(SuccessMessageMixin,View):
             booking.is_taken=is_taken
             booking.status=status        
             booking.is_applied=is_applied
-            booking.save()
+            booking.save() 
+            print(booking)
+            notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.patient,booking=booking)
+            notification.save()
+            print(notification)
             return HttpResponse("ok")
         except Exception as e:
             return HttpResponse(e)
@@ -1106,8 +1114,13 @@ def verifybooking(request):
                 booking.status="taken"        
                 booking.taken_date= showtime
                 booking.save()
+                
                 treatmentreliefpetient = TreatmentReliefPetient(patient=booking.patient.patients,booking=booking,status="CHECKUPED",amount_paid=booking.service.service_charge,is_active=True)
                 treatmentreliefpetient.save()
+
+                notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.patient,booking=booking)
+                notification.save()
+                print(notification)
                 messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
             else:
                 messages.add_message(request,messages.ERROR,"OTP does not matched")

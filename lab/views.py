@@ -1,4 +1,5 @@
 
+from chat.models import Notification
 from patient.models import LabTest, Orders, Slot, phoneOPTforoders
 from lab.models import Medias
 from hospital.models import ServiceAndCharges
@@ -126,6 +127,7 @@ class LabUpdateViews(SuccessMessageMixin,UpdateView):
                 filename1=fs.save(profile_pic.name,profile_pic)
                 profile_pic_url=fs.url(filename1)
                 lab.profile_pic=profile_pic_url
+                lab.admin.profile_pic=profile_pic_url
 
             print(registration_proof)
             if registration_proof:
@@ -270,11 +272,6 @@ class ViewAppointmentViews(SuccessMessageMixin,View):
             if status == 'accepted':
                 is_accepted = True
                 booking.accepted_date= showtime
-            elif status == 'taken':
-                is_taken= True
-                booking.taken_date= showtime
-                # treatmentreliefpetient = TreatmentReliefPetient(patient=booking.patient.patients,booking=booking,status="CHECKUPED",amount_paid=booking.service.service_charge,is_active=True)
-                # treatmentreliefpetient.save()
             elif status == 'rejected':
                 is_rejected = True
                 booking.rejected_date= showtime
@@ -286,6 +283,8 @@ class ViewAppointmentViews(SuccessMessageMixin,View):
             booking.status=status        
             booking.is_applied=is_applied
             booking.save()
+            notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.patient,slot=booking)
+            notification.save()
             print(booking)
             return HttpResponse("ok")
         except Exception as e:
@@ -316,6 +315,8 @@ def verifylabtestbooking(request):
                 booking.status="taken"        
                 booking.taken_date= showtime
                 booking.save()
+                notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.patient,slot=booking)
+                notification.save()
                 messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
             else:
                 messages.add_message(request,messages.ERROR,"OTP does not matched")

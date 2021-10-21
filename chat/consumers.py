@@ -15,9 +15,6 @@ class NotificationConsumer(WebsocketConsumer):
             self.channel_name,
         )
         self.accept()
-        self.send(text_data=json.dumps({
-            "payload" : "good connected from receiver"
-        }))
         # notifications = Notification.give_notification_details(self.room_name)
         # print(notifications)
         # self.send(text_data=json.dumps({
@@ -45,7 +42,8 @@ class NotificationConsumer(WebsocketConsumer):
         print('send notification')
         data =json.loads(event.get('value'))
         print(data)
-        self.send(text_data=json.dumps({'payload':data}))
+        count = Notification.objects.filter(to_user = self.room_name,user_has_seen=False).count()
+        self.send(text_data=json.dumps({'payload':data,'count':count}))
         print('send notification')
 
     

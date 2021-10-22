@@ -199,15 +199,17 @@
                             </div>                       
                             <div class="col-sm-6">
                                 <label  class="form-label">Room Type *</label>
-                                <select class="form-select" aria-label="Default select example" name="room">
+                                <select class="form-select" aria-label="Default select example" name="room" required>
+                                <option value="">None</option>
                                 {% for price in prices %}
-                                    <option value="{{price.id}}">{{price}} -INR{{price.rooms_price}}</option>
+                                    <option value="{{price.id}}">{{price}} -INR {{price.rooms_price}}</option>
                                 {% endfor %}
                                 </select>
                             </div>
                             <div class="col-sm-6">
                                 <label  class="form-label">Department *</label>
-                                <select class="form-select" aria-label="Default select example" name="department">
+                                <select class="form-select" aria-label="Default select example" name="department" required>
+                                <option value="">None</option>
                                 {% for department in departments %}
                                     <option value="{{department.id}}">{{department}}</option>
                                 {% endfor %}
@@ -263,7 +265,8 @@
                             </div>                       
                             <div class="col-sm-6">
                                 <label  class="form-label">Room Type *</label>
-                                <select class="form-select" aria-label="Default select example" name="room" value="{{room.room}}">
+                                <select class="form-select" aria-label="Default select example" name="room" value="{{room.room}}" required>
+                                <option value="">None</option>
                                 {% for price in prices %}
                                     <option value="{{price.id}}">{{price}} -INR{{price.rooms_price}}</option>
                                 {% endfor %}
@@ -271,7 +274,8 @@
                             </div>
                             <div class="col-sm-6">
                                 <label  class="form-label">Department *</label>
-                                <select class="form-select" aria-label="Default select example" name="department">
+                                <select class="form-select" aria-label="Default select example" name="department" required>
+                                <option value="">None</option>
                                 {% for department in departments %}
                                     <option {% if room.department == department %}selected{% endif %} value="{{department.id}}">{{department}}</option>
                                 {% endfor %}
@@ -313,7 +317,6 @@
     $(".submit_btn").click(function(){
         var form=new FormData($("#roomadd"));
        // form.append("long_desc",tinyMCE.activeEditor.getContent());
-
         //Ajax code
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange=function(){

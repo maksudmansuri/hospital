@@ -402,6 +402,9 @@ class manageRoomclassView(SuccessMessageMixin,CreateView):
         room_no = request.POST.get("room_no")
         room = request.POST.get("room")
         department = request.POST.get("department")
+        if department == "":
+            messages.add_message(request,messages.ERROR,"Department not selected")
+            return HttpResponseRedirect(reverse("manage_room"))
         print(room)
         is_active = request.POST.get("is_active")
         active = False

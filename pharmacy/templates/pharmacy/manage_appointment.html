@@ -22,8 +22,11 @@
             <div class="border-0 mb-4">
                 <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
                     <h3 class="fw-bold mb-0">All Appointment</h3>
+                      <div class="col-auto d-flex w-sm-100">
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;" onclick = "refesh()"><i class="icofont-refresh"></i></button>
+                    </div> 
                     {% comment %} <div class="col-auto d-flex w-sm-100">
-                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " data-bs-toggle="modal" data-bs-target="#depadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Room</button>
+                        <button type="button" class="btn btn-primary btn-set-task w-sm-100 " data-bs-toggle="modal" data-bs-target="#depadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Room</button> 
                         <button type="button" class="btn btn-primary btn-set-task w-sm-100 " style="margin-left: 20px;" data-bs-toggle="modal" data-bs-target="#priceadd"><i class="icofont-plus-circle me-2 fs-6"></i>Add Price</button>
                     </div> {% endcomment %}
                    
@@ -73,9 +76,9 @@
                                         </select>
                                         {% elif  book.status == "accepted" and book.amount == 0 and book.store_invoice == ""%}
                                             <span class="badge rounded-pill bg-secondary">Pending Amount and Invoice</span>
-                                        {% elif  book.status == "accepted" and book.amount != 0 and book.store_invoice and book.amount_paid == False %}
+                                        {% elif  book.status == "Amount Uploded" and book.amount != 0 and book.store_invoice and book.amount_paid == False %}
                                             <span class="badge rounded-pill bg-secondary">Bill Pending</span>
-                                        {% elif  book.amount_paid and book.status == "accepted"%}
+                                        {% elif  book.amount_paid and book.status == "Amount Paid"%}
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter1{{book.id}}" data-bs-placement="top" title="Paid " >Enter OTP</button>
                                         {% elif book.status == "taken" and book.store_invoice and book.amount_paid %}
                                             <button type="button" class="btn btn-dark">Delivered</button>
@@ -259,7 +262,19 @@
         }
     }
 </script>
+<script>
 
-// Open the Modal
+$(document).ready(function () {
+    setInterval(function () {
+        
+    }, 3000);
+});
+function refesh(){
+  //  $("#mydiv").load(location.href + " #mydiv");
+  //  $( "#mydiv" ).load(window.location.href);
+    location.reload();
+}
+</script>
+
 
 {% endblock custom_js %}

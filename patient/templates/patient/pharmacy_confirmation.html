@@ -4,6 +4,12 @@
 {% block title %} :: I-Health::  Pharmacy Medicine Appointment{% endblock title %}
 
 {% block custom_css %}
+<style>
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+</style>
 {% endblock custom_css %} 
 
 {% block content %}
@@ -30,7 +36,12 @@
     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 00%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
 </div>
 
-<div id="amount_checkout">
+<div>
+ 
+  </br><h5><span  id="amount_status">Invoice Not Uploaded yet</span><span id="amount_payable"></span>
+      <a type="button" class="btn btn-primary disabled" href="{% url 'payformedicine' picturesformedicine.id %}" id="payment_status">Pay Now</a>
+      {% if picturesformedicine.store_invoice %}
+      <a type="button" class="btn btn-outline-secondary" href="{{picturesformedicine.store_invoice}}" download="" data-bs-placement="top" title="Download your Invoice"><i class="icofont-download text-primary"></i> Download Invoice</a>{% endif %}
 </div>
 {% endblock content %}
 
@@ -56,11 +67,19 @@
     var amount_payable = data.payload.amount
     var invoice_payable = data.payload.invoice
     if(data.payload.amount_paid == "0" && invoice_payable != "" ){
-      var amount_status = document.querySelector('#amount_checkout')
-      amount_status.innerHTML = `</br><h5> Pay the amount of Rs.${amount_payable}
-                    <button type="button" class="btn btn-primary"><span></span> Pay Now</button>
-                    <a type="button" class="btn btn-outline-secondary" href="${invoice_payable}" download="" data-bs-placement="top" title="Download your Invoice"><i class="icofont-download text-primary"></i> Download Invoice</a>`
-      
+      var amount_payable_js = document.querySelector('#amount_payable')
+      amount_payable_js.innerHTML = amount_payable
+      var amount_status_js = document.querySelector('#amount_status')
+      amount_status_js.innerHTML = "You are expected to pay : "
+      var element = document.getElementById("payment_status");
+      element.classList.remove("disabled");
+            
+    }
+    if(data.payload.amount_paid == "1" && invoice_payable != "" ){
+      var amount_status_js = document.querySelector('#amount_status')
+      amount_status_js.innerHTML = "Your payment has been made take your order now"
+      var element = document.getElementById("payment_status");
+      element.classList.add("disabled");
     }
     increaseProgress(data.payload.status,data.payload.progress)
     }

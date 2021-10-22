@@ -322,9 +322,9 @@ class PicturesForMedicine(models.Model):
             progress_pecentage = 20
         elif instance.status == "accepted":
             progress_pecentage = 40
-        elif instance.store_invoice:
+        elif instance.status == "Amount Uploded":
             progress_pecentage = 60
-        elif instance.amount_paid:
+        elif instance.status == "Amount Paid":
             progress_pecentage = 80
         elif instance.status == "taken":
             progress_pecentage = 100

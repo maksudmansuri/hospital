@@ -274,7 +274,7 @@ class ViewBookedAnAppointmentViews(SuccessMessageMixin,ListView):
 def bookingConfirmation(request,booking_id):
     try:
         booking = get_object_or_404(Booking,id=booking_id,patient=request.user )
-        notifications = Notification.objects.filter(booking=booking)
+        notifications = Notification.objects.filter(booking=booking,to_user=request.user)
         for notification in notifications:
             notification.user_has_seen =True
             notification.save()
@@ -302,9 +302,9 @@ class BookAnAppointmentViews(SuccessMessageMixin,View):
             print(doctorid,hospitalstaffdoctor,serviceid,service,date,time)
             if someone:
                 forsome = get_object_or_404(ForSome,id=someone)
-                booking = Booking(patient = request.user,for_whom=forsome,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge)
+                booking = Booking(patient = request.user,for_whom=forsome,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge,status="booked")
             else:
-                booking = Booking(patient = request.user,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge)
+                booking = Booking(patient = request.user,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge,status="booked")
             booking.save()
             print("booking saved")
             order = Orders(patient=request.user,service=service,amount=service.service_charge,booking_for=1,bookingandlabtest=booking.id,status=1)
@@ -405,6 +405,7 @@ class BookAnAppointmentViews(SuccessMessageMixin,View):
 def CancelBookedAnAppointmentViews(request,id):
     booked = Booking.objects.get(id=id)
     booked.is_cancelled = True
+    booked.Status = "cancelled"
     booked.save()
     messages.add_message(request,messages.SUCCESS,"Cancelled Successfully !")
     return HttpResponseRedirect(reverse('viewbookedanappointment'))
@@ -436,9 +437,9 @@ class BookAnAppointmentForLABViews(SuccessMessageMixin,View):
             print(serviceid_list,date,labid,lab,time)
             if someone:
                 forsome = get_object_or_404(ForSome,id=someone)
-                labbooking = Slot(patient = request.user,for_whom=forsome,lab=lab,applied_date=date,applied_time=time,is_applied=True,is_active=True) 
+                labbooking = Slot(patient = request.user,for_whom=forsome,lab=lab,applied_date=date,applied_time=time,is_applied=True,is_active=True,status="booked") 
             else:   
-                labbooking = Slot(patient = request.user,lab=lab,applied_date=date,applied_time=time,is_applied=True,is_active=True) 
+                labbooking = Slot(patient = request.user,lab=lab,applied_date=date,applied_time=time,is_applied=True,is_active=True,status="booked") 
             labbooking.save()
             total = 0
                         
@@ -499,6 +500,7 @@ def ReportSendToDoctorViews(request,id):
 def CancelLabBookedAnAppointmentViews(request,id):
     booked = Slot.objects.get(id=id)
     booked.is_cancelled = True
+    booked.status = "cancelled"
     booked.save()
     messages.add_message(request,messages.SUCCESS,"Cancelled Successfully !")
     return HttpResponseRedirect(reverse('viewbookedanappointment'))
@@ -531,7 +533,7 @@ class labDetailsViews(DetailView):
 def slotConfirmation(request,slot_id):
     try:
         slot = get_object_or_404(Slot,id=slot_id,patient=request.user )
-        notifications = Notification.objects.filter(slot=slot)
+        notifications = Notification.objects.filter(slot=slot,to_user=request.user)
         for notification in notifications:
             notification.user_has_seen =True
             notification.save()
@@ -575,11 +577,11 @@ class UploadPresPhotoViews(SuccessMessageMixin,View):
             pharmacy = get_object_or_404(Pharmacy,id=pharmacyid)
             time = request.POST.get('time') 
             print(time,date,pharmacy,pharmacyid,prescription)
-            picturesformedicine = PicturesForMedicine(patient = request.user,pharmacy=pharmacy,prescription=profile_pic_url,applied_date=date,applied_time=time,is_applied=True,is_active=True,add_note=add_note) 
+            picturesformedicine = PicturesForMedicine(patient = request.user,pharmacy=pharmacy,prescription=profile_pic_url,applied_date=date,applied_time=time,is_applied=True,is_active=True,add_note=add_note,status="booked") 
             picturesformedicine.save()
             service = get_object_or_404(ServiceAndCharges,id=13)
             print("booking saved")
-            order = Orders(patient=request.user,service=service,booking_for=3,bookingandlabtest=picturesformedicine.id,status=1)
+            order = Orders(patient=request.user,service=service,booking_for=3,bookingandlabtest=picturesformedicine.id,status=1,)
             order.save()
             print("order")
             tc = 0
@@ -613,19 +615,26 @@ class UploadPresPhotoViews(SuccessMessageMixin,View):
             # return HttpResponseRedirect(reverse("pharmacy_details" , kwargs={'id':pharmacyid}))
 
 def picturesformedicineConfirmation(request,booking_id):   
-    try:
-        picturesformedicine = get_object_or_404(PicturesForMedicine,id=booking_id,patient=request.user )
-        notifications = Notification.objects.filter(picturesmedicine=picturesformedicine)
-        for notification in notifications:
-            notification.user_has_seen =True
-            notification.save()
-        print("hello")
-        context = {'picturesformedicine' : picturesformedicine}
-        return render(request , 'patient/pharmacy_confirmation.html', context)
-    except Exception as e:
-        messages.add_message(request,messages.ERROR,"page not found!")
-        return render(request , 'accounts/404.html',)
+    # try:
+    picturesformedicine = get_object_or_404(PicturesForMedicine,id=booking_id,patient=request.user )
+    notifications = Notification.objects.filter(picturesmedicine=picturesformedicine,to_user=request.user)
+    for notification in notifications:
+        notification.user_has_seen =True
+        notification.save()
+    print("hello i m in view of confirmation")
+    context = {'picturesformedicine' : picturesformedicine}
+    return render(request , 'patient/pharmacy_confirmation.html', context)
+    # except Exception as e:
+    #     messages.add_message(request,messages.ERROR,"page not found!")
+    #     return render(request , 'accounts/404.html',)
 
+def CancelPictureForMedicineViews(request,id):
+    booked = PicturesForMedicine.objects.get(id=id)
+    booked.is_cancelled = True
+    booked.Status = "cancelled"
+    booked.save()
+    messages.add_message(request,messages.SUCCESS,"Cancelled Successfully !")
+    return HttpResponseRedirect(reverse('viewbookedanappointment'))
 
 """
 Add Someone As patient and Update  and delete
@@ -719,8 +728,7 @@ def AddSomeoneAsPatient(request):
             messages.add_message(request,messages.SUCCESS,"Successfully Deleted")
         else:
             return HttpResponse("on other side")
-
-    
+   
 """
 Checkout page
 """
@@ -739,13 +747,25 @@ def CheckoutViews(request):
         param ={'order':order,'booking':booking,'services':services}
     if book_for == "3":
         booking = get_object_or_404(PicturesForMedicine,id=order.bookingandlabtest)
+        booking.amount_paid = True
         param ={'order':order,'booking':booking}
+    return render(request,"patient/checkout.html",param)
+
+def PayForMedicine(request,id):
+    booking = get_object_or_404(PicturesForMedicine,id=id)
+    booking.amount_paid = True
+    booking.status = "Amount Paid"
+    booking.save()
+    notification =  Notification(notification_type="1",from_user= request.user,to_user=booking.pharmacy.admin,picturesmedicine=booking)
+    notification.save()
+    order = get_object_or_404(Orders,bookingandlabtest=booking.id,booking_for="3")
+    order.status=1
+    order.save()
+    param ={'order':order,'booking':booking}
     return render(request,"patient/checkout.html",param)
 
 def PaytmProcessViews(request):
     return HttpResponse("onpayment page")
-
-
 
 """
 Paytm handler
@@ -770,14 +790,11 @@ def handlerequest(request):
     #     print("Checksum Mismatched")
     pass
 
-
 """
 List of doctor or hospital for online
 """
 def ListofVirtualDoctor(reuqest):
     return render(reuqest,"patient/virtual.html")
-
-
 
 """
 Home visit doctor list

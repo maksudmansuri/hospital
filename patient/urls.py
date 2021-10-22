@@ -12,6 +12,7 @@ urlpatterns = [
     path('viewbookedanappointment', views.ViewBookedAnAppointmentViews.as_view(), name="viewbookedanappointment"),
     path('cancelbookedanappointment/<id>', views.CancelBookedAnAppointmentViews, name="cancelbookedanappointment"),
     path('cancellabbookedanappointment/<id>', views.CancelLabBookedAnAppointmentViews, name="cancellabbookedanappointment"),
+    path('CancelPictureForMedicineViews/<id>', views.CancelPictureForMedicineViews, name="CancelPictureForMedicineViews"),
     
     # Laboratory urls
     path('laboratory_list', views.LabListViews.as_view(), name="laboratory_list"),
@@ -24,6 +25,7 @@ urlpatterns = [
 
     #checkout for lab and hospital combin 
     path('checkout', views.CheckoutViews, name="checkout"),
+    path('payformedicine/<id>', views.PayForMedicine, name="payformedicine"),
     path('paytmprocess', views.PaytmProcessViews, name="paytmprocess"),
 
     path('handlerequest', views.handlerequest, name="handlerequest"),

@@ -80,11 +80,11 @@
                                 {% endif %}
                                 {% if notification.to_user.user_type == "6" %}
                                     <li class="py-2 mb-1 border-bottom">
-                                        <a href="javascript:void(0);" class="d-flex">
+                                        <a href="{% url 'view_pharmacy_appointment' %}" class="d-flex">
                                             <img class="avatar rounded-circle" src="{{notification.from_user.profile_pic}}" alt="">
                                             <div class="flex-fill ms-2">
                                                 <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">{{notification.from_user.patients.fisrt_name}} {{notification.from_user.patients.last_name}}</span> <small>{{notification.updated_at|naturaltime}}</small></p>
-                                                <span class="">Appointment No. {{notification.picturesmedicine.id}} has been  <span class="badge {% if notification.picturesmedicine.status == "rejected" %}bg-danger {% elif notification.picturesmedicine.status == "accepted" %}bg-success{% elif notification.picturesmedicine.status == "taken" or notification.picturesmedicine.status == "Amount Uploded" or notification.picturesmedicine.status == "Amount Paid" %}bg-primary {% endif %} ">{{notification.picturesmedicine.status}}</span> </span>
+                                                <span class="">Appointment No. {{notification.picturesmedicine.id}} has been  <span class="badge {% if notification.picturesmedicine.status == "rejected" %}bg-danger {% elif notification.picturesmedicine.status == "accepted" or notification.picturesmedicine.status == "booked" %}bg-success{% elif notification.picturesmedicine.status == "taken" or notification.picturesmedicine.status == "Amount Uploded" or notification.picturesmedicine.status == "Amount Paid" %}bg-primary {% endif %} ">{{notification.picturesmedicine.status}}</span> </span>
                                             </div>
                                         </a>
                                     </li>

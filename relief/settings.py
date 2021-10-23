@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'radmin',
     'hospital',
-    'accounts',
+    'accounts.apps.AccoumtsConfig',
     'lab',
     'pharmacy',
     'patient',
@@ -96,18 +96,18 @@ SITE_ID = 1
 TIME_INPUT_FORMATS = ('%H:%M',)
 
 REST_FRAMWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
+    'DEFAULT_PERMISSION_CLASSES': [
         # 'rest_framework.permissions.IsAuthenticatedOrReadOnly'
-        'rest_framework.permissions.IsAuthenticated'
+        'rest_framework.permissions.IsAuthenticated',
         #  'rest_framework.permissions.IsAdminUser'
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'knox.auth.TokenAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         'accounts.EmailBackEnd.EmailBackEnd',
         # 'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
-    ),
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE':10,
     # 'REST_SESSION_LOGIN' : False

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from accounts.models import CustomUser,HospitalDoctors, HospitalPhones, AdminHOD, DoctorForHospital ,Hospitals
+from accounts.models import CustomUser,HospitalDoctors, HospitalPhones, AdminHOD, DoctorForHospital ,Hospitals, Patients
 # Register your models here.
 
 class AuthorAdmin(admin.ModelAdmin):
@@ -7,6 +7,7 @@ class AuthorAdmin(admin.ModelAdmin):
 
 admin.site.register(CustomUser, AuthorAdmin)
 admin.site.register(HospitalDoctors)
+admin.site.register(Patients)
 admin.site.register(AdminHOD)
 admin.site.register(HospitalPhones)
 admin.site.register(DoctorForHospital)

@@ -25,8 +25,7 @@ class MyAccountManager(BaseUserManager):
 
         user = self.model(
                 email=self.normalize_email(email),
-                username=username,                
-               
+                username=username,
             )
         user.is_active= False
         user.set_password(password)
@@ -35,12 +34,12 @@ class MyAccountManager(BaseUserManager):
 
         return user
 
+
     def create_superuser(self, email, username, password,**extra_fields):
         user = self.create_user(
                 email=self.normalize_email(email),
                 password=password,
-                username=username,                           
-                
+                username=username,  
             )
         
         # phone = "7801925101"
@@ -337,7 +336,24 @@ def create_user_profile(sender,instance,created,**kwargs):
             HospitalDoctors.objects.create(admin=instance)
             OPDTime.objects.create(user=instance)
         if instance.user_type==4:
-            Patients.objects.create(admin=instance)            
+            Patients.objects.get_or_create(admin=instance)
+        if instance.user_type==5:
+            Labs.objects.create(admin=instance)
+            OPDTime.objects.create(user=instance)
+        if instance.user_type==6:
+            Pharmacy.objects.create(admin=instance)
+            OPDTime.objects.create(user=instance)
+    else:
+        if instance.user_type==1:
+            AdminHOD.objects.create(admin=instance)
+        if instance.user_type==2:
+            Hospitals.objects.create(admin=instance)
+            OPDTime.objects.create(user=instance)
+        if instance.user_type==3:
+            HospitalDoctors.objects.create(admin=instance)
+            OPDTime.objects.create(user=instance)
+        if instance.user_type==4:
+            Patients.objects.get_or_create(admin=instance)
         if instance.user_type==5:
             Labs.objects.create(admin=instance)
             OPDTime.objects.create(user=instance)

@@ -31,6 +31,10 @@ urlpatterns = [
     path('patient/', include("patient.urls")),
     path('lab/', include("lab.urls")),
     path('pharmacy/', include("pharmacy.urls")),
+
+    #Api urls
+    path('api/accounts/',include("accounts.api.urls")),
+    
     # path('hospital_profile',profileview.hospitalProfileViews.as_view(),name="hospital_profile"),
 
     #password reset and change

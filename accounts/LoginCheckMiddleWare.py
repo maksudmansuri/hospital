@@ -118,7 +118,7 @@ class LoginCheckMiddleWare(MiddlewareMixin):
                     # return RedirectView.as_view(url=reverse_lazy('admin:index'))
                 # return reverse('admin_login')
         else: 
-            if request.path == reverse("dologin") or request.path == reverse("Authorizedsingup") or modulename == "front.views" or modulename == "accounts.views" or modulename == "django.views.static" or modulename == "django.contrib.auth.views" or modulename == "chat.views" or modulename == "accounts.api.views" or modulename == "front.api.views" or modulename == "allauth.account.views" or modulename == " allauth.socialaccount.views" :
+            if request.path == reverse("dologin") or request.path == reverse("Authorizedsingup") or modulename == "front.views" or modulename == "accounts.views" or modulename == "django.views.static" or modulename == "django.contrib.auth.views" or modulename == "chat.views" or modulename == "accounts.api.views" or modulename == "front.api.views" or modulename == "allauth.account.views" or modulename == " allauth.socialaccount.views" or modulename == "patient.api.views" :
                 pass
             else:
                 return HttpResponseRedirect(reverse("dologin")) or modulename == "allauth.account.views" or modulename == " allauth.socialaccount.views" or request.path == reverse("saccount") or modulename == "allauth.socialaccount.providers.oauth2.views"

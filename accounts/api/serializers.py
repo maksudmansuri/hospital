@@ -276,4 +276,3 @@ class DProfilePropertiesSerializer(serializers.ModelSerializer):
 # 	old_password 				= serializers.CharField(required=True)
 # 	new_password 				= serializers.CharField(required=True)
 # 	confirm_new_password 		= serializers.CharField(required=True)
-

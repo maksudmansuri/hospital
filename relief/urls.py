@@ -34,6 +34,7 @@ urlpatterns = [
 
     #Api urls
     path('api/accounts/',include("accounts.api.urls")),
+    path('api/patient/',include("patient.api.urls")),
     
     # path('hospital_profile',profileview.hospitalProfileViews.as_view(),name="hospital_profile"),
 

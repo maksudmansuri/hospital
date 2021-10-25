@@ -466,7 +466,7 @@ class LabTest(models.Model):
     id                      =           models.AutoField(primary_key=True)
     lab                     =           models.ForeignKey(Labs, on_delete=models.CASCADE)
     service                 =           models.ForeignKey(ServiceAndCharges, on_delete=models.CASCADE)
-    slot                    =           models.ForeignKey(Slot, on_delete=models.CASCADE)
+    slot                    =           models.ForeignKey(Slot,related_name="labtest" ,on_delete=models.CASCADE)
     is_active               =           models.BooleanField(default=False)
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
@@ -483,10 +483,11 @@ class Orders(models.Model):
     BOOKING_FOR_CHOICE      =           ((1,"Hospital"),(2,"Laboratory"),(3,"Pharmacy"))
     booking_for             =           models.CharField(max_length=256,default="",blank=True,null=True,choices=BOOKING_FOR_CHOICE)
     amount                  =           models.FloatField(default=0,blank=True,null=True)
-    STATUS_TYPE_CHOICE      =           ((1,"Processed"),(2,"Successed"),(3,"Failed"),(4,"Cancelled"),(5,"Refunded"))
+    STATUS_TYPE_CHOICE      =           (("Processed","Processed"),("Successed","Successed"),("Failed","Failed"),("Cancelled","Cancelled"),("Refunded","Refunded"))
     status                  =           models.CharField(default="",blank=True,null=True,max_length=64,choices=STATUS_TYPE_CHOICE)    
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
+    is_cancelled            =           models.BooleanField(default=False)
     is_booking_Verified     =           models.BooleanField(default=False)
     is_taken                =           models.BooleanField(default=False)
     counter                 =           models.IntegerField(default=0, blank=False)
@@ -494,7 +495,7 @@ class Orders(models.Model):
     objects                 =           models.Manager()
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-updated_at']
 
 class phoneOPTforoders(models.Model):
     id =  models.AutoField(primary_key=True)

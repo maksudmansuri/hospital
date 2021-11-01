@@ -43,9 +43,9 @@ class ValidatePhoneSendOTP(APIView):
     permission_classes = []
     def post(self, request, *args, **kwargs):
         phone_number = request.data.get('phone')
-        password = request.data.get('password', False)
-        username = request.data.get('username', False)
-        email    = request.data.get('email', False)
+        # password = request.data.get('password', False)
+        # username = request.data.get('username', False)
+        # email    = request.data.get('email', False)
         print(phone_number)
         # permission_classes = [IsAuthenticated]
         if phone_number:

@@ -50,16 +50,16 @@ class ValidatePhoneSendOTP(APIView):
         # permission_classes = [IsAuthenticated]
         if phone_number:
             phone = str(phone_number)
-            user = CustomUser.objects.filter(phone__iexact = phone)
-            if user.exists():
-                return Response({
-                    'status' : False,
-                    'detail' : 'Phone number already exists'
-                })
+            user = CustomUser.objects.filter(phone__iexact = phone)			
+            # if user.exists():
+            #     return Response({
+            #         'status' : False,
+            #         'detail' : 'Phone number already exists'
+            #     })
 
-            else:
-                key = send_otp(phone)
-                if key:
+            # else:
+            key = send_otp(phone)
+            if key:
                     old = PhoneOTP.objects.filter(phone__iexact = phone)
                     if old.exists():
                         old = old.first()
@@ -101,13 +101,10 @@ class ValidatePhoneSendOTP(APIView):
                                 }) 
                    
                     else:
-                        print(phone,key,email,username,password)
+                        print(phone,key)
                         obj=PhoneOTP.objects.create(
                             phone=phone,
                             otp = key,
-                            email=email,
-                            username=username,
-                            password=password,
                         )
                         conn.request("GET", "https://2factor.in/API/V1/f08f2dc9-aa1a-11eb-80ea-0200cd936042/SMS/"+phone+"/"+str(key))
                         res = conn.getresponse()    
@@ -132,11 +129,11 @@ class ValidatePhoneSendOTP(APIView):
                                 })
 
                        
-                else:
-                     return Response({
-                           'status' : False,
-                            'detail' : 'Sending otp error'
-                     })   
+            else:
+                return Response({
+                        'status' : False,
+                        'detail' : 'Sending otp error'
+                })   
 
         else:
             return Response({

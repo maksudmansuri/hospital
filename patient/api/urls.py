@@ -4,7 +4,6 @@ from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
   
 urlpatterns = [
-
     #Hospital's APIs 
     
     path('hospitalslist', views.ApiHospitalListAndDetailsView.as_view(),name='hospitalslist'),
@@ -22,16 +21,14 @@ urlpatterns = [
 
     path('labslist', views.ApiLabsListAndDetailsView.as_view(),name='labslist'),
     path('labsdetials/<id>', views.ApiLabsListAndDetailsView.as_view(),name='labsdetials'),
- 
- 
+  
     # Pharmacy's APIs
 
     path('pharmacylist', views.ApiPharmacyListAndDetailsView.as_view(),name='pharmacylist'),
     path('pharmacydetials/<id>', views.ApiPharmacyListAndDetailsView.as_view(),name='pharmacydetials'),
 
-
     # List Of AppointmentBooked
-     path('appointmentlist', views.AppointmentListView.as_view(),name='appointmentlist'),
-     path('appointmentdetail/<id>', views.AppointmentListView.as_view(),name='appointmentdetail'),
+    path('appointmentlist', views.AppointmentListView.as_view(),name='appointmentlist'),
+    path('appointmentdetail/<id>', views.AppointmentListView.as_view(),name='appointmentdetail'),
 
 ]

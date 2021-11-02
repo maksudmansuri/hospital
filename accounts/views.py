@@ -1,6 +1,7 @@
 
 from typing import Counter
 from django.contrib.messages import views
+from django.db.models.signals import post_delete
 from django.http import request, response
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -34,7 +35,6 @@ conn = http.client.HTTPConnection("2factor.in")
 def send_otp(phone):
     if phone:
         key = random.randint(999,9999)
-        print(key)
         return key
     else:
         return False
@@ -69,18 +69,19 @@ def verifyOTP(request,phone):
         # fifth=request.POST.get("fifth")
         # sixth=request.POST.get("sixth")
 
-        postotp = first+second+third+forth+fifth+sixth  #added in one string
+        postotp = first+second+third+forth  #added in one string
 
         # keygen = generateKey()
         # key = base64.b32encode(keygen.returnValue(phone).encode())  # Generating Key
-        key = base64.b32encode(user.otp.encode())  # Generating Key
-        OTP = pyotp.HOTP(user.otp)  # HOTP Model
-        key = CustomUser.objects.get()
-        if OTP.verify(postotp, user.counter):  # Verifying the OTP
+        key =user.otp  # Generating Key
+        # OTP = pyotp.HOTP(user.otp)  # HOTP Model
+        #key = CustomUser.objects.get()
+        # if OTP.verify(postotp, user.counter):  # Verifying the OTP
+        if key == postotp:  # Verifying the OTP
             user.is_Mobile_Verified = True
             user.is_active=True
             user.save()
-            messages.add_message(request,messages.SUCCESS,"booking have been Verified Successfuly")
+            messages.add_message(request,messages.SUCCESS,"Mobile Number is VArified Successfully")
         #emila message for email verification
         current_site=get_current_site(request) #fetch domain    
         email_subject='Active your Account',
@@ -189,20 +190,21 @@ class HospitalSingup(SuccessMessageMixin,CreateView):
         mobile= user.phone
         key = base64.b32encode((send_otp(mobile).encode()))
         # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
-        OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
-        print(OTP.at(user.counter))
-        otp=OTP.at(user.counter)
-        conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
-        res = conn.getresponse()
-        data = res.read()
-        data=data.decode("utf-8")
-        data=ast.literal_eval(data)
-        print(data)
-        if data["Status"] == 'Success':
-            user.otp_session_id = data["Details"]
-            user.otp = str(otp)
-            user.save()
-            print('In validate phone :'+user.otp_session_id)
+        key = send_otp(mobile)
+        # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
+        # print(OTP.at(user.counter))
+        # otp=OTP.at(user.counter)
+        # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
+        # res = conn.getresponse()
+        # data = res.read()
+        # data=data.decode("utf-8")
+        # data=ast.literal_eval(data)
+        # print(data)
+        # if data["Status"] == 'Success':
+        #     user.otp_session_id = data["Details"]
+        user.otp = str(key)
+        user.save()
+            # print('In validate phone :'+user.otp_session_id)
         messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
         return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
         # else:
@@ -246,23 +248,24 @@ class PatientSingup(SuccessMessageMixin,CreateView):
         user.save() # Save the data
         print('user saved!')  
         mobile= user.phone
+        key = send_otp(mobile)
         # keygen = generateKey()
         # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
-        key = base64.b32encode((send_otp(mobile).encode()))
-        OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
-        print(OTP.at(user.counter))
-        otp=OTP.at(user.counter)
-        conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
-        res = conn.getresponse()
-        data = res.read()
-        data=data.decode("utf-8")
-        data=ast.literal_eval(data)
-        print(data)
-        if data["Status"] == 'Success':
-            user.otp_session_id = data["Details"]
-            user.otp = str(otp)
-            user.save()
-            print('In validate phone :'+user.otp_session_id)
+        # key = base64.b32encode((send_otp(mobile).encode()))
+        # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
+        # print(OTP.at(user.counter))
+        # otp=OTP.at(user.counter)
+        # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
+        # res = conn.getresponse()
+        # data = res.read()
+        # data=data.decode("utf-8")
+        # data=ast.literal_eval(data)
+        # print(data)
+        # if data["Status"] == 'Success':
+        #     user.otp_session_id = data["Details"]
+        user.otp = str(key)
+        user.save()
+            # print('In validate phone :'+user.otp_session_id)
         messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
         return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
 
@@ -287,10 +290,10 @@ class LabSingup(SuccessMessageMixin,CreateView):
     template_name="accounts/labsingup.html"
     model=CustomUser
     fields=["first_name","last_name","email","phone","username","password"]
-    success_message = "Hospital User Created"  
+    success_message = "LAB User Created"  
     def form_valid(self,form):
         #Saving Custom User Object for Merchant User
-        print('i m here at Hospital singup')
+        print('I am here at LAB singup')
         user=form.save(commit=False)
         user.user_type=5
         user.set_password(form.cleaned_data["password"])
@@ -300,21 +303,22 @@ class LabSingup(SuccessMessageMixin,CreateView):
         mobile= user.phone
         # keygen = generateKey()
         # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
-        key = base64.b32encode((send_otp(mobile).encode()))
-        OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
-        print(OTP.at(user.counter))
-        otp=OTP.at(user.counter)
-        conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
-        res = conn.getresponse()
-        data = res.read()
-        data=data.decode("utf-8")
-        data=ast.literal_eval(data)
-        print(data)
-        if data["Status"] == 'Success':
-            user.otp_session_id = data["Details"]
-            user.otp = str(otp)
-            user.save()
-            print('In validate phone :'+user.otp_session_id)
+        key = send_otp(mobile)
+        print(key)
+        # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
+        # print(OTP.at(user.counter))
+        # otp=OTP.at(user.counter)
+        # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
+        # res = conn.getresponse()
+        # data = res.read()
+        # data=data.decode("utf-8")
+        # data=ast.literal_eval(data)
+        # print(data)
+        # if data["Status"] == 'Success':
+        #     user.otp_session_id = data["Details"]
+        user.otp = str(key)
+        user.save()
+        #     print('In validate phone :'+user.otp_session_id)
         messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
         return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
 
@@ -333,22 +337,23 @@ class PharmacySingup(SuccessMessageMixin,CreateView):
         user.counter += 1  # Update Counter At every Call
         user.save() # Save the data
         mobile= user.phone
-        key = base64.b32encode((send_otp(mobile).encode()))
+        key = send_otp(mobile)
         # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
-        OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
-        print(OTP.at(user.counter))
-        otp=OTP.at(user.counter)
-        conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
-        res = conn.getresponse()
-        data = res.read()
-        data=data.decode("utf-8")
-        data=ast.literal_eval(data)
-        print(data)
-        if data["Status"] == 'Success':
-            user.otp_session_id = data["Details"]
-            user.otp = str(otp)
-            user.save()
-            print('In validate phone :'+user.otp_session_id)
+        
+        # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
+        # print(OTP.at(user.counter))
+        # otp=OTP.at(user.counter)
+        # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(key)+"&templatename=WomenMark1")
+        # res = conn.getresponse()
+        # data = res.read()
+        # data=data.decode("utf-8")
+        # data=ast.literal_eval(data)
+        # print(data)
+        # if data["Status"] == 'Success':
+        #     user.otp_session_id = data["Details"]
+        user.otp = str(key)
+        user.save()
+        # print('In validate phone :'+user.otp_session_id)
         messages.add_message(self.request,messages.SUCCESS,"OTP sent successfully") 
         return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
 

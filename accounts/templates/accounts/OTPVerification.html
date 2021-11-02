@@ -37,18 +37,9 @@
                                         <input type="text" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" name="forth">
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="mb-2">
-                                        <input type="text" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" name="fifth">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-2">
-                                        <input type="text" class="form-control form-control-lg text-center" placeholder="-" maxlength="1" name="sixth">
-                                    </div>
-                                </div>
+                                
                                 <div class="col-12 text-center mt-4">
-                                    <button title="submit" class="btn btn-lg btn-block btn-light lift text-uppercase">Verify my Mobile</button>
+                                    <button title="submit" class="btn btn-lg btn-block btn-light lift text-uppercase">Verify my Mobile With {{user.otp}}</button>
                                 </div>
                                 <div class="col-12 text-center mt-4">
                                     <span >Haven't received it? <a href="{% url 'verifyPhone' user.phone %}">Resend a new code.</a></span>

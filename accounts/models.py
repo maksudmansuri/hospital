@@ -343,23 +343,23 @@ def create_user_profile(sender,instance,created,**kwargs):
         if instance.user_type==6:
             Pharmacy.objects.create(admin=instance)
             OPDTime.objects.create(user=instance)
-    else:
-        if instance.user_type==1:
-            AdminHOD.objects.create(admin=instance)
-        if instance.user_type==2:
-            Hospitals.objects.create(admin=instance)
-            OPDTime.objects.create(user=instance)
-        if instance.user_type==3:
-            HospitalDoctors.objects.create(admin=instance)
-            OPDTime.objects.create(user=instance)
-        if instance.user_type==4:
-            Patients.objects.get_or_create(admin=instance)
-        if instance.user_type==5:
-            Labs.objects.create(admin=instance)
-            OPDTime.objects.create(user=instance)
-        if instance.user_type==6:
-            Pharmacy.objects.create(admin=instance)
-            OPDTime.objects.create(user=instance)
+    # else:
+    #     if instance.user_type==1:
+    #         AdminHOD.objects.create(admin=instance)
+    #     if instance.user_type==2:
+    #         Hospitals.objects.create(admin=instance)
+    #         OPDTime.objects.create(user=instance)
+    #     if instance.user_type==3:
+    #         HospitalDoctors.objects.create(admin=instance)
+    #         OPDTime.objects.create(user=instance)
+    #     if instance.user_type==4:
+    #         Patients.objects.get_or_create(admin=instance)
+    #     if instance.user_type==5:
+    #         Labs.objects.create(admin=instance)
+    #         OPDTime.objects.create(user=instance)
+    #     if instance.user_type==6:
+    #         Pharmacy.objects.create(admin=instance)
+    #         OPDTime.objects.create(user=instance)
 
 @receiver(post_save,sender=CustomUser)
 def save_user_profile(sender,instance,**kwargs):

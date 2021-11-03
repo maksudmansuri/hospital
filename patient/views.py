@@ -338,7 +338,7 @@ class BookAnAppointmentViews(SuccessMessageMixin,View):
                 # data=data.decode("utf-8")
                 # data=ast.literal_eval(data)
                 # print(data)            
-                return JsonResponse({'message' : 'success','status': True,"otp":key})
+                return JsonResponse({'message' : 'success','status': True,'Booking_id':booking.id,"otp":key})
             else:
                 return JsonResponse({'message' : 'Error','status': False})
     # except Exception as e:

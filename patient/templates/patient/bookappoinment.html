@@ -971,11 +971,14 @@
                 'csrfmiddlewaretoken': "{{csrf_token}}",
                 'action': 'Hospital'
             },
-            success: function (id) {
+            success: function (id,) {
                 console.log(id)
-                
-                alert("OTP have been sent successfully to your phone ");
-                window.location.replace("{% url 'checkout' %}");
+                var booking_id = id.Booking_id;
+                var otp = id.otp;
+                console.log(booking_id)
+                console.log(otp)
+                alert("OTP have been sent successfully to your phone. OTP = "+ otp + ", Booking ID is " + booking_id );
+                //window.location.replace("{% url 'checkout' %}");
             },
             error: function (xhr, errmsg, err) {
                 alert(errmsg);

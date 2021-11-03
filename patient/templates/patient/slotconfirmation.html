@@ -39,7 +39,10 @@
 <script> 
 
   var booking_id = '{{slot.id}}'
-  let socket =  new WebSocket('ws://localhost:8000/ws/patientlab/' + booking_id)
+  if(window.location.protocol == 'https'){
+        wsProtocol = 'wss://'
+    }else{ wsProtocol = 'ws://'}
+    let socket =  new WebSocket(wsProtocol + window.location.host + '/ws/patientlab/' + booking_id)
 
  
 

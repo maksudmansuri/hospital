@@ -79,7 +79,10 @@
 <script>
     var user = '{{request.user.id}}'
     console.log(user)
-    let socket =  new WebSocket('ws://localhost:8000/ws/notification/' + user)
+    if(window.location.protocol == 'https'){
+        wsProtocol = 'wss://'
+    }else{ wsProtocol = 'ws://'}
+    let socket =  new WebSocket(wsProtocol + window.location.host +'/ws/notification/' + user)
 
     socket.onopen = function(e){
         console.log("connected with notifications")

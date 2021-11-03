@@ -53,7 +53,10 @@ a.disabled {
 <script> 
 
   var booking_id = '{{picturesformedicine.id}}'
-  let socket =  new WebSocket('ws://localhost:8000/ws/patientpicture/' + booking_id)
+  if(window.location.protocol == 'https'){
+        wsProtocol = 'wss://'
+    }else{ wsProtocol = 'ws://'}
+    let socket =  new WebSocket(wsProtocol + window.location.host + '/ws/patientpicture/' + booking_id)
 
  
 

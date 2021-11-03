@@ -65,7 +65,7 @@
                                         {{book.applied_time}} , {{book.applied_date}}
                                     </td>
                                     <td>
-                                    {% if book.status == ""  or book.status == "rejected" %}
+                                    {% if book.status == "booked"  or book.status == "rejected" %}
                                        <select class="form-select status" aria-label="Default select example" data-index="{{book.id}}" id="status" name="status"{% if book.status == "rejected" %} disabled {%endif%} >
                                             <option selected disabled >Status</option>
                                             <option value="accepted" {% if book.status == "accepted" %}selected{% endif %} >Accepted</option>

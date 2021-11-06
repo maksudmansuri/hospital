@@ -82,30 +82,30 @@ class ValidatePhoneSendOTP(APIView):
                         old.save()
                         print('Count Increase', count)
 
-                        conn.request("GET", "https://2factor.in/API/V1/f08f2dc9-aa1a-11eb-80ea-0200cd936042/SMS/"+phone+"/"+str(key))
+                        #conn.request("GET", "https://2factor.in/API/V1/f08f2dc9-aa1a-11eb-80ea-0200cd936042/SMS/"+phone+"/"+str(key))
 
                         # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042"+phone+"&otpvalue="+str(key)+"&templatename=WomenMark1")
                         # conn.request("GET", "http://dnd.saakshisoftware.in/api/mt/SendSMS?user=Sect&password=Sect@123&senderid=GLOBAL&channel=Promo&DCS=0&flashsms=0&number=91989xxxxxxx&text=test message&route=##&DLTTemplateId=approvded dlt templateid&PEID=sender entity id")
-                        res = conn.getresponse() 
+                        #res = conn.getresponse() 
                        
-                        data = res.read()
-                        data=data.decode("utf-8")
-                        data=ast.literal_eval(data)
+                        #data = res.read()
+                        #data=data.decode("utf-8")
+                        #data=ast.literal_eval(data)
                         
                         
-                        if data["Status"] == 'Success':
-                            old.otp_session_id = data["Details"]
-                            old.save()
+                        #if data["Status"] == 'Success':
+                         #   old.otp_session_id = data["Details"]
+                          #  old.save()
                             # print('In validate phone :'+old.otp_session_id)
-                            return Response({
-                                   'status' : True,
+                        return Response({
+                                  'status' : True,
                                    'detail' : 'OTP sent successfully'
                                 })    
-                        else:
-                            return Response({
-                                  'status' : False,
-                                  'detail' : 'OTP sending Failed'
-                                }) 
+                        # else:
+                        #     return Response({
+                        #           'status' : False,
+                        #           'detail' : 'OTP sending Failed'
+                        #         }) 
                    
                     else:
                         print(phone,key)
@@ -113,27 +113,28 @@ class ValidatePhoneSendOTP(APIView):
                             phone=phone,
                             otp = key,
                         )
-                        conn.request("GET", "https://2factor.in/API/V1/f08f2dc9-aa1a-11eb-80ea-0200cd936042/SMS/"+phone+"/"+str(key))
-                        res = conn.getresponse()    
-                        data = res.read()
-                        print(data.decode("utf-8"))
-                        data=data.decode("utf-8")
-                        data=ast.literal_eval(data)
+                        # conn.request("GET", "https://2factor.in/API/V1/f08f2dc9-aa1a-11eb-80ea-0200cd936042/SMS/"+phone+"/"+str(key))
+                        # res = conn.getresponse()    
+                        # data = res.read()
+                        # print(data.decode("utf-8"))
+                        # data=data.decode("utf-8")
+                        # data=ast.literal_eval(data)
 
-                        if data["Status"] == 'Success':
-                            obj.otp_session_id = data["Details"]
-                            print(obj)
-                            obj.save()
+                        # if data["Status"] == 'Success':
+                        #     obj.otp_session_id = data["Details"]
+                        #     print(obj)
+                        #     obj.save()
                             # print('In validate phone :'+obj.otp_session_id)
-                            return Response({
+                        return Response({
                                    'status' : True,
-                                   'detail' : 'OTP sent successfully'
+                                   'detail' : 'OTP sent successfully',
+								   'opt' : key,
                                 })    
-                        else:
-                            return Response({
-                                  'status' : False,
-                                  'detail' : 'OTP sending Failed'
-                                })
+                        # else:
+                        #     return Response({
+                        #           'status' : False,
+                        #           'detail' : 'OTP sending Failed'
+                        #         })
 
                        
             else:

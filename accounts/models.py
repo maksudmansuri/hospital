@@ -97,7 +97,7 @@ class PhoneOTP(models.Model):
     otp             = models.CharField(max_length=9, blank = True, null=True)
     count           = models.IntegerField(default=0, help_text = 'Number of otp_sent')
     validated       = models.BooleanField(default = False, help_text = 'If it is true, that means user have validate otp correctly in second API')
-    otp_session_id  = models.CharField(max_length=120, null=True, default = "")
+    otp_session_id  = models.CharField(max_length=120,blank = True, null=True, default = "")
     username        = models.CharField(max_length=20, blank = True, null = True, default = None )
     email           = models.CharField(max_length=50, null = True, blank = True, default = None) 
     password        = models.CharField(max_length=100, null = True, blank = True, default = None) 

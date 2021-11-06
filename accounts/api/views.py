@@ -175,7 +175,7 @@ class ValidateOTP(APIView):
                 print(otp_sent,old.otp)
                 if otp_sent == old.otp:
                     # data["Status"] = 'success'
-                # otp_session_id = old.otp_session_id
+                	
                 # print("In validate otp"+otp_session_id)
                 # conn.request("GET", "http://2factor.in/API/V1/f08f2dc9-aa1a-11eb-80ea-0200cd936042/SMS/VERIFY/"+otp_session_id+"/"+otp_sent)
                 # res = conn.getresponse()    
@@ -185,6 +185,7 @@ class ValidateOTP(APIView):
                 # data=ast.literal_eval(data)
                 # if data["Status"] == 'Success':
                     old.validated = True
+                    old.otp_session_id = "bkjbjbkkj"
                     print(old)
                     old.save()
                     return Response({

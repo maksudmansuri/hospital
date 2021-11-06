@@ -1,4 +1,7 @@
 from django.shortcuts import render,get_object_or_404, redirect
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+from accounts.utils import generate_token
+from django.core.mail import EmailMessage
 from rest_framework.views import APIView
 from django.http import HttpResponse,JsonResponse
 import http.client
@@ -7,6 +10,7 @@ import json
 import ast
 import random
 from django.contrib.auth import authenticate,login,logout
+from django.utils.encoding import force_bytes
 
 import lab
 
@@ -30,6 +34,9 @@ from rest_framework.permissions import (
 from rest_framework.authtoken.models import Token
 
 from django.views.decorators.csrf import csrf_protect
+from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
 
 conn = http.client.HTTPConnection("2factor.in")
 
@@ -440,19 +447,40 @@ class ObtainAuthTokenView(APIView):
 
 		return Response(context)
 
-@api_view(['GET', ])
+@api_view(['POST', ])
 @permission_classes([])
 @authentication_classes([])
 def does_account_exist_view(request):
 
-	if request.method == 'GET':
-		email = request.GET['email'].lower()
+	if request.method == 'POST':
+		email = request.POST['email'].lower()
 		data = {}
 		try:
 			account = CustomUser.objects.get(email=email)
+			current_site=get_current_site(request)
+			# current_site="127.0.0.1:8000"
+			email_subject='Active your Account',
+			message=render_to_string('accounts/activate.html',
+			{
+				'user':account,
+				'domain':current_site.domain,
+				# 'domain':"127.0.0.1:8000",
+				'uid':urlsafe_base64_encode(force_bytes(account.pk)),
+				'token':generate_token.make_token(account)
+			}
+			)	
+			email_message=EmailMessage(
+				email_subject,
+				message,
+				settings.EMAIL_HOST_USER,
+				[email]
+			)
+			email_message.send()
 			data['response'] = "Email Exists"
+			data['email_send'] = "YES"
 		except CustomUser.DoesNotExist:
 			data['response'] = "Account does not exist"
+			data['email_send'] = "NO"
 		return Response(data)
 
 class ChangePasswordView(UpdateAPIView):

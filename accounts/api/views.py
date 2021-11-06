@@ -169,7 +169,7 @@ class ValidateOTP(APIView):
 
         data = {}
         if phone and otp_sent:
-            old = PhoneOTP.objects.filter(phone__iexact = phone)
+            old = PhoneOTP.objects.get(phone__iexact = phone)
             if old.exists():
                 old = old.first()
                 print(otp_sent,old.otp)

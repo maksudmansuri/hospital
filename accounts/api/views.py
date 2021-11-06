@@ -99,7 +99,8 @@ class ValidatePhoneSendOTP(APIView):
                             # print('In validate phone :'+old.otp_session_id)
                         return Response({
                                   'status' : True,
-                                   'detail' : 'OTP sent successfully'
+                                   'detail' : 'OTP sent successfully',
+								    'opt' : key,
                                 })    
                         # else:
                         #     return Response({

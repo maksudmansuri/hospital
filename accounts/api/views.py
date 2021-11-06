@@ -481,7 +481,7 @@ def does_account_exist_view(request):
 		except CustomUser.DoesNotExist:
 			data['response'] = "Account does not exist"
 			data['email_send'] = "NO"
-		return Response(data)
+		return Response(data,status=status.HTTP_200_OK)
 
 class ChangePasswordView(UpdateAPIView):
 

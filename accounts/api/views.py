@@ -270,7 +270,7 @@ def registration_view(request):
 				'status' : False,
 				'detail' : 'OTP havent Verified. First do that Step.'
 				}
-				)
+			)
 
 def validate_email(email):
 	account = None

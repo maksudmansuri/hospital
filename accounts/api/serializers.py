@@ -52,7 +52,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 			patient = DoctorForHospital()
 			patient.admin = account
 			patient.save()
-		if user_type == "4":
+		if user_type == 4:
 			patient = Patients()
 			patient.admin = account
 			patient.save()
@@ -109,7 +109,7 @@ class PProfilePropertiesSerializer(serializers.ModelSerializer):
 
 class HProfilePropertiesSerializer(serializers.ModelSerializer):
 
-	class Meta:
+	class Meta: 
 		model = Hospitals
 		fields = "__all__"
 

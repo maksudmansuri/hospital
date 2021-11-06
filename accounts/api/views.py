@@ -259,11 +259,11 @@ def registration_view(request):
 
 			else:
 				data = serializer.errors
-			# return Response(data)
-			return Response(
-                        {'status' : True,
-                        'detail' : 'Account Created Successfully'}
-                        )   		
+			return Response(data)
+			# return Response(
+            #             {'status' : True,
+            #             'detail' : 'Account Created Successfully'}
+            #             )   		
 		else:
 			return Response(data,
 				{

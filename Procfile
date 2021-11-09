@@ -1,1 +1,1 @@
-web: daphne relief.asgi:application
+web: relief.asgi:application

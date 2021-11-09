@@ -15,12 +15,14 @@ from channels.routing import ProtocolTypeRouter,URLRouter
 from django.urls import path
 from chat.consumers import *
 from channels.auth import AuthMiddlewareStack
+from whitenoise.django import DjangoWhiteNoise
 
 
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'relief.settings')
 
 application = get_asgi_application()
+application = DjangoWhiteNoise(application)
 
 ws_patterns = [
     path('ws/notification/<user>' ,NotificationConsumer.as_asgi() ),

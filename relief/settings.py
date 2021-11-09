@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'channels',
     'chat',
     'django.contrib.humanize',
+    'daphne',
 
 ]
 

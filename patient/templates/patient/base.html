@@ -101,7 +101,7 @@
     if(window.location.protocol == 'https'){
         wsProtocol = 'wss://'
     }else{ wsProtocol = 'ws://'}
-    let socket =  new WebSocket(wsProtocol + window.location.host + '/ws/notification/' + user)
+    let socket =  new WebSocket('wss://' + window.location.host + '/ws/notification/' + user)
 
     socket.onopen = function(e){
         console.log("connected with notifications")

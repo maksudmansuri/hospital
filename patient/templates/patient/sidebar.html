@@ -16,7 +16,7 @@
                 <i class="icofont-ui-home fs-5"></i> <span>Dashboard</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span></a>
                 <!-- Menu: Sub menu ul -->
                     <ul class="sub-menu collapse {% if request.path == patient_home %} show {% endif %}" id="dashboard">
-                        <li><a class="ms-link {% if request.path == patient_home %} active {% endif %}" href="{% url 'patient_home' %}">Hospital Dashboard</a></li>
+                        <li><a class="ms-link {% if request.path == patient_home %} active {% endif %}" href="{% url 'patient_home' %}">Patient Dashboard</a></li>
                         <li><a class="ms-link" href="coviddashboard.html"> Covid-19 Dashboard</a></li>
                     </ul>
                 </li>

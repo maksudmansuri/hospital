@@ -35,6 +35,7 @@ from rest_framework.authtoken.models import Token
 
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
+settings.configure( DEBUG=True)
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 

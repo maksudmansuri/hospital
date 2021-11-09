@@ -21,6 +21,7 @@ from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.utils.encoding import force_bytes,force_text,DjangoUnicodeDecodeError
 from django.core.mail import EmailMessage, message
 from django.conf import settings
+settings.configure( DEBUG=True)
 from .utils import generate_token
 import base64
 import pyotp

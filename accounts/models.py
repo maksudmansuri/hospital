@@ -8,9 +8,8 @@ from rest_framework.authtoken.models import Token
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db.models import Q
-from relief import myapp_defaults
 # Create your models here.
-settings.configure(default_settings=myapp_defaults, DEBUG=True)
+settings.configure( DEBUG=True)
 # class CustomUser(AbstractUser): 
 #     user_type_data=((1,"HOD"),(2,"Staff"),(3,"Customer"))
 #     user_type=models.CharField(choices=user_type_data,max_length=10)

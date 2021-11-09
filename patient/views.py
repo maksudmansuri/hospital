@@ -37,6 +37,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage, message
 from django.conf import settings
+settings.configure( DEBUG=True)
 import ast
 conn = http.client.HTTPConnection("2factor.in")
 from django.utils.decorators import method_decorator

@@ -1,2 +1,2 @@
-web: daphne chat.asgi:channel_layer --port $PORT --bind 0.0.0.0 -v2
+web: daphne relief.asgi:channel_layer --port $PORT --bind 0.0.0.0 -v2
 chatworker: python manage.py runworker --settings=relief.settings -v2

@@ -1,13 +1,14 @@
 from django.urls import path
 from django.urls.conf import re_path
 from .import views
+from patient import views as patientView
 from accounts import logoutview as profileview
 
 urlpatterns = [   
     # path('',views.indexView,name="hospital_home"),
     path('',views.hospitaldDashboardViews.as_view(),name="hospital_dashboard"),
     path('hospital_update',views.hospitalUpdateViews.as_view(),name="hospital_update"),
-    path('hospital_profile',profileview.hospitalProfileViews.as_view(),name="hospital_profile"),
+    path('hospital_profile',patientView.hospitalProfileViews.as_view(),name="hospital_profile"),
     
     
     # for treatment tab menu Treatment includes Diseas , Medicine(with time) , Reports , Follow ups dates , Exercise 

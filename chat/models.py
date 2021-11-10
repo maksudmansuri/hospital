@@ -33,8 +33,8 @@ class Notification(models.Model):
 
 
     def save(self,*args, **kwargs):
-        channels_layer = get_channel_layer()
-        notification_objs = Notification.objects.filter(user_has_seen=False).count()
+        # channels_layer = get_channel_layer()
+        # notification_objs = Notification.objects.filter(user_has_seen=False).count()
         # data = {'count' : notification_objs, 'current_notification':self.booking.status}
 
         # async_to_sync(channels_layer.group_send)(
@@ -68,108 +68,108 @@ class Notification(models.Model):
     #     data['user_has_seen'] = instance.user_has_seen
     #     return data
 
-@receiver(post_save, sender=Notification)
-def notification_handler(sender, instance, created,**kwargs):
-    print(instance)
-    if created:
-        channel_layer = get_channel_layer()
-        data = {}
-        data['id'] = instance.id
-        data['from_user_profile_pic'] = str(instance.from_user.profile_pic)
-        data['from_user_user_type'] = instance.from_user.user_type
-        print("signal called 2")
-        if instance.from_user.user_type =="1": #radmin
-            data['name'] = instance.from_user.patients.fisrt_name + " " + instance.from_user.patients.last_name 
-        elif instance.from_user.user_type =="2": #Hospital
-            data['name'] = instance.from_user.hospitals.hopital_name
-        elif instance.from_user.user_type =="3": # DOctor
-            data['name'] = instance.from_user.hospitals.Doctor_name
-        elif instance.from_user.user_type =="4":#patient
-            data['name'] = instance.from_user.patients.fisrt_name + " " + instance.from_user.patients.last_name
-        elif instance.from_user.user_type =="5":#lab
-            data['name'] = instance.from_user.labs.lab_name
-        elif instance.from_user.user_type =="6":#pharmacy
-            data['name'] = instance.from_user.pharmacy.pharmacy_name
-        if instance.notification_type == "1": # this is for appoinment            
-            print("signal called 2.1")
-            if instance.booking:
-                data['booking_id'] = instance.booking.id
-                data['status'] = instance.booking.status
-                if instance.booking.booking_type == "OPD":
-                    data['booking'] = "For OPD"
-                if instance.booking.booking_type == "Emergency":
-                    data['booking'] = "For Emergency"
-                if instance.booking.booking_type == "ONLINE":
-                    data['booking'] = "For Online"
-                if instance.booking.booking_type == "HOME":
-                    data['booking'] = "For Home Visit"
-            elif instance.slot:
-                data['booking'] = "For Lab Test"
-                data['booking_id'] = instance.slot.id
-                data['status'] = instance.slot.status                
-            elif instance.picturesmedicine:
-                data['booking'] = "New Order"                   
-                data['status'] = instance.picturesmedicine.status
-                data['booking_id'] = instance.picturesmedicine.id
-        data['created_at'] = instance.updated_at
-        print("signal called 3")
-        print(instance.to_user)
-        async_to_sync(channel_layer.group_send)(
-            'notificaion_%s' % instance.to_user.id,{
-                'type' : 'send_notification',
-                'value' : json.dumps(data,default=str)
-            }
-        )
-    else:
-        channel_layer = get_channel_layer()
-        data = {}
-        data['id'] = instance.id
-        data['from_user_profile_pic'] = str(instance.from_user.profile_pic)
-        data['from_user_user_type'] = instance.from_user.user_type
-        print("signal else called 2")
-        if instance.from_user.user_type =="1": #radmin
-            data['name'] = instance.from_user.patients.fisrt_name + " " + instance.from_user.patients.last_name 
-        elif instance.from_user.user_type =="2": #Hospital
-            data['name'] = instance.from_user.hospitals.hopital_name
-        elif instance.from_user.user_type =="3": # DOctor
-            data['name'] = instance.from_user.hospitals.Doctor_name
-        elif instance.from_user.user_type =="4":#patient
-            data['name'] = instance.from_user.patients.fisrt_name + " " + instance.from_user.patients.last_name
-        elif instance.from_user.user_type =="5":#lab
-            data['name'] = instance.from_user.labs.lab_name
-        elif instance.from_user.user_type =="6":#pharmacy
-            data['name'] = instance.from_user.pharmacy.pharmacy_name
+# @receiver(post_save, sender=Notification)
+# def notification_handler(sender, instance, created,**kwargs):
+#     print(instance)
+#     if created:
+#         channel_layer = get_channel_layer()
+#         data = {}
+#         data['id'] = instance.id
+#         data['from_user_profile_pic'] = str(instance.from_user.profile_pic)
+#         data['from_user_user_type'] = instance.from_user.user_type
+#         print("signal called 2")
+#         if instance.from_user.user_type =="1": #radmin
+#             data['name'] = instance.from_user.patients.fisrt_name + " " + instance.from_user.patients.last_name 
+#         elif instance.from_user.user_type =="2": #Hospital
+#             data['name'] = instance.from_user.hospitals.hopital_name
+#         elif instance.from_user.user_type =="3": # DOctor
+#             data['name'] = instance.from_user.hospitals.Doctor_name
+#         elif instance.from_user.user_type =="4":#patient
+#             data['name'] = instance.from_user.patients.fisrt_name + " " + instance.from_user.patients.last_name
+#         elif instance.from_user.user_type =="5":#lab
+#             data['name'] = instance.from_user.labs.lab_name
+#         elif instance.from_user.user_type =="6":#pharmacy
+#             data['name'] = instance.from_user.pharmacy.pharmacy_name
+#         if instance.notification_type == "1": # this is for appoinment            
+#             print("signal called 2.1")
+#             if instance.booking:
+#                 data['booking_id'] = instance.booking.id
+#                 data['status'] = instance.booking.status
+#                 if instance.booking.booking_type == "OPD":
+#                     data['booking'] = "For OPD"
+#                 if instance.booking.booking_type == "Emergency":
+#                     data['booking'] = "For Emergency"
+#                 if instance.booking.booking_type == "ONLINE":
+#                     data['booking'] = "For Online"
+#                 if instance.booking.booking_type == "HOME":
+#                     data['booking'] = "For Home Visit"
+#             elif instance.slot:
+#                 data['booking'] = "For Lab Test"
+#                 data['booking_id'] = instance.slot.id
+#                 data['status'] = instance.slot.status                
+#             elif instance.picturesmedicine:
+#                 data['booking'] = "New Order"                   
+#                 data['status'] = instance.picturesmedicine.status
+#                 data['booking_id'] = instance.picturesmedicine.id
+#         data['created_at'] = instance.updated_at
+#         print("signal called 3")
+#         print(instance.to_user)
+#         async_to_sync(channel_layer.group_send)(
+#             'notificaion_%s' % instance.to_user.id,{
+#                 'type' : 'send_notification',
+#                 'value' : json.dumps(data,default=str)
+#             }
+#         )
+#     else:
+#         channel_layer = get_channel_layer()
+#         data = {}
+#         data['id'] = instance.id
+#         data['from_user_profile_pic'] = str(instance.from_user.profile_pic)
+#         data['from_user_user_type'] = instance.from_user.user_type
+#         print("signal else called 2")
+#         if instance.from_user.user_type =="1": #radmin
+#             data['name'] = instance.from_user.patients.fisrt_name + " " + instance.from_user.patients.last_name 
+#         elif instance.from_user.user_type =="2": #Hospital
+#             data['name'] = instance.from_user.hospitals.hopital_name
+#         elif instance.from_user.user_type =="3": # DOctor
+#             data['name'] = instance.from_user.hospitals.Doctor_name
+#         elif instance.from_user.user_type =="4":#patient
+#             data['name'] = instance.from_user.patients.fisrt_name + " " + instance.from_user.patients.last_name
+#         elif instance.from_user.user_type =="5":#lab
+#             data['name'] = instance.from_user.labs.lab_name
+#         elif instance.from_user.user_type =="6":#pharmacy
+#             data['name'] = instance.from_user.pharmacy.pharmacy_name
 
-        if instance.notification_type == 1: # this is for appoinment            
-            print("signal called 2.1")
-            if instance.booking:
-                data['booking_id'] = instance.booking.id
-                data['status'] = instance.booking.status
-                if instance.booking.booking_type == "OPD":
-                    data['booking'] = "For OPD"
-                if instance.booking.booking_type == "Emergency":
-                    data['booking'] = "For Emergency"
-                if instance.booking.booking_type == "ONLINE":
-                    data['booking'] = "For Online"
-                if instance.booking.booking_type == "HOME":
-                    data['booking'] = "For Home Visit"
-            elif instance.slot:
-                data['booking_id'] = instance.slot.id
-                data['booking'] = "For Lab Test" 
-                data['status'] = instance.slot.status                   
-            elif instance.picturesmedicine:
-                data['booking_id'] = instance.picturesmedicine.id
-                data['booking'] = "New Order"
-                data['status'] = instance.picturesmedicine.status
+#         if instance.notification_type == 1: # this is for appoinment            
+#             print("signal called 2.1")
+#             if instance.booking:
+#                 data['booking_id'] = instance.booking.id
+#                 data['status'] = instance.booking.status
+#                 if instance.booking.booking_type == "OPD":
+#                     data['booking'] = "For OPD"
+#                 if instance.booking.booking_type == "Emergency":
+#                     data['booking'] = "For Emergency"
+#                 if instance.booking.booking_type == "ONLINE":
+#                     data['booking'] = "For Online"
+#                 if instance.booking.booking_type == "HOME":
+#                     data['booking'] = "For Home Visit"
+#             elif instance.slot:
+#                 data['booking_id'] = instance.slot.id
+#                 data['booking'] = "For Lab Test" 
+#                 data['status'] = instance.slot.status                   
+#             elif instance.picturesmedicine:
+#                 data['booking_id'] = instance.picturesmedicine.id
+#                 data['booking'] = "New Order"
+#                 data['status'] = instance.picturesmedicine.status
                 
-        data['created_at'] = instance.updated_at
-        print("signal called 3")
-        print(instance.to_user)
-        async_to_sync(channel_layer.group_send)(
-            'notificaion_%s' % instance.to_user.id,{
-                'type' : 'send_notification',
-                'value' : json.dumps(data,default=str)
-            }
-        )
+#         data['created_at'] = instance.updated_at
+#         print("signal called 3")
+#         print(instance.to_user)
+#         async_to_sync(channel_layer.group_send)(
+#             'notificaion_%s' % instance.to_user.id,{
+#                 'type' : 'send_notification',
+#                 'value' : json.dumps(data,default=str)
+#             }
+#         )
 
     

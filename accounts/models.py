@@ -9,7 +9,6 @@ from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db.models import Q
 # Create your models here.
-settings.configure( DEBUG=True)
 # class CustomUser(AbstractUser): 
 #     user_type_data=((1,"HOD"),(2,"Staff"),(3,"Customer"))
 #     user_type=models.CharField(choices=user_type_data,max_length=10)

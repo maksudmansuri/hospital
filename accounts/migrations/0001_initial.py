@@ -2,7 +2,6 @@
 
 import accounts.models
 from django.conf import settings
-settings.configure( DEBUG=True)
 import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion

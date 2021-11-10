@@ -15,7 +15,6 @@ from accounts.utils import generate_token
 from django.core.mail import EmailMessage
 from django.contrib import messages
 from django.conf import settings
-settings.configure( DEBUG=True)
 from django.utils.encoding import force_bytes,force_text,DjangoUnicodeDecodeError
 
 

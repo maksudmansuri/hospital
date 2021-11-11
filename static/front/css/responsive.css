@@ -1,0 +1,576 @@
+/*-------- Respnsive All page in your site --------*/
+
+/*xl- Decice -  Normal desktop :1200px. */
+@media (min-width: 1200px) and (max-width: 1500px) {
+    .min-menu nav ul > li > a {
+        padding: 32px 6px;
+    }
+    .header-sticky.sticky-bar .min-menu > nav > ul > li > a {
+	padding: 33px 0px;
+    }
+    .header-main {
+        padding-left: 30px;
+        padding-right: 29px;
+    }
+    .yellow-btn {
+        padding: 18px 20px;
+    }
+    .min-menu nav ul li {
+        margin-left: 28px;
+    }
+    .hero-padding {
+        padding-left: 120px;
+        padding-right: 10px;
+    }
+    .hero-caption h1 {
+        font-size: 88px;
+    }
+    .solutions-wrapper {
+        padding-right: 0px;
+    }
+    .solutions-wrapper .card-header a {
+        padding: 30px 14px 30px 74px;
+    }
+    .prescription-area {
+        padding-left: 75px;
+    }
+    .brand-area-wrapper {
+        padding: 100px 49px;
+    }
+    .h1-caption-wrap {
+        padding-left: 100px;
+    }
+    .h1-hero-active:hover button.slick-prev {
+        left: 20px;
+    }
+    .h1-hero-active:hover button.slick-next {
+        right: 20px;
+    }
+}
+
+
+/*Lg-Decive -  Normal desktop :992px. */
+@media (min-width: 992px) and (max-width: 1200px) {
+    .header-main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .sticky-bar {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .header-info ul li {
+        margin-right: 18px;
+        padding: 20px 18px 20px 0px;
+    }
+    .header-right span a {
+        margin-right: 14px;
+        padding: 20px 15px 20px 0px;
+    }
+    .header-social a i {
+        margin-left: 13px;
+    }
+    .min-menu nav ul>li>a {
+        padding: 55px 15px;
+    }
+    .header-sticky.sticky-bar .min-menu>nav>ul>li>a {
+        padding: 33px 15px;
+    }
+    .min-menu nav ul li {
+        margin-left: 8px;
+    }
+    .hero-padding {
+        padding-left: 34px;
+        padding-right: 0px;
+        padding-top: 208px;
+        padding-bottom: 70px;
+    }
+    .clinic-caption ul li {
+        padding-left: 37px;
+    }
+    .hero-thumb-right {
+        margin-left: -2%;
+    }
+    .blue-btn {
+        padding: 23px 21px;
+    }
+    .hero-btn .blue-btn {
+        margin-right: 16px;
+    }
+    .border-btn {
+        padding: 21px 34px;
+    }
+    .services-caption h3 {
+        font-size: 18px;
+    }
+    .extra-services-wrapper {
+        padding: 42px 15px 38px 15px;
+    }
+    .extra-caption h4 {
+        font-size: 23px;
+    }
+    .small-tittle span {
+        font-size: 12px;
+    }
+    .extra-caption p {
+        padding-right: 0;
+    }
+    .servies-tittle h3 {
+        font-size: 43px;
+    }
+.prescription-area {
+    padding-left: 50PX;
+    padding-right: 50px;
+    background-position: right;
+    background-size: cover;
+}
+    .subscribe-caption h2 {
+        font-size: 46px;
+    }
+    .brand-area-wrapper {
+        padding: 100px 5px;
+    }
+    .contact-content h4 {
+        font-size: 13px;
+    }
+    .contact-content {
+        padding-left: 13px;
+    }
+    .contact-ico i {
+        font-size: 17px;
+    }
+    .solutions-area {
+        padding-left: 47px;
+    }
+    .blog-caption3 {
+        padding: 0px 31px 23px 25px;
+    }
+    .h1-caption-wrap {
+        padding-left: 50PX;
+    }
+    .testmonial-top p {
+        font-size: 20px;
+    }
+    .depertmet-tittle h1 {
+        padding-right: 0px;
+    }
+    .depertmet-tittle p {
+        padding-right: 0px;
+    }
+    .depertmet-tittle h1 {
+        font-size: 25px;
+    }
+    .tabs-content-wrapper {
+        padding: 20px;
+    }
+    .h1-hero-active:hover button.slick-prev {
+        left: auto;
+        right: 10px;
+    }
+    .servies-tittle h3 {
+        font-size: 40px;
+    }
+    .feeds-img>img {
+        width: 100%;
+    }
+
+    .feeds-img>a>img {
+        width: 100%;
+    }
+
+    .blog-feeds .feeds-img img {
+        float: left;
+        width: inherit;
+    }
+    .feed-banner-widget {
+        padding: 20px 20px;
+    }
+    .servies-tittle2 span::before {
+        left: -35px;
+    }
+    .department-area .nav-item {
+        margin-right: 25px;
+    }
+    .hero-caption2 h1 {
+        font-size: 90px;
+    }
+    .min-menu ul li ul.submenu {
+        width: 195px;
+    }
+
+
+}
+
+
+/*md-decive  Tablet desktop :768px. */
+@media (min-width: 768px) and (max-width: 991px) {
+
+    .hero-padding {
+        padding-bottom: 70px;
+        padding-top: 195px;
+    }
+    .hero-caption2 h1 {
+        font-size: 90px;
+    }
+
+    .logo {
+        padding-top: 20px;
+    }
+    .header-main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .hero-padding {
+        padding-left: 22px;
+        padding-right: 0px;
+    }
+    .header-info ul li {
+        margin-right: 10px;
+        padding: 20px 10px 20px 0px;
+    }
+    .header-right span a {
+        margin-right: 0px;
+        border-right: 0px;
+        padding:0px;
+    }
+    .services-caption h3 {
+        font-size: 18px;
+    }
+    .servies-tittle h3 {
+        font-size: 46px;
+    }
+    .services-box h5 {
+        font-size: 15px;
+    }
+    .services-box {
+        padding: 57px 19px 36px 28px;
+    }
+    .team-caption h3 {
+        font-size: 19px;
+    }
+    .prescription-area {
+        padding-left: 56px;
+        padding-right: 56px;
+    }
+    .solutions-area {
+        padding-left: 50px;
+    }
+    .solutions-wrapper {
+        padding-right: 0px;
+    }
+    .servies-tittle2 h3 {
+        font-size: 45px;
+    }
+    .subscribe-caption h2 {
+        font-size: 42px;
+    }
+    .brand-area-wrapper {
+        padding: 68px 24px;
+        background: #eff2ff;
+    }
+    .testmonial-top p {
+        font-size: 19px;
+    }
+    .h1-testimonal-title h3 {
+        font-size: 46px;
+    }
+    .tabs-content-wrapper {
+        padding: 20px;
+    }
+    .h1-caption-wrap {
+        padding-left: 0px;
+    }
+    .department-area .nav-item {
+        width: 28.4%;
+        margin-bottom: 30px;
+    }
+    .feeds-img>img {
+        width: 100%;
+    }
+    .feeds-img>a>img {
+        width: 100%;
+    }
+    .blog-feeds .feeds-img img {
+        float: left;
+        width: inherit;
+    }
+    .feeds-content2 p {
+        padding-right: 0;
+    }
+
+    .mobile-menu2.mean-container a.meanmenu-reveal span {
+        background: #0078ff;
+    }
+
+    .mobile-menu2.mean-container a.meanmenu-reveal {
+        color: #0078ff;
+        border: 1px solid #0078ff;
+    }
+    .header-bottm {
+        padding-top: 10px;
+    }
+    .sticky-bar .logo {
+        padding-top: 8px;
+    }
+    .sticky-bar .mean-container a.meanmenu-reveal {
+        margin-top: -56px;
+    }
+
+
+
+}
+
+
+/* small mobile :320px. */
+@media (max-width: 767px) {
+    .header-main {
+        padding-left: 0px;
+         padding-right: 0px;
+    }
+    .hero-padding {
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 53px;
+        padding-top: 121px;
+    }
+    .hero-caption h1 {
+        font-size: 32px;
+    }
+    .border-btn {
+        display: none;
+    }
+    .extra-services-wrapper {
+        padding: 78px 12px 50px 23px;
+    }
+    .servies-tittle h3 {
+        font-size: 30px;
+    }
+    .servies-tittle3 h3 {
+        font-size: 33px;
+    }
+    .servies-tittle4 h3 {
+        font-size: 24px;
+    }
+    .border-btn2 {
+        float: left;
+    }
+    .servies-tittle {
+        margin-bottom: 30px;
+    }
+    .extra-caption.extra-caption2 h4 {
+        font-size: 25px;
+    }
+    .btn.border-btn4 {
+        float: left;
+        margin-bottom: 42px;
+    }
+    .prescription-form {
+        padding: 21px;
+    }
+    .prescription-area {
+        padding-left: 0px;
+    }
+    .team-caption h3 {
+        font-size: 18px;
+    }
+    .solutions-wrapper {
+        padding-right: 0;
+    }
+    .subscribe-caption h2 {
+        font-size: 25px;
+    }
+    .subscribe-form a {
+        padding: 22px 10px;
+        font-size: 13px;
+    }
+    .subscribe-form input {
+        height: 62px;
+        padding-left: 8px;
+    }
+    .btn.border-btn5 {
+        float: left;
+        margin-bottom: 32px;
+    }
+    .pb-border {
+        padding-bottom: 0;
+    }
+    .team-caption {
+        padding: 20px 20px 22px 17px;
+    }
+    .hero-thumb-right {
+        display: none;
+    }
+    .header-bottm {
+        padding-top: 21px;
+    }
+    .header-bottm {
+        padding-top: 21px;
+    }
+    .logo-desktop {
+        display: none;
+    }
+    .logo-mobile {
+        display: block;
+    }
+    .help-thumb > img {
+        width: 100%;
+    }
+    .solutions-wrapper .card-header a {
+        padding: 25px 25px 25px 60px;
+    }
+    .solutions-wrapper .card-header h2 a::after {
+        font-size: 14px;
+        left: 20px;
+    }
+    .brand-area-wrapper {
+        padding: 60px 0px;
+    }
+    .blog-caption3 {
+        padding: 0px 20px 15px 20px;
+    }
+    .feeds-caption h4 a br {
+        display: none;
+    }
+    .welcome-img img {
+        left: 0;
+    }
+    .prescription-btn {
+        padding: 23px 28px;
+    }
+    .tabs-content-wrapper {
+        padding: 20px;
+    }
+    .depertmet-tittle h1 {
+        padding-right: 0px;
+        font-size: 24px;
+    }
+    .depertmet-tittle p {
+        padding-right: 0px;
+    }
+    .red-btn3 {
+        padding: 26px 40px;
+    }
+    .red-btn4 {
+        padding: 26px 36px;
+    }
+    .Cadet-blue {
+        float: left;
+    }
+    .h1-testimonal-title h3 {
+        font-size: 26px;
+    }
+    .testmonial-top p {
+        font-size: 16px;
+    }
+    .red-btn2 {
+        float: left;
+    }
+    .h1-caption-wrap {
+        padding-left: 0;
+    }
+    .h1-hero-caption p {
+        padding-right: 0;
+    }
+    .h1-hero-caption h1 span {
+        font-size: 53px;
+    }
+    .department-area .nav-item {
+        margin-right: 0;
+        width: 50%;
+        margin-bottom: 30px;
+    }
+    .servies-tittle2 span::before {
+        width: 24px;
+        left: -30px;
+    }
+    .feeds-content {
+        padding: 20px 15px 20px 15px;
+    }
+    .feeds-content h2 {
+        font-size: 22px;
+    }
+    .news-bord2 {
+        padding: 24px 20px 31px 20px;
+    }
+    .post-commest {
+        flex-wrap: wrap;
+    }
+    .right-single {
+        padding: 33px 20px 38px 20px;
+    }
+    .feed-banner-widget {
+        padding: 20px 20px;
+        position: relative;
+    }
+    .feeds-content2 p {
+        padding-right: 0;
+    }
+    .mobile-menu2.mean-container a.meanmenu-reveal span {
+        background: #0078ff;
+    }
+    .mobile-menu2.mean-container a.meanmenu-reveal {
+        color: #0078ff;
+        border: 1px solid #0078ff;
+    }
+    .news-feeds-caption h1 {
+        font-size: 47px;
+    }
+    .service-chart img {
+        width: 100%;
+    }
+    .ser-fea-box {
+        margin-right: 0;
+        float: none;
+        margin-bottom: 20px;
+    }
+    .servies-tittle2 span::before {
+        display: none;
+    }
+    .download-box {
+        padding: 15px 20px;
+        text-align: center;
+    }
+    .download-area a span.download-size {
+        float: none;
+    }
+    .feeds-img>a>img,
+    .feeds-img>img {
+        width: 100%;
+    }
+    .blog-feeds .feeds-img img {
+        float: left;
+        width: inherit;
+    }
+    .bord-content h2 {
+        font-size: 18px;
+    }
+    .news-bord {
+        padding: 40px 25px 40px 25px;
+    }
+    .bord-content {
+        overflow: hidden;
+        padding-left: 20px;
+    }
+    .feeds-content p {
+        padding-right: 0;
+    }
+    .header-bottm {
+        padding-top: 10px;
+    }
+    .sticky-bar {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .hero-caption2 h1 {
+        font-size: 41px;
+    }
+
+
+}
+
+/* Large Mobile :480px. */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+
+
+
+}

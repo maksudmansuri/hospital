@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccoumtsConfig',
     'lab',
     'pharmacy',
+    'front',
     'patient',
     'rest_framework',
     'rest_framework.authtoken',

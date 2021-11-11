@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', accViews.dologin,name='dologin'),
     path('radmin/', include("radmin.urls")),
+    path('front', include("front.urls")),
     path('accounts/', include("accounts.urls")),
     path('hospital/', include("hospital.urls")),
     path('patient/', include("patient.urls")),

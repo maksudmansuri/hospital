@@ -1,0 +1,155 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="zxx">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+       	<title>
+		{% block title %}   Zionico - Health and Medical HTML5 Template{% endblock title %}</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--  <link rel="manifest" href="site.webmanifest">
+		 Place favicon.ico in the root directory -->
+		<link rel="shortcut icon" type="image/x-icon" href="{% static 'front/img/tittle_icon/favicon1.png' %}">
+
+		<!-- CSS Here -->
+			<!-- Main CSS style -->
+			<link rel="stylesheet" href="{% static 'front/css/style.css'%}">
+			<!-- Responsive CSS -->
+			<link rel="stylesheet" href="{% static 'front/css/responsive.css'%}">
+			{% block custom_css %}
+		{% endblock custom_css %}
+    </head>
+    <body class="home1">
+        <!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+		<![endif]-->
+
+		<!-- Add your site or application content here -->
+		<!-- Preloader -->
+		<div id="preloader-active">
+			<div class="preloader d-flex align-items-center justify-content-center">
+				<div class="preloader-inner position-relative">
+					<div class="preloader-circle"></div>
+					<div class="preloader-img">
+						<img src="{% static 'front/img/loader/loader1.png'%}" alt="loader">
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- header_start -->
+		<header>
+			<div class="header-main">
+				<div class="header-top h2-header-border d-none d-md-block">
+					<div class="container-fluid">
+						<div class="row d-flex align-items-center">
+							<div class="col-xl-8 col-lg-8 col-md-10">
+								<div class="header-info h1-header-info">
+									<ul>
+										<li><i class="fas fa-phone"></i> +18008339780</li>
+										<li> <i class="fas fa-envelope"></i> info@example.com</li>
+										<li><i class="fas fa-map-marker-alt"></i> 27 Division St, New York, NY 10002 </li>
+									</ul>
+								</div>
+							</div>
+							<div class="col-xl-4 col-lg-4 col-md-2">
+								<div class="header-right h1-header-right d-flex f-right">
+									<span><a href="#">Get A Quote</a></span>
+									<!-- social-link -->
+									<div class="header-social h1-header-social d-none d-lg-block">
+										<a href="#"><i class="fab fa-facebook-f"></i></a>
+										<a href="#"><i class="fab fa-twitter"></i></a>
+										<a href="#"><i class="fab fa-behance"></i></a>
+										<a href="#"><i class="fab fa-youtube"></i></a>
+										<a href="#"><i class="fab fa-linkedin-in"></i></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="header-bottm header-sticky">
+					<div class="container-fluid d-flex justify-content-between align-items-center">
+						<div class="logo">
+							<a class="logo-desktop" href="index.html"><img src="{% static 'front/img/logo/logo2.png'%}" alt=""></a>
+							<a class="logo-mobile"href="index.html"><img src="{% static 'front/img/logo/logo__mobile2.png'%}" alt=""></a>
+						</div>
+						<div class="min-menu h1-min-menu">
+							<nav id="mobile-menu">
+								<ul>
+									<li><a href="index.html">Home</a>
+										<ul class="submenu">
+											<li><a href="index.html">Home Page 01</a></li>
+											<li><a href="index-2.html">Home Page 02</a></li>
+										</ul>
+									</li>
+									<li><a href="about.html">About</a>
+										<ul class="submenu">
+											<li><a href="about.html">About Us</a></li>
+											<li><a href="appointment.html">Appointment</a></li>
+										</ul>
+									</li>
+									<li><a href="services-01.html">Services</a>
+										<ul class="submenu">
+											<li><a href="services-01.html">Services Page 01</a></li>
+											<li><a href="services-02.html">Services Page 02</a></li>
+											<li><a href="services-details.html">Service Details</a></li>
+										</ul>
+									</li>
+									<li><a href="#">Pages</a>
+										<ul class="submenu">
+											<li><a href="about.html">About Us</a></li>
+											<li><a href="appointment.html">Appointment</a></li>
+											<li><a href="services-01.html">Services - 01</a></li>
+											<li><a href="services-02.html">Services - 02</a></li>
+											<li><a href="services-details.html">Service Details</a></li>
+											<li><a href="news_feeds.html">News - 01</a></li>
+											<li><a href="news_feeds_nosidebar.html">News - 02</a></li>
+											<li><a href="news_details.html">News Details - 01</a></li>
+											<li><a href="news_details_nosidebar.html">News Details - 02</a></li>
+											<li><a href="contacts.html">Contact Us</a></li>
+										</ul>
+									</li>
+									<li><a href="news_feeds.html">Blog</a>
+										<ul class="submenu">
+											<li><a href="news_feeds.html">News - 01</a></li>
+											<li><a href="news_feeds_nosidebar.html">News - 02</a></li>
+											<li><a href="news_details.html">News Details - 01</a></li>
+											<li><a href="news_details_nosidebar.html">News Details - 02</a></li>
+										</ul>
+									</li>
+									<li><a href="contacts.html">Contact</a></li>
+								</ul>
+							</nav>
+						</div>
+						<div class="header-btn d-none d-xl-block">
+							<a href="#" class="btn yellow-btn red-btn">make appointment</a>
+						</div>
+					</div>
+					<div class="mobile-menu-active">
+						<div class="container-fluid">
+							<!-- mobile-menu -->
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="mobile-menu"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<!-- header_end -->
+
+		{% block content %}
+		
+		{% endblock content %}
+
+		{% block custom_js %}
+		{% endblock custom_js %}
+
+
+
+
+		{% include 'front/footersnipet.html' %}

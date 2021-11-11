@@ -4,7 +4,7 @@ from django.contrib.messages import views
 from django.db.models.signals import post_delete
 from django.http import request, response
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls.base import reverse_lazy, translate_url
@@ -54,6 +54,26 @@ def verifyPhone(request,phone):
         messages.add_message(request,messages.ERROR,"Mobile number does not Exits")
         return render(request,"accounts/OTPVerification.html")  # False Call
     return render(request,"accounts/OTPVerification.html",{'user':user})  #  Call
+
+def resendOTP(request,phone):
+    user = get_object_or_404(CustomUser,phone=phone)
+    key = send_otp(phone)
+    # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created
+    # print(OTP.at(user.counter))
+    # otp=OTP.at(user.counter)
+    # conn.request("GET", "https://2factor.in/API/R1/?module=SMS_OTP&apikey=f08f2dc9-aa1a-11eb-80ea-0200cd936042&to="+str(mobile)+"&otpvalue="+str(otp)+"&templatename=WomenMark1")
+    # res = conn.getresponse()
+    # data = res.read()
+    # data=data.decode("utf-8")
+    # data=ast.literal_eval(data)
+    # print(data)
+    # if data["Status"] == 'Success':
+    #     user.otp_session_id = data["Details"]
+    user.otp = str(key)
+    user.save()
+        # print('In validate phone :'+user.otp_session_id)
+    messages.add_message(request,messages.SUCCESS,"OTP sent successfully") 
+    return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
 
 def verifyOTP(request,phone):
     try:

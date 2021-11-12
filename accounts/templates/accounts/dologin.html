@@ -61,7 +61,7 @@
                                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                             <li><a class="dropdown-item" href="{% url 'patientsingup' %}">As a Patient</a></li>
                                             <li><a class="dropdown-item" href="{% url 'hospitalsingup' %}">As a Hospital</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'doctorsingup' %}">As a Doctor</a></li>
+                                            {% comment %} <li><a class="dropdown-item" href="{% url 'doctorsingup' %}">As a Doctor</a></li> {% endcomment %}
                                             <li><a class="dropdown-item" href="{% url 'labsingup' %}">As a Laboratory</a></li>
                                             <li><a class="dropdown-item" href="{% url 'pharmacysingup' %}">As a Pharmacist</a></li>
                                         </ul>

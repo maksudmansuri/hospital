@@ -135,7 +135,7 @@ body {
         
           <!-- To add FontAwesome Icons use Unicode characters and to set size use font-size instead of fa-*x because when calculating the height (see js), the size of the icon is not calculated if using classes -->
           {% comment %} <span class="card-img-top fa" style="font-size: 4em">&#xf118;</span> {% endcomment %}            
-          <a href="#" ><img src="{{hospital.hospital.profile_pic}}" alt=""></a>
+          <a href="#" ><img src="{{hospital.hospital.profile_pic}}" alt="" width="300" height="300"></a>
           <h4 class="card-title">{{hospital.hospital.hopital_name}}</h4>
           <h6 class="card-subtitle text-muted">{{hospital.hospital.landline}}</h6>
           <p class="card-text">{{hospital.hospital.specialist}}</p>

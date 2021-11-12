@@ -967,18 +967,18 @@
                 'serviceid':$('#serviceid').val(),
                 'someone':$('#someone').val(),
                 'time':schtime,
-                'date':scdat,
+                'date':scdat, 
                 'csrfmiddlewaretoken': "{{csrf_token}}",
                 'action': 'Hospital'
             },
-            success: function (id,) {
+            success: function (id,) { 
                 console.log(id)
                 var booking_id = id.Booking_id;
                 var otp = id.otp;
                 console.log(booking_id)
                 console.log(otp)
                 alert("OTP have been sent successfully to your phone. OTP = "+ otp + ", Booking ID is " + booking_id );
-                //window.location.replace("{% url 'checkout' %}");
+                window.location.replace("{% url 'checkout' %}");
             },
             error: function (xhr, errmsg, err) {
                 alert(errmsg);

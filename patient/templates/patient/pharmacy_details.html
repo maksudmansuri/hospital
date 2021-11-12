@@ -685,13 +685,18 @@
                 'pharmacyid':"{{pharmacy.id}}",
                 'prescription':form,
                 'time':schtime,
-                'date':scdat,
+                'date':scdat, 
                 'csrfmiddlewaretoken': "{{csrf_token}}",
                 'action': 'pharmacy',
             },
-            success: function (json) {
+            success: function (json) { 
                 console.log(json)
-                alert("Wait for 10 minutes if pharmacy will accept your request then pay the ammount")
+                var booking_id = json.Booking_id;
+                var otp = id.otp;
+                console.log(booking_id)
+                console.log(otp)
+                alert("OTP have been sent successfully to your phone. OTP = "+ otp + ", Booking ID is " + booking_id );
+                
             },
             error: function (xhr, errmsg, err) {
 

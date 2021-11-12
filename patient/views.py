@@ -498,9 +498,9 @@ class BookAnAppointmentForLABViews(SuccessMessageMixin,View):
                 # data=data.decode("utf-8")
                 # data=ast.literal_eval(data)
                 # print(data)            
-                return HttpResponse("ok")
+                return JsonResponse({'message' : 'success','status': True,'Booking_id':labbooking.id,"otp":key})
             else:
-                return HttpResponse("error")
+                return JsonResponse({'message' : 'error','status': False,})
            
         # except Exception as e:
         #     messages.add_message(request,messages.ERROR,"Network Issue try after some time")
@@ -628,7 +628,10 @@ class UploadPresPhotoViews(SuccessMessageMixin,View):
                 # data=data.decode("utf-8")
                 # data=ast.literal_eval(data)
                 # print(data)
-            return render(request,"patient/amount_confirmation.html")
+                return JsonResponse({'message' : 'success','status': True,'Booking_id':picturesformedicine.id,"otp":key})
+            else:
+                return JsonResponse({'message' : 'error','status': False,})
+            # return render(request,"patient/amount_confirmation.html")
             # return HttpResponseRedirect(reverse("pharmacy_details" , kwargs={'id':pharmacyid}))
 
 def picturesformedicineConfirmation(request,booking_id):   
@@ -830,7 +833,7 @@ class HomeVisitDoctor(CreateView):
 def BookanAppointmentForHomeVisit(request):
    if request.method == "POST":
        if request.method == "POST":
-            doctorid = request.POST.get('doctorid')
+            doctorid = request.POST.get('doctorid') 
             hospitalstaffdoctor = get_object_or_404(HospitalStaffDoctors,id=doctorid)
             serviceid = request.POST.get('serviceid')
             someone = request.POST.get('someone')
@@ -867,6 +870,6 @@ def BookanAppointmentForHomeVisit(request):
                 # data=data.decode("utf-8")
                 # data=ast.literal_eval(data)
                 # print(data)            
-                return HttpResponse("ok")
+                return JsonResponse({'message' : 'success','status': True,'Booking_id':booking.id,"otp":key})
             else:
-                return HttpResponse("error")
+                return JsonResponse({'message' : 'error','status': False,})

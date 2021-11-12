@@ -147,7 +147,7 @@ class Hospitals(models.Model):
     objects             =models.Manager()
     
     def __str__(self):
-        return self.admin  
+        return self.admin.username 
 
 class HospitalPhones(models.Model):
     id                  =models.AutoField(primary_key=True)

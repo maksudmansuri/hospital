@@ -102,6 +102,9 @@ def verifyOTP(request,phone):
             user.is_active=True
             user.save()
             messages.add_message(request,messages.SUCCESS,"Mobile Number is VArified Successfully")
+        else:
+            messages.add_message(request,messages.ERROR,"Incorrect OTP !")
+            return HttpResponseRedirect(reverse("verifyPhone",kwargs={'phone':user.phone}))
         #emila message for email verification
         current_site=get_current_site(request) #fetch domain    
         email_subject='Active your Account',
@@ -208,7 +211,7 @@ class HospitalSingup(SuccessMessageMixin,CreateView):
         user.counter += 1  # Update Counter At every Call
         user.save() # Save the data
         mobile= user.phone
-        key = base64.b32encode((send_otp(mobile).encode()))
+        #key = base64.b32encode((send_otp(mobile).encode()))
         # key = base64.b32encode(keygen.returnValue(mobile).encode())  # Key is generated
         key = send_otp(mobile)
         # OTP = pyotp.HOTP(key)  # HOTP Model for OTP is created

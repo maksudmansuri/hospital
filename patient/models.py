@@ -1,5 +1,6 @@
 import datetime
 import json
+from time import timezone
 import channels
 from channels.layers import get_channel_layer
 from django.contrib import admin
@@ -71,6 +72,7 @@ class Booking(models.Model):
     add_note                =           models.CharField(max_length=5000,blank=True,null=True,default="")
     booking_type            =           models.CharField(default="OPD",blank=True,null=True,max_length=64)
     is_active               =           models.BooleanField(default=False)
+    reject_within_5         =           models.DateTimeField(default=datetime.datetime(1970,1,1))
     created_at              =           models.DateTimeField(auto_now_add=True)
     updated_at              =           models.DateTimeField(auto_now=True)
     objects                 =           models.Manager()

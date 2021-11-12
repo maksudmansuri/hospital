@@ -3,6 +3,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import deletion
 from django.db.models.query_utils import Q
 from pyotp.otp import OTP
+from accounts.views import send_otp
 from chat.models import Notification
 from lab.models import Medias
 from django.views.generic.base import View
@@ -30,7 +31,7 @@ from accounts.utils import generate_token
 import base64
 import pyotp
 from django.core.exceptions import ObjectDoesNotExist
-from datetime import datetime
+from datetime import datetime,timedelta
 import random
 import http.client
 from django.contrib.sites.shortcuts import get_current_site
@@ -42,6 +43,7 @@ conn = http.client.HTTPConnection("2factor.in")
 from django.utils.decorators import method_decorator
 from django.db.models.signals import post_save
 from channels.layers import get_channel_layer 
+from django.db import transaction
 # Create your views here.
 class generateKey:
     @staticmethod
@@ -298,14 +300,24 @@ class BookAnAppointmentViews(SuccessMessageMixin,View):
             service = ServiceAndCharges.objects.get(id=serviceid)
             date = request.POST.get('date')
             time = request.POST.get('time')
+            now = datetime.now()
+            now5 = now + timedelta(minutes=5)
 
+            
             print(doctorid,hospitalstaffdoctor,serviceid,service,date,time)
-            if someone:
-                forsome = get_object_or_404(ForSome,id=someone)
-                booking = Booking(patient = request.user,for_whom=forsome,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge,status="booked")
-            else:
-                booking = Booking(patient = request.user,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge,status="booked")
+            with transaction.atomic():
+                if someone:
+                    forsome = get_object_or_404(ForSome,id=someone)
+                    booking = Booking(patient = request.user,for_whom=forsome,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge,status="booked")
+                else:
+                    booking = Booking(patient = request.user,hospitalstaffdoctor=hospitalstaffdoctor,service=service,applied_date=date,applied_time=time,is_applied=True,is_active=True,amount=service.service_charge,status="booked",)
+                booking.reject_within_5__lt = now
+            booking.reject_within_5 = now5
             booking.save()
+
+            print(booking.reject_within_5__lt)
+            print(booking.reject_within_5)
+
             print("booking saved")
             order = Orders(patient=request.user,service=service,amount=service.service_charge,booking_for=1,bookingandlabtest=booking.id,status=1)
             order.save()
@@ -341,6 +353,11 @@ class BookAnAppointmentViews(SuccessMessageMixin,View):
                 return JsonResponse({'message' : 'success','status': True,'Booking_id':booking.id,"otp":key})
             else:
                 return JsonResponse({'message' : 'Error','status': False})
+
+    def new_method(self, now, booking):
+        booking.reject_within_5__lt = now
+    
+   
     # except Exception as e:
     #         messages.add_message(request,messages.ERROR,"Network Issue try after some time")
     #         return HttpResponse(e)

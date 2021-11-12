@@ -326,6 +326,9 @@ class manageDepartmentclassView(SuccessMessageMixin,CreateView):
         hospital_staff_doctor1 = request.POST.get("hospital_staff_doctor")
         mobile = request.POST.get("mobile")
         email = request.POST.get("email")
+        if department_name == None or hospital_staff_doctor1 == None or mobile == None:
+            messages.add_message(request,messages.ERROR,"Connection Error Try after some time")
+            return HttpResponseRedirect(reverse("manage_department"))
         is_active = request.POST.get("is_active")
         active = False
         if is_active == "on":

@@ -87,7 +87,7 @@
  
 {% endblock content %}
 {% block modal_fade %}
-<!-- Add Staff-->
+<!-- Add Department-->
         <div class="modal fade" id="depadd" tabindex="-1"  aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
             <div class="modal-content">
@@ -101,12 +101,12 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="department_name" class="form-label">Department Name *</label>
-                        <input type="text" class="form-control" name="department_name" id="department_name">
+                        <input type="text" class="form-control" name="department_name" id="department_name" required>
                     </div>
                     <div class="mb-3">
                         <label  class="form-label">Department Head *</label>
-                        <select class="form-select" aria-label="Default select example" name="hospital_staff_doctor">
-                         <option disabled selected>Select Staff Member</option>
+                        <select class="form-select" aria-label="Default select example" name="hospital_staff_doctor" required>
+                        <option disabled selected>Select Staff Member</option>
                         {% for doctor in  doctors %}
                         <option value="{{doctor.id}}"> Dr. {{doctor}}</option>
                         {% endfor %}
@@ -114,7 +114,7 @@
                     </div>
                     <div class="mb-3">
                     <label for="phone" class="form-label">Mobile</label>
-                    <input type="text" class="form-control" id="mobile" name="mobile">
+                    <input type="text" class="form-control" id="mobile" name="mobile" required>
                     </div>
                     <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
@@ -124,7 +124,7 @@
                                            
                     <div class="form-group" style="margin-left: 20px;">
                         <label class="custom-switch mt-2">
-                            <input type="checkbox" name="is_active" id ="is_active" class="custom-switch-input">
+                            <input type="checkbox" name="is_active" id ="is_active" class="custom-switch-input" required>
                             <span class="custom-switch-indicator" ></span>
                             <span class="custom-switch-description">Department is active ?</span>
                         </label>

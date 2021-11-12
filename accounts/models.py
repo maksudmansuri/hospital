@@ -12,7 +12,7 @@ from django.db.models import Q
 # class CustomUser(AbstractUser): 
 #     user_type_data=((1,"HOD"),(2,"Staff"),(3,"Customer"))
 #     user_type=models.CharField(choices=user_type_data,max_length=10)
-
+ 
 class MyAccountManager(BaseUserManager):
     # create _create_user for mobiel number for facebbook and for google and for userid password so it can be solve your all problem regarding social login/auth
     use_in_migrations = True

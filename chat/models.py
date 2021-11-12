@@ -8,7 +8,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 import json
 # Create your models here.
-
+ 
 
 class Notification(models.Model):
     id       =           models.AutoField(primary_key=True)

@@ -17,7 +17,7 @@ from accounts.models import CustomUser, Hospitals, Labs, Patients, Pharmacy
 from django.db import models
 from asgiref.sync import async_to_sync,sync_to_async
 
-
+ 
 # Create your models here.
 class ForSome(models.Model):
     id                  =models.AutoField(primary_key=True)
